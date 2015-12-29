@@ -1,0 +1,25 @@
+{
+  "name": "valeryweb-model",
+  "version": "0.0.1",
+  "description": "Modelo ORM sequelize",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Raul Contreras <rcontreras@valery.com>",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^2.9.33",
+    "mysql": "2.6.2",
+    "sequelize": "^3.15.1",
+    "sqlite3": "3.0.8",
+    "underscore": "1.8.3",
+    "validator": "^3.41.2"
+  },
+  "devDependencies": {
+    "should": "~5.2.0"
+  },
+  "publishConfig": {
+    "registry": "http://192.168.1.12:8081/content/repositories/npm-interno-backend"
+  }
+}
