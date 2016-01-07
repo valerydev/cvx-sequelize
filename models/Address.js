@@ -18,10 +18,10 @@ module.exports = function(sequelize, Sequelize) {
     timezone: {},
     geolocation: {}
   }, {
+    tableName: 'dat_direcciones',
     classMethods: {
-      associate: function () {
-
-      }
+       associate: function () {
+       }
     }
   }];
 };

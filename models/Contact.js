@@ -11,6 +11,7 @@ module.exports = function(sequelize, Sequelize) {
     value: {},
     description: {}
   }, {
+    tableName: 'dat_contactos',
     classMethods: {
       associate: function () {
 

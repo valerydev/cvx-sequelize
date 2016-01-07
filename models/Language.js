@@ -7,6 +7,7 @@ module.exports = function(sequelize, Sequelize) {
     code: {}
 
   }, {
+    tableName: 'dat_idiomas',
     classMethods: {
       associate: function () {
 
