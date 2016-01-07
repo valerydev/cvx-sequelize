@@ -1,5 +1,131 @@
 var _ = require('underscore');
 
+module.exports.wrapAssociations = function(models){
+
+    models = _.flatten([models]);
+
+    models.forEach(function(model){
+        model.hasOne._assocType        = 'hasOne';
+        model.hasMany._assocType       = 'hasMany';
+        model.belongsTo._assocType     = 'belongsTo';
+        model.belongsToMany._assocType = 'belongsToMany';
+
+        var associationWrapper = function(assocFunc, target, opts){
+
+            var foreignKeyAttrib = null;
+
+            //Segun el tipo de relacion escojemos cual modelo representa la tabla
+            //propietaria de la relacion (owner) y cual modelo representa la tabla
+            //inversa de la relacion (inverse).
+            var owner, inverse;
+            if(assocFunc._assocType.slice(0,3) == 'has') {
+                //En asociaciones "has" el propietario de la relacion es el modelo "target"
+                owner = target;
+                inverse = this;
+            } else if( assocFunc._assocType == 'belongsTo' ) {
+                //En asociaciones "belongs" el propietario de la relacion
+                //es el modelo es "this"
+                owner = this;
+                inverse = target;
+            }
+
+            if(opts.foreignKey) {
+
+                if(_.isString(opts.foreignKey)) {
+                    opts.foreignKey = { field: opts.foreignKey }
+                }
+
+                //TODO: Buscar el nombre de la clave foranea creada por defecto por sequelize en caso de no conseguir el nombre.
+                //if(_.isUndefined(opts.foreignKey.name)){
+                //    this.name + this.primaryKeyAttribute
+                //}
+
+                //Buscamos el atributo que define la clave foranea.
+                foreignKeyAttrib = _.findWhere(owner.attributes, {field: opts.foreignKey.field});
+
+                //Validamos que el atributo references (si se definió) se corresponda con la
+                //definicion en la asociacion
+                if(foreignKeyAttrib) {
+
+                    if( !foreignKeyAttrib.references ){
+
+                        console.log('Asociacion virtual detectada: No especificó referencia en definicion del atributo "' +
+                            foreignKeyAttrib.fieldName + '"' + ' del modelo "' + owner.name +
+                            '" que es clave foranea al modelo "' + this.name + '".');
+
+                    } else {
+
+                        if(_.isString(foreignKeyAttrib.references)) {
+                            //Note que por defecto sequelize asume que key es id.
+                            foreignKeyAttrib.references = {model: foreignKeyAttrib.references, key: 'id'}
+                        }
+
+                        if ( foreignKeyAttrib.references.model != inverse.tableName ) {
+
+                            throw new Error('El nombre de tabla ('+ inverse.tableName +') del modelo "' + inverse.name
+                                + '" en la asociacion: ' + this.name + ' ' + assocFunc._assocType + ' ' + target.name + ', '
+                                + 'no se corresponde con el nombre definido en el atributo "' + foreignKeyAttrib.fieldName
+                                + '" de ' + foreignKeyAttrib.Model.name + ' (' + foreignKeyAttrib.references.model + ')');
+                        }
+
+                        if( !_.isUndefined(foreignKeyAttrib.references.key) &&
+                            foreignKeyAttrib.references.key != inverse.primaryKeyField ){
+
+                            throw new Error('El nombre de clave primaria ('+ inverse.primaryKeyField +') del modelo "'
+                                + inverse.name + '" en la asociacion: ' + this.name + ' ' + assocFunc._assocType + ' '
+                                + target.name + ', ' + 'no se corresponde con el nombre definido en el atributo "'
+                                + foreignKeyAttrib.fieldName + '" de ' + foreignKeyAttrib.Model.name + ' ('
+                                + foreignKeyAttrib.references.key + ')');
+                        }
+                    }
+                }
+
+                //Damos precedencia a las configuraciones establecidas en los atributos
+                //sobre las establecidas en las asociaciones
+                if(foreignKeyAttrib) {
+
+                    opts.foreignKey.name = foreignKeyAttrib.fieldName;
+
+                    if(!_.isUndefined(foreignKeyAttrib.allowNull)) {
+                        opts.foreignKey.allowNull    = foreignKeyAttrib.allowNull;
+                    }
+                    if(!_.isUndefined(foreignKeyAttrib.defaultValue)) {
+                        opts.foreignKey.defaultValue = foreignKeyAttrib.defaultValue;
+                    }
+                    if(!_.isUndefined(foreignKeyAttrib.unique)) {
+                        opts.foreignKey.unique = foreignKeyAttrib.unique;
+                    }
+                    if(!_.isUndefined(foreignKeyAttrib.type)) {
+                        opts.foreignKey.type = foreignKeyAttrib.type;
+                    }
+                    if(!_.isUndefined(foreignKeyAttrib.comment)) {
+                        opts.foreignKey.comment = foreignKeyAttrib.comment;
+                    }
+
+                    //En este caso invertimos el comportamiento por defecto de sequelize de
+                    //dar precedencia a los valores de onUpdate y onDelete establecidos en
+                    //las asociaciones sobre los establecidos en los atributos que definen
+                    //claves foraneas.
+                    if(!_.isUndefined(foreignKeyAttrib.onUpdate) && opts.constraints !== false) {
+                        opts.onUpdate = foreignKeyAttrib.onUpdate;
+                    }
+                    if(!_.isUndefined(foreignKeyAttrib.onDelete) && opts.constraints !== false) {
+                        opts.onDelete = foreignKeyAttrib.onDelete;
+                    }
+
+                }
+            }
+
+            assocFunc.call(this, target, opts);
+        };
+
+        model.hasOne    = _.wrap(model.hasOne, associationWrapper);
+        model.hasMany   = _.wrap(model.hasMany, associationWrapper);
+        model.belongsTo = _.wrap(model.belongsTo, associationWrapper);
+    });
+
+};
+
 module.exports.addJSONSchema = function (models) {
 
     models = _.flatten([models]);
@@ -254,131 +380,3 @@ module.exports.addJSONSchema = function (models) {
         };
     });
 };
-
-module.exports.wrapAssociations = function(models){
-
-    models = _.flatten([models]);
-
-    models.forEach(function(model){
-        model.hasOne._assocType        = 'hasOne';
-        model.hasMany._assocType       = 'hasMany';
-        model.belongsTo._assocType     = 'belongsTo';
-        model.belongsToMany._assocType = 'belongsToMany';
-
-        var associationWrapper = function(assocFunc, target, opts){
-
-            var foreignKeyAttrib = null;
-
-            //Segun el tipo de relacion escojemos cual modelo representa la tabla
-            //propietaria de la relacion (owner) y cual modelo representa la tabla
-            //inversa de la relacion (inverse).
-            var owner, inverse;
-            if(assocFunc._assocType.slice(0,3) == 'has') {
-                //En asociaciones "has" el propietario de la relacion es el modelo "target"
-                owner = target;
-                inverse = this;
-            } else if( assocFunc._assocType == 'belongsTo' ) {
-                //En asociaciones "belongs" el propietario de la relacion
-                //es el modelo es "this"
-                owner = this;
-                inverse = target;
-            }
-
-            if(opts.foreignKey) {
-
-                if(_.isString(opts.foreignKey)) {
-                    opts.foreignKey = { field: opts.foreignKey }
-                }
-
-                //TODO: Buscar el nombre de la clave foranea creada por defecto por sequelize en caso de no conseguir el nombre.
-                //if(_.isUndefined(opts.foreignKey.name)){
-                //    this.name + this.primaryKeyAttribute
-                //}
-
-                //Buscamos el atributo que define la clave foranea.
-                foreignKeyAttrib = _.findWhere(owner.attributes, {field: opts.foreignKey.field});
-
-                //Validamos que el atributo references (si se definió) se corresponda con la
-                //definicion en la asociacion
-                if(foreignKeyAttrib) {
-
-                    if( !foreignKeyAttrib.references ){
-
-                        console.warn('Advertencia: No especificó referencia en definicion del atributo "' +
-                            foreignKeyAttrib.fieldName + '"' + ' del modelo "' + owner.name +
-                            '" que es clave foranea al modelo "' + this.name + '".');
-
-                    } else {
-
-                        if(_.isString(foreignKeyAttrib.references)) {
-                            //Note que por defecto sequelize asume que key es id.
-                            foreignKeyAttrib.references = {model: foreignKeyAttrib.references, key: 'id'}
-                        }
-
-                        if ( foreignKeyAttrib.references.model != inverse.tableName ) {
-
-                            throw new Error('El nombre de tabla ('+ inverse.tableName +') del modelo "' + inverse.name
-                                + '" en la asociacion: ' + this.name + ' ' + assocFunc._assocType + ' ' + target.name + ', '
-                                + 'no se corresponde con el nombre definido en el atributo "' + foreignKeyAttrib.fieldName
-                                + '" de ' + foreignKeyAttrib.Model.name + ' (' + foreignKeyAttrib.references.model + ')');
-                        }
-
-                        if( !_.isUndefined(foreignKeyAttrib.references.key) &&
-                            foreignKeyAttrib.references.key != inverse.primaryKeyField ){
-
-                            throw new Error('El nombre de clave primaria ('+ inverse.primaryKeyField +') del modelo "'
-                                + inverse.name + '" en la asociacion: ' + this.name + ' ' + assocFunc._assocType + ' '
-                                + target.name + ', ' + 'no se corresponde con el nombre definido en el atributo "'
-                                + foreignKeyAttrib.fieldName + '" de ' + foreignKeyAttrib.Model.name + ' ('
-                                + foreignKeyAttrib.references.key + ')');
-                        }
-                    }
-                }
-
-                //Damos precedencia a las configuraciones establecidas en los atributos
-                //sobre las establecidas en las asociaciones
-                if(foreignKeyAttrib) {
-
-                    opts.foreignKey.name = foreignKeyAttrib.fieldName;
-
-                    if(!_.isUndefined(foreignKeyAttrib.allowNull)) {
-                        opts.foreignKey.allowNull    = foreignKeyAttrib.allowNull;
-                    }
-                    if(!_.isUndefined(foreignKeyAttrib.defaultValue)) {
-                        opts.foreignKey.defaultValue = foreignKeyAttrib.defaultValue;
-                    }
-                    if(!_.isUndefined(foreignKeyAttrib.unique)) {
-                        opts.foreignKey.unique = foreignKeyAttrib.unique;
-                    }
-                    if(!_.isUndefined(foreignKeyAttrib.type)) {
-                        opts.foreignKey.type = foreignKeyAttrib.type;
-                    }
-                    if(!_.isUndefined(foreignKeyAttrib.comment)) {
-                        opts.foreignKey.comment = foreignKeyAttrib.comment;
-                    }
-
-                    //En este caso invertimos el comportamiento por defecto de sequelize de
-                    //dar precedencia a los valores de onUpdate y onDelete establecidos en
-                    //las asociaciones sobre los establecidos en los atributos que definen
-                    //claves foraneas.
-                    if(!_.isUndefined(foreignKeyAttrib.onUpdate) && opts.constraints !== false) {
-                        opts.onUpdate = foreignKeyAttrib.onUpdate;
-                    }
-                    if(!_.isUndefined(foreignKeyAttrib.onDelete) && opts.constraints !== false) {
-                        opts.onDelete = foreignKeyAttrib.onDelete;
-                    }
-
-                }
-            }
-
-            assocFunc.call(this, target, opts);
-        };
-
-        model.hasOne    = _.wrap(model.hasOne, associationWrapper);
-        model.hasMany   = _.wrap(model.hasMany, associationWrapper);
-        model.belongsTo = _.wrap(model.belongsTo, associationWrapper);
-    });
-
-};
-
-
