@@ -9,7 +9,7 @@ var basename  = path.basename(module.filename);
 var env       = process.env.NODE_ENV || 'test';
 var config    = require(__dirname + '/config/config.json')[env];
 var modelAttribs = require('valeryweb-model-attribs')(DataTypes);
-var db  = {};
+var models    = {};
 
 if (config.use_env_variable) {
   var sequelize = new Sequelize(process.env[config.use_env_variable]);
@@ -55,21 +55,21 @@ fs.readdirSync(path.join(__dirname, 'models'))
        return sequelize.define(modelName, baseAttribs, baseOpts);
     });
 
-    db[model.name] = model;
+    models[model.name] = model;
 });
 
-utils.addJSONSchema( _.values( db ) );
-utils.wrapAssociations( _.values( db ) );
+utils.addJSONSchema( _.values( models ) );
+utils.wrapAssociations( _.values( models ) );
 
 //Ejecutamos las asociaciones
-_.values( db ).forEach(function( model ) {
+_.values( models ).forEach(function( model ) {
     if (model.associate) {
         model.associate();
     }
 });
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+models.sequelize = sequelize;
+models.Sequelize = Sequelize;
 
-module.exports = db;
+module.exports = models;
 
