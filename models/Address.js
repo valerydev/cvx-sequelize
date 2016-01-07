@@ -20,6 +20,7 @@ module.exports = function(sequelize, Sequelize) {
   }, {
     classMethods: {
        associate: function () {
+         this.belongsTo(sequelize.models.Supplier, {foreignKey: 'entidad_correlativo', scope: { entity: 'PRV' }, constraints: false});
        }
     }
   }];
