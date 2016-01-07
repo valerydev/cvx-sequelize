@@ -292,7 +292,12 @@ fs.readdirSync(path.join(__dirname, 'models'))
     });
 
     if(otherOpts) {
-      baseOpts.validate = otherOpts;
+        if(!_.isUndefined(otherOpts.tableName)) {
+            baseOpts.tableName = otherOpts.tableName;
+        }
+        if(!_.isUndefined(otherOpts.validate)) {
+            baseOpts.validate  = _.defaults(baseOpts.validate, otherOpts.validate);
+        }
     }
 
     var model = sequelize['import'](modelName, function(){

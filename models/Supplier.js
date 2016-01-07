@@ -18,7 +18,6 @@ module.exports = function(sequelize, Sequelize) {
     languageId: {}
 
   }, {
-    tableName: 'dat_proveedores',
     classMethods: {
       associate: function () {
         this.hasMany(sequelize.models.Contact, { foreignKey: 'entidad_correlativo' });
