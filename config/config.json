@@ -2,23 +2,32 @@
   "development": {
     "username": "valerysystem",
     "password": "fHKuLJx4",
-    "database": "valerydb",
-    "host": "valerywebdb.valeryweb.com",
+    "database": "valerydb_v2",
+    "host": "192.168.1.13",
     "dialect": "mysql",
-    "define": {"timestamps": false, "freezeTableName": true}
+    "define": {"timestamps": false, "freezeTableName": true, "underscored": true}
   },
-  "test": {
+  "testSqlite": {
     "username": null,
     "password": null,
     "database": "valerydb-test",
     "storage": "./valerydb-test.sqlite",
-    "dialect": "sqlite"
+    "dialect": "sqlite",
+    "define": {"timestamps": false, "freezeTableName": true, "underscored": true}
   },
+   "testMysql": {
+     "username": "root",
+     "password": "root",
+     "database": "transient_test",
+     "dialect": "mysql",
+     "define": {"timestamps": false, "freezeTableName": true, "underscored": true}
+   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": "valerysystem",
+    "password": "fHKuLJx4",
+    "database": "valerydb",
+    "host": "valerywebdb.valeryweb.com",
+    "dialect": "mysql",
+    "define": {"timestamps": false, "freezeTableName": true, "underscored": true}
   }
 }
