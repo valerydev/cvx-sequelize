@@ -27,11 +27,11 @@ fs.readdirSync(path.join(__dirname, 'models'))
     if (file.slice(-3) !== '.js') return;
 
     var modelOpts    = require(path.join(__dirname, 'models', file))( sequelize, DataTypes );
-    var baseAttribs = _.clone( modelAttribs[ modelName ][0] );
-    var otherAttribs = modelOpts[0];
 
-    var baseOpts  = modelOpts[1];
-    var otherOpts  = _.clone( modelAttribs[ modelName ][1] );
+    var baseAttribs  = modelAttribs[ modelName ][0];
+    var otherAttribs = modelOpts[0];
+    var baseOpts     = modelOpts[1];
+    var otherOpts    = modelAttribs[ modelName ][1];
 
     Object.keys(baseAttribs).forEach(function(attrib){
        if( otherAttribs[attrib] && otherAttribs[attrib].get ) {
