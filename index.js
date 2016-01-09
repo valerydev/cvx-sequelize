@@ -1,5 +1,6 @@
 var fs        = require('fs');
 var path      = require('path');
+var cls = require('continuation-local-storage');
 var Sequelize = require('sequelize');
 var DataTypes = Sequelize;
 //var inflection= require('inflection');
@@ -10,6 +11,8 @@ var env       = process.env.NODE_ENV || 'test';
 var config    = require(__dirname + '/config/config.json')[env];
 var modelAttribs = require('valeryweb-model-attribs')(DataTypes);
 var models    = {};
+
+Sequelize.cls = cls.createNamespace('valeryweb-model-ns');
 
 if(!config) throw new Error('No se encontro la configuracion "' + env + '" de conexion para el modelo de valeryweb')
 
