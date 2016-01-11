@@ -11,6 +11,8 @@ var config    = require(__dirname + '/config/config.json')[env];
 var modelAttribs = require('valeryweb-model-attribs')(DataTypes);
 var models    = {};
 
+if(!config) throw new Error('No se encontro la configuracion "' + env + '" de conexion para el modelo de valeryweb')
+
 if (config.use_env_variable) {
   var sequelize = new Sequelize(process.env[config.use_env_variable]);
 } else {
@@ -72,4 +74,48 @@ models.sequelize = sequelize;
 models.Sequelize = Sequelize;
 
 module.exports = models;
+
+
+//sequelize.sync({
+//    force: true,
+//    match: /^test|test$/i,
+//    logging: console.log.bind(console)
+//}).then(function(){
+//    var newSupplier = {
+//        contractId: 1,
+//        classifierId1: 1,
+//        classifierId2: 2,
+//        classifierId3: 3,
+//        branchId: 27,
+//        Contacts: [{
+//            contractId: 1,
+//            entity: 'PRV'
+//        }],
+//        Addresses: [{
+//            contractId: 1,
+//            entity: 'PRV'
+//        }],
+//        code: 'AAAAAAA',
+//        name: 'Proveedor A',
+//        fiscalDenomination: 'SA',
+//        fiscalId1  : 'ABCDEFGHIJ0123456789',
+//        fiscalId2  : 'ABCDEFGHIJ9876543210',
+//        creditDays : 7,
+//        creditLimit: 500000,
+//        defaultCurrencyId: 62,
+//        //language: {
+//        //    name: 'spanish',
+//        //    translatedName: 'español',
+//        //    code: 'ESP'
+//        //}
+//    };
+//
+//    models.Supplier.create(newSupplier,{
+//        include: [ models.Contact, models.Address ]
+//    }).then(function(){
+//        return models.Supplier.findById(1, {include:[models.Contact, models.Address]});
+//    }).then(function(supplier){
+//        console.log(JSON.stringify(supplier));
+//    });
+//});
 

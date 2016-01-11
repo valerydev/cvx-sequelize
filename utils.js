@@ -49,9 +49,9 @@ module.exports.wrapAssociations = function(models){
 
                     if( !foreignKeyAttrib.references ){
 
-                        console.log('Asociacion virtual detectada: No especificó referencia en definicion del atributo "' +
-                            foreignKeyAttrib.fieldName + '"' + ' del modelo "' + owner.name +
-                            '" que es clave foranea al modelo "' + this.name + '".');
+                        //console.log('Asociacion virtual detectada: No especificó referencia en definicion del atributo "' +
+                        //    foreignKeyAttrib.fieldName + '"' + ' del modelo "' + owner.name +
+                        //    '" que es clave foranea al modelo "' + this.name + '".');
 
                     } else {
 
