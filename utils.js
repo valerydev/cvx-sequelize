@@ -117,9 +117,8 @@ module.exports.wrapAssociations = function(models){
             }
 
             if(opts.scope) {
-                var _self = this;
                 opts.scope = _.object(_.pairs(opts.scope).map(function(fieldName){
-                    var attrib = _.find(_self.attributes, {fieldName: fieldName[0]});
+                    var attrib = _.find(owner.attributes, {fieldName: fieldName[0]});
                     fieldName[0] = attrib ? attrib.field : fieldName[0];
                     return fieldName
                 }));
