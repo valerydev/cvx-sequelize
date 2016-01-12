@@ -68,6 +68,19 @@ module.exports = function(config) {
         }
     });
 
+
+    models.sync = function(options){
+        options = options || {};
+        if(!options.force ) options.force = true;
+        if(!options.match ) options.match = /^test|test$/i;
+        if(_.isUndefined(options.logging))
+            options.logging = false;
+        else if(options.logging === true ){
+            options.logging = console.log.bind(console);
+        }
+        return sequelize.sync(options);
+    };
+
     models.sequelize = sequelize;
     models.Sequelize = Sequelize;
 
