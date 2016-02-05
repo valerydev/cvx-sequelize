@@ -21,6 +21,6 @@
     "should": "~5.2.0"
   },
   "publishConfig": {
-    "registry": "http://192.168.1.12:8081/content/repositories/npm-interno-backend"
+    "registry": "http://192.168.1.12:8081/repository/valeryweb-npm-hosted/"
   }
 }
