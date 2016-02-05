@@ -1,8 +1,11 @@
 var _ = require('underscore');
+var Model = require('sequelize').Model;
 
 module.exports.wrapAssociations = function(models){
 
-    models = _.flatten([models]);
+    models = _.flatten([_.filter(_.values(models), function(model){
+      return model instanceof Model
+    })]);
 
     models.forEach(function(model){
         model.hasOne._assocType        = 'hasOne';
@@ -136,7 +139,10 @@ module.exports.wrapAssociations = function(models){
 
 module.exports.addJSONSchema = function (models) {
 
-    models = _.flatten([models]);
+    var Sequelize = models.Sequelize;
+    models = _.flatten([_.filter(_.values(models), function(model){
+      return model instanceof Model
+    })]);
 
     var modelAttribs = require('valeryweb-model-attribs')({
         BIGINT: function(){
@@ -173,7 +179,7 @@ module.exports.addJSONSchema = function (models) {
         STRING: function(len){
             return 'string'+ (len ? '('+len+')' : '');
         }
-    });
+    }, Sequelize);
 
     models.forEach(function(model) {
         var modelDef = modelAttribs[model.name][0];

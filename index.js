@@ -4,7 +4,7 @@ var cls       = require('continuation-local-storage');
 var Sequelize = require('sequelize');
 var _         = require('underscore');
 var utils     = require('./utils');
-var modelAttribs = require('valeryweb-model-attribs')(Sequelize);
+var modelAttribs = require('valeryweb-model-attribs')(Sequelize, Sequelize);
 
 var basename  = path.basename(module.filename);
 Sequelize.cls = cls.createNamespace('valeryweb-model-ns');
@@ -58,8 +58,11 @@ module.exports = function(config) {
         models[model.name] = model;
     });
 
-    utils.addJSONSchema(_.values(models));
-    utils.wrapAssociations(_.values(models));
+    models.sequelize = sequelize;
+    models.Sequelize = Sequelize;
+
+    utils.addJSONSchema(models);
+    utils.wrapAssociations(models);
 
     //Ejecutamos las asociaciones
     _.values(models).forEach(function (model) {
@@ -80,9 +83,6 @@ module.exports = function(config) {
         }
         return sequelize.sync(options);
     };
-
-    models.sequelize = sequelize;
-    models.Sequelize = Sequelize;
 
     return models;
 };
