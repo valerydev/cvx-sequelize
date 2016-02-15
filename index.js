@@ -4,7 +4,6 @@ var cls       = require('continuation-local-storage');
 var Sequelize = require('sequelize');
 var _         = require('underscore');
 var utils     = require('./utils');
-var modelAttribs = require('valeryweb-model-attribs')(Sequelize, Sequelize);
 
 var basename  = path.basename(module.filename);
 Sequelize.cls = cls.createNamespace('valeryweb-model-ns');
@@ -16,6 +15,8 @@ module.exports = function(config) {
 
     var models    = {};
     var sequelize = new Sequelize(config.database, config.user, config.password, config);
+
+    var modelAttribs = require('./models/attribs')(DataTypes, Sequelize);
 
     fs.readdirSync(path.join(__dirname, 'models'))
     .filter(function (file) {

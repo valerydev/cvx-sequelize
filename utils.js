@@ -144,7 +144,7 @@ module.exports.addJSONSchema = function (models) {
       return model instanceof Model
     })]);
 
-    var modelAttribs = require('valeryweb-model-attribs')({
+    var modelAttribs = require('./models/attribs')({
         BIGINT: function(){
             return 'integer';
         },
