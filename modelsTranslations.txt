@@ -1,0 +1,1362 @@
+Payment                          : caja
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   *documentType                    : tipo_documento
+   module                           : modulo
+   issuedAt                         : fecha_emision
+   currencyId                       : moneda_correlativo
+   globalCurrencyFactor             : factor_moneda_global
+   saleId                           : venta_correlativo
+   cash                             : efectivo
+   check                            : cheque
+   creditCard                       : tarjeta_credito
+   debitCard                        : tarjeta_debito
+   bonusCard                        : tarjeta_alimenticia
+   coupon                           : cupon
+   giftCard                         : tarjeta_regalo
+   bankDeposit                      : deposito_bancario
+   bankTransfer                     : transferencia_bancaria
+   paymentTotal                     : total_pagado
+   *change                          : vuelto
+   operationTotal                   : total_operacion
+   creditTotal                      : total_credito
+
+ContractClassifier               : cfg_clasificaciones_contratos
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   level                            : nivel
+   name                             : nombre
+
+BranchClassifier                 : cfg_clasificacion_sucursales
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   level                            : nivel
+   name                             : nombre
+   parentId                         : padre_correlativo
+
+Contract                         : cfg_contratos
+   id                               : correlativo
+   number                           : numero
+   startDate                        : fecha_inicio
+   endDate                          : fecha_final
+   active                           : activo
+   shortName                        : nombre_corto
+   name                             : nombre
+   brandName                        : nombre_marca_comercial
+   fiscalId1                        : id_fiscal_1
+   fiscalId2                        : id_fiscal_2
+   contact                          : contacto_principal
+   contactEmail                     : correoe_contacto_principal
+   secondaryContact                 : contacto_secundario
+   secondaryContactEmail            : correoe_contacto_secundario
+   technicalContact                 : contacto_tecnico
+   technicalContactEmail            : correoe_contacto_tecnico
+   businessEmail                    : correoe_empresa
+   phoneNumbers                     : telefonos
+   address                          : direccion
+   countryId                        : pais_correlativo
+   stateId                          : provincia_correlativo
+   cityId                           : ciudad_correlativo
+   subLocationId1                   : sublocalidad1_correlativo
+   subLocationId2                   : sublocalidad2_correlativo
+   postalCode                       : zona_postal
+   timezone                         : zona_horaria
+   web                              : web
+   facebook                         : facebook
+   twitter                          : twitter
+   instagram                        : instagram
+   googlePlus                       : googleplus
+   pinterest                        : pinterest
+   linkedIn                         : linkedin
+   publicProfile                    : perfil_publico
+   logoId                           : logotipo_correlativo
+   disabledMenus                    : menu_deshabilitado
+
+ContractProperty                 : cfg_contratos_propiedades
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   propertyId                       : propiedad_correlativo
+   value                            : valor
+   updatedAt                        : ultima_actualizacion
+
+ConnectionScheduleDetails        : cfg_horario_conexion_detalles
+   id                               : correlativo
+   scheduleId                       : horario_correlativo
+   weekDay                          : dia_semana
+   startTime                        : hora_desde
+   endTime                          : hora_hasta
+
+ConnectionSchedule               : cfg_horario_conexion
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   name                             : nombre
+   indicator                        : indicador
+
+Profile                          : cfg_perfiles
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   branchId                         : sucursal_correlativo
+   code                             : codigo
+   name                             : nombre
+   active                           : activo
+   disabledMenus                    : menu_deshabilitado
+
+ProfileProperty                  : cfg_perfiles_propiedades
+   id                               : correlativo
+   profileId                        : perfil_correlativo
+   propertyId                       : propiedad_correlativo
+   value                            : valor
+   updatedAt                        : ultima_actualizacion
+
+*cfg_profundida_entidades
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   entity                           : entidad
+   level                            : nivel
+
+BranchProperty                   : cfg_propiedades_sucursal
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   propertyId                       : propiedad_correlativo
+   value                            : valor
+   updatedAt                        : ultima_actualizacion
+
+Branch                           : cfg_sucursales
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   classifierId1                    : clasificacion_1_correlativo
+   classifierId2                    : clasificacion_2_correlativo
+   classifierId3                    : clasificacion_3_correlativo
+   branchCode                       : sucursal_codigo
+   name                             : nombre
+   contact                          : contacto_principal
+   startDate                        : fecha_inicio
+   countryId                        : pais_correlativo
+   stateId                          : provincia_correlativo
+   cityId                           : ciudad_correlativo
+   subLocationId1                   : sublocalidad1_correlativo
+   subLocationId2                   : sublocalidad2_correlativo
+   postalCode                       : zona_postal
+   timezone                         : zona_horaria
+   address                          : direccion
+   phoneNumbers                     : telefonos
+   propertyType                     : tipo_propiedad
+
+User                             : cfg_usuarios
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   code                             : codigo
+   password                         : clave
+   fullName                         : nombres
+   email                            : correo_electronico
+   securityQuestion                 : pregunta_seguridad
+   securityAnswer                   : respuesta_seguridad
+   type                             : tipo
+   profileId                        : perfil_correlativo
+   ocuppation                       : cargo_correlativo
+   active                           : activo
+   securityQuestion2                : pregunta_seguridad_2
+   securityAnswer2                  : respuesta_seguridad_2
+   allowedIPs                       : ip_permitidas
+   address                          : direccion
+   countryId                        : pais_correlativo
+   stateId                          : provincia_correlativo
+   cityId                           : ciudad_correlativo
+   subLocationId1                   : sublocalidad1_correlativo
+   subLocationId2                   : sublocalidad2_correlativo
+   photoId                          : foto_correlativo
+   connectionScheduleId             : horario_conexion_correlativo
+   disabledMenus                    : menu_deshabilitado
+
+UserProperty                     : cfg_usuarios_propiedades
+   id                               : correlativo
+   userId                           : usuario_correlativo
+   propertyId                       : propiedad_correlativo
+   value                            : valor
+   updatedAt                        : ultima_actualizacion
+
+ClientPhoto                      : clientes_foto
+   clientId                         : cliente_correlativo
+   number                           : numero
+   photo                            : foto
+
+Client                           : clientes
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   classifierId1                    : clasificacion_1_correlativo
+   classifierId2                    : clasificacion_2_correlativo
+   classifierId3                    : clasificacion_3_correlativo
+   branchId                         : sucursal_correlativo
+   code                             : codigo
+   name                             : nombre
+   reference                        : referencia
+   contact                          : contacto
+   salesPersonId                    : vendedor_correlativo
+   salesZoneId                      : zona_venta_correaltivo
+   accountingAccount                : cuenta_contable
+   fiscalId1                        : id_fiscal1
+   fiscalId2                        : id_fiscal2
+   address                          : direccion
+   countryId                        : pais_correlativo
+   stateId                          : provincia_correlativo
+   cityId                           : ciudad_correlativo
+   subLocationId1                   : sublocalidad1_correlativo
+   subLocationId2                   : sublocalidad2_correlativo
+   postalCode                       : zona_postal
+   TimeZone                         : huso_horario
+   phoneNumbers                     : telefonos
+   fax                              : fax
+   email                            : correo_electronico
+   creditDays                       : dias_credito
+   creditLimit                      : limite_credito
+   denominationFiscal               : denominacion_fiscal
+
+ClientLoyaltyPoints              : clientes_puntos_lealtad
+   clientId                         : cliente_correlativo
+   earnedPoints                     : puntos_acumulados
+   lastInvoive                      : ultima_factura
+   lastExchange                     : ultimo_canje
+
+ClientBalanceMonth               : clientes_saldos_mes
+   id                               : correlativo
+   clientId                         : cliente_correlativo
+   period                           : periodo
+   credit                           : credito
+   debit                            : debito
+   advance                          : anticipo
+   balance                          : saldo
+   advanceBalance                   : saldo_anticipo
+
+Colors                           : colores
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   classifierId1                    : clasificacion_1_correlativo
+   classifierId2                    : clasificacion_2_correlativo
+   classifierId3                    : clasificacion_3_correlativo
+   bracnhId                         : sucursal_correlativo
+   code                             : codigo
+   name                             : nombre
+
+Department                       : departamentos
+   Id                               : correlativo
+   ContractId                       : contrato_correlativo
+   classifierId1                    : clasificacion_1_correlativo
+   classifierId2                    : clasificacion_2_correlativo
+   classifierId3                    : clasificacion_3_correlativo
+   branchId                         : sucursal_correlativo
+   code                             : codigo
+   name                             : nombre
+   roundMethod                      : metodo_redondeo
+   useSize                          : usa_talla
+   useColor                         : usa_color
+   maxPricePercentage               : porc_precio_maximo
+   offerPricePercentage             : porc_precio_oferta
+   higherPricePercentage            : porc_precio_mayor
+   lowerPricePercentage             : porc_precio_minimo
+   extraPricePercentage1            : porc_precio_adicional_1
+   extraPricePercentage2            : porc_precio_adicional_2
+   level                            : nivel
+   parentDepartment                 : departamento_padre
+   ancestorCodes                    : codigos_de_ascendencia
+   productsDependecy                : dependencia_productos
+   lastDependecyLevel               : ultimo_nivel_dependencia
+   notes                            : notas
+
+Storage                          : depositos
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   branchId                         : sucursal_correlativo
+   code                             : codigo
+   name                             : nombre
+   notes                            : notas
+
+Station                          : estaciones
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   name                             : nombre
+
+*estadistica_productos_dia
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   productId                        : producto_correlativo
+   unitId                           : unidad_correlativo
+   storageId                        : deposito_correlativo
+   currencyId                       : moneda_correlativo
+   date                             : fecha
+   period                           : periodo
+   initialUnitCost                  : costo_unitario_inicial
+   initialCalculedCost              : costo_calculado_inicial
+   initialAverageCost               : costo_promedio_inicial
+   initialExistence1                : existencia_inicial
+   initialExistence1                : existencia_2_inicial
+   issuedInvoices                   : cantidad_fac
+   issuedInvoices2                  : cantidad_2_fac
+   **/cantidad_net
+   cantidad_2_net
+   cantidad_dcm
+   cantidad_2_dcm
+   cantidad_fcm
+   cantidad_2_fcm
+   cantidad_rcm
+   cantidad_2_rcm
+   cantidad_dev
+   cantidad_2_dev
+   cantidad_crg
+   cantidad_2_crg
+   cantidad_crg_uso_interno
+   cantidad_2_crg_uso_interno
+   cantidad_dsc
+   cantidad_2_dsc
+   cantidad_dsc_uso_interno
+   cantidad_2_dsc_uso_interno
+   cantidad_trs_sal
+   cantidad_2_trs_sal
+   cantidad_trs_ent
+   cantidad_2_trs_ent
+   cantidad_ajs
+   cantidad_2_ajs
+   existencia_final
+   existencia_2_final
+   costo_unitario_final
+   costo_calculado_final
+   costo_promedio_final
+   existencia_comp_ini
+   existencia_comp_2_ini
+   cantidad_ped
+   cantidad_2_ped
+   cantidad_odc
+   cantidad_2_odc
+   cantidad_fac_gral
+   cantidad_2_fac_gral
+   cantidad_dev_gral
+   cantidad_2_dev_gral
+   existencia_comp_final
+   existencia_comp_2_final
+   existencia_ordenada_ini
+   existencia_ordenada_2_ini
+   existencia_ordenada_final
+   existencia_ordenada_2_final**/
+
+*estadistica_productos_mes
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   productId                        : producto_correlativo
+   unitId                           : unidad_correlativo
+   storageId                        : deposito_correlativo
+   currencyId                       : moneda_correlativo
+   period                           : periodo
+   **/costo_unitario_inicial
+   costo_calculado_inicial
+   costo_promedio_inicial
+   existencia_inicial
+   existencia_2_inicial
+   cantidad_fac
+   cantidad_2_fac
+   cantidad_net
+   cantidad_2_net
+   cantidad_dcm
+   cantidad_2_dcm
+   cantidad_fcm
+   cantidad_2_fcm
+   cantidad_rcm
+   cantidad_2_rcm
+   cantidad_dev
+   cantidad_2_dev
+   cantidad_crg
+   cantidad_2_crg
+   cantidad_crg_uso_interno
+   cantidad_2_crg_uso_interno
+   cantidad_dsc
+   cantidad_2_dsc
+   cantidad_dsc_uso_interno
+   cantidad_2_dsc_uso_interno
+   cantidad_trs_sal
+   cantidad_2_trs_sal
+   cantidad_trs_ent
+   cantidad_2_trs_ent
+   cantidad_ajs
+   cantidad_2_ajs
+   existencia_final
+   existencia_2_final
+   costo_unitario_final
+   costo_calculado_final
+   costo_promedio_final
+   existencia_comp_ini
+   existencia_comp_2_ini
+   cantidad_ped
+   cantidad_2_ped
+   cantidad_odc
+   cantidad_2_odc
+   cantidad_fac_gral
+   cantidad_2_fac_gral
+   cantidad_dev_gral
+   cantidad_2_dev_gral
+   existencia_comp_final
+   existencia_comp_2_final
+   existencia_ordenada_ini
+   existencia_ordenada_2_ini
+   existencia_ordenada_final
+   existencia_ordenada_2_final
+   moneda_nombre**/
+
+Image                            : imagenes
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   module                           : modulo
+   type                             : tipo
+   image                            : imagen
+
+Tax                              : impuestos
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   classifierId1                    : clasificacion_1_correlativo
+   classifierId2                    : clasificacion_2_correlativo
+   classifierId2                    : clasificacion_3_correlativo
+   branchId                         : sucursal_correlativo
+   code                             : codigo
+   name                             : nombre
+   position                         : posicion
+   aliquot                          : alicuota
+   isExempt                         : es_exento
+   applicableTo                     : aplicable_a
+
+DailyBranchIncomeIndex           : indice_ingresos_suc_dia
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   period                           : periodo
+   issuedAt                         : fecha
+   currencyId                       : moneda_correlativo
+   cash                             : efectivo
+   check                            : cheque
+   creditCard                       : tarjeta_credito
+   debitCard                        : tarjeta_debito
+   bonusCard                        : tarjeta_alimenticia
+   coupon                           : cupon
+   giftCard                         : tarjeta_regalo
+   bankDeposit                      : deposito_bancario
+   bankTransfer                     : transferencia_bancaria
+   totalCreditSale                  : total_venta_credito
+   totalCash                        : total_venta_contado
+   salesIncome                      : ingreso_venta
+   collectionsIncome                : ingreso_cobranza
+   totalIncome                      : total_ingreso
+
+DailyBranchSalesIndex            : indice_ventas_suc_dia
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   period                           : periodo
+   date                             : fecha
+   currencyId                       : moneda_correlativo
+   salesGoalAmmount                 : monto_meta_venta
+   salesGoalPercentage              : porc_meta_venta
+   lastSalesGoalPercentage          : porc_meta_venta_ant
+   *porc_meta_venta_anio_mes_ant
+
+contractEntryList                : lista_registros_contratos
+   unit                             : unidades
+   contractId                       : contrato_correlativo
+
+Brand                            : marcas
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   classifierId1                    : clasificacion_1_correlativo
+   classifierId2                    : clasificacion_2_correlativo
+   classifierId3                    : clasificacion_3_correlativo
+   branchId                         : sucursal_correlativo
+   name                             : nombre
+   code                             : codigo
+
+MonthlyGoals                     : metas_mes
+   id                               : correlativo
+   period                           : periodo
+   currencyId                       : moneda_correlativo
+   calendarId                       : calendario_correlativo
+   *dias_efectivo
+   salesGoalAmount                  : monto_meta_ventas
+   expenseGoalAmount                : monto_meta_gastos
+   profitGoalAmount                 : monto_meta_utilidad
+   profitGoalPercentage             : porc_meta_utilidad
+   dailyGoalAmount                  : monto_meta_diario
+
+DailyBranchsGoals                : metas_sucusales_dia
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   period                           : periodo
+   date                             : fecha
+   currencyId                       : moneda_correlativo
+   salesGoalAmount                  : monto_meta_ventas
+   expenseGoalAmount                : monto_meta_gastos
+   profitGoalAmount                 : monto_meta_utilidad
+   profitGoalPercentage             : porc_meta_utilidad
+
+MonthlyBranchsGoals              : metas_sucusales_mes
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   period                           : periodo
+   currencyId                       : moneda_correlativo
+   calendarId                       : calendario_correlativo
+   *dias_efectivo
+   salesGoalAmount                  : monto_meta_ventas
+   expenseGoalAmount                : monto_meta_gastos
+   profitGoalAmount                 : monto_meta_utilidad
+   profitGoalPercentage             : porc_meta_utilidad
+   dailyGoalAmount                  : monto_meta_diario
+
+currencyConversionHistory : monedas_conversion_historial
+   id                               : correlativo
+   upadatedAt                       : fecha_hora
+   currencyId1                      : correlativo_moneda_1
+   currencyId2                      : correlativo_moneda_2
+   factor                           : factor
+
+CurrencyConversion               : monedas_conversion
+   id                               : correlativo
+   currencyId1                      : correlativo_moneda_1
+   currencyId2                      : correlativo_moneda_2
+   factor                           : factor
+   conversionType                   : tipo_conversion
+   conversionValue                  : valor_conversion
+
+Currency                         : monedas
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   classifierId1                    : clasificacion_1_correlativo
+   classifierId2                    : clasificacion_2_correlativo
+   classifierId3                    : clasificacion_3_correlativo
+   branchId                         : sucursal_correlativo
+   code                             : codigo
+   name                             : nombre
+   symbol                           : simbolo
+   isPrimary                        : principal
+   notes                            : notas
+   active                           : activo
+
+Profile                          : perfiles
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   branchId                         : sucursal_correlativo
+   code                             : codigo
+   name                             : nombre
+   status                           : estatus
+   updatedAt                        : fecha_hora_modificado
+   disabledMenu                     : menu_deshabilitado
+   disabledReportMenu               : menu_reportes_deshabilitado
+
+alternCodesProducts              : productos_codigos_alternos
+   id                               : correlativo
+   productId                        : producto_correlativo
+   code                             : codigo
+
+ProductCost                      : productos_costos
+   productId                        : producto_correlativo
+   currencyId                       : moneda_correlativo
+   currencyFactor                   : factor_moneda
+   particularCurrencyFactor         : factor_moneda_particular
+   GrossCost                        : costo_bruto
+   discount1                        : descuento_1
+   discount2                        : descuento_2
+   discount3                        : descuento_3
+   discount4                        : descuento_4
+   discount5                        : descuento_5
+   discount6                        : descuento_6
+   discountPercentage1              : porc_descuento_1
+   discountPercentage2              : porc_descuento_2
+   discountPercentage3              : porc_descuento_3
+   discountPercentage4              : porc_descuento_4
+   discountPercentage5              : porc_descuento_5
+   discountPercentage6              : porc_descuento_6
+   bonusDiscount                    : descuento_bonificacion
+   unitCost                         : costo_unitario
+   addedCost1                       : costo_agregado_1
+   addedCost2                       : costo_agregado_2
+   addedCost3                       : costo_agregado_3
+   addedCost4                       : costo_agregado_4
+   addedCostPercentage1             : porc_costo_agregado_1
+   addedCostPercentage2             : porc_costo_agregado_2
+   addedCostPercentage3             : porc_costo_agregado_3
+   addedCostPercentage4             : porc_costo_agregado_4
+   importCost                       : costo_importacion
+   calculedCost                     : costo_calculado
+   unitAverageCost                  : costo_unitario_promedio
+   calculedAverageCost              : costo_calculado_promedio
+   initialCalculedCost              : costo_calculado_inicial
+   lastCalculedCost                 : costo_calculado_anterior
+   initialUnitAverageCost           : costo_unitario_promedio_inicial
+   lastUnitAverageCost              : costo_unitario_promedio_anterior
+   initialCalculedAverageCost       : costo_calculado_promedio_inicial
+   lastCalculedAverageCost          : costo_calculado_promedio_anterior
+   decimalPresicion                 : numero_decimales
+
+ProductStorage                   : productos_depositos
+   id                               : correlativo
+   productId                        : producto_correlativo
+   storageId                        : deposito_correlativo
+   minStock                         : existencia_minima
+   maxStock                         : existencia_maxima
+   reorderPoint                     : punto_reorden
+   actualStock                      : existencia_actual
+   reserveStock                     : existencia_comprometida
+   orderedStock                     : existencia_ordenada
+   consignmentStock2                : existencia_consignacion
+   consignmentStock2                : existencia_2_consignacion
+   orderedStock2                    : existencia_2_ordenada
+   reserveStock                     : existencia_2_comprometida
+   actualStock2                     : existencia_2_actual
+
+ProductImage                     : productos_foto
+   productId                        : producto_correlativo
+   number                           : numero
+   image                            : foto
+
+Product                          : productos
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   classifierId1                    : clasificacion_1_correlativo
+   classifierId2                    : clasificacion_2_correlativo
+   classifierId3                    : clasificacion_3_correlativo
+   branchId                         : sucursal_correlativo
+   code                             : codigo
+   documentType                     : tipo_producto
+   departmentId                     : departamento_correlativo
+   buyingCurrencyId                 : moneda_compra_correlativo
+   sellingCurrencyId                : moneda_venta_correlativo
+   name                             : nombre
+   shortName                        : nombre_corto
+   reference                        : referencia
+   brandId                          : marca_correlativo
+   model                            : modelo
+   unitId                           : unidad_correlativo
+   secondaryUnit                    : unidad_secundaria_correlativo
+   currencyId                       : moneda_correlativo
+   importProduct                    : producto_importado
+   saleTaxId1                       : impuesto1_venta_correlativo
+   saleTaxId2                       : impuesto2_venta_correlativo
+   saleTaxId3                       : impuesto3_venta_correlativo
+   buyTaxId1                        : impuesto1_compra_correlativo
+   buyTaxId2                        : impuesto2_compra_correlativo
+   buyTaxId3                        : impuesto3_compra_correlativo
+   costMethod                       : metodo_costeo
+   warrantyDays                     : dias_garantia_general
+   status                           : estatus
+
+ProductOptions                   : productos_opciones
+   productId                        : producto_correlativo
+   isDescriptable                   : editar_descripcion
+   isFractioned                     : fraccionado
+   hasSerial                        : serializado
+   invoicingPasswordRequired        : requiere_clave_para_facturar
+   hasSize                          : usa_talla
+   hasColor                         : usa_color
+   internalUse                      : uso_interno
+   compositeCodeMethod              : metodo_codigo_compuesto
+   franchiseProfitPercentage        : porc_utilidad_franquicia
+   account                          : cuenta_contable
+   *uso_particular_sucursal
+
+-------------------------------------------------------------------------
+ProductPrices                    : productos_precios
+   id                               : producto_correlativo
+   currencyId                       : moneda_correlativo
+   currencyFactor                   : factor_moneda
+   specialCurrencyFactor            : factor_moneda_particular
+   maxPrice                         : precio_maximo
+   offerPrice                       : precio_oferta
+   higherPrice                      : precio_mayor
+   lowerPrice                       : precio_minimo
+   extraPrice1                      : precio_adicional_1
+   extraPrice2                      : precio_adicional_2
+   maxPricePercentage               : porc_precio_maximo
+   offerPricePercentege             : porc_precio_oferta
+   higherPricePercentage            : porc_precio_mayor
+   lowerPricePercentage             : porc_precio_minimo
+   extraPricePercentage1            : porc_precio_adicional_1
+   extraPricePercentage2            : porc_precio_adicional_2
+   roundMethod                      : metodo_redondeo
+   roundWithTaxIncluded             : redondear_con_impuesto_incluido
+   defaultPriceType                 : tipo_precio_defecto
+   decimalPrecision                 : numero_decimales
+   altMaxPrice                      : precio_maximo_alt
+   altOfferPrice                    : precio_oferta_alt
+   altHigherPrice                   : precio_mayor_alt
+   altLowerPrice                    : precio_minimo_alt
+   altExtraPrice1                   : precio_adicional_1_alt
+   altExtraPrice2                   : precio_adicional_2_alt
+   altMaxPricePercentage            : porc_precio_maximo_alt
+   altOfferPricePercentege          : porc_precio_oferta_alt
+   altHigherPricePercentage         : porc_precio_mayor_alt
+   altLowerPricePercentage          : porc_precio_minimo_alt
+   altExtraPricePercentage1         : porc_precio_adicional_1_alt
+   altExtraPricePercentage2         : porc_precio_adicional_2_alt
+   altRoundMethod                   : metodo_redondeo_alt
+   altRoundWithTaxesIncluded        : redondear_con_impuesto_incluido_alt
+   altDefaultPriceType              : tipo_precio_defecto_alt
+   altDecimalPrecision              : numero_decimales_alt
+
+ProductSupplier                  : productos_proveedores
+   id                               : correlativo
+   productId                        : producto_correlativo
+   supplierId                       : proveedor_correlativo
+   internalCode                     : codigo_interno 
+   lastDiscountPercentage1          : ultimo_porc_descuento_1
+   lastDiscountPercentage2          : ultimo_porc_descuento_2
+   lastDiscountPercentage3          : ultimo_porc_descuento_3
+   lastDiscountPercentage4          : ultimo_porc_descuento_4
+   lastDiscountPercentage5          : ultimo_porc_descuento_5
+   lastDiscountPercentage6          : ultimo_porc_descuento_6
+   deliveryDays                     : dias_de_entrega
+   warrantyDays                     : dias_garantia
+
+ProductSizeColor                : productos_tallascolores
+   id                               : correlativo
+   productId                        : producto_correlativo
+   sizeId                           : talla_correlativo
+   colorId                          : color_correlativo
+
+ProductStorageLocation           : productos_ubicaciones_depositos
+   id                               : correlativo
+   productId                        : producto_correlativo
+   locationId                       : ubicacion_correlativo
+
+Supplier                         : proveedores
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   classifierId1                    : clasificacion_1_correlativo
+   classifierId2                    : clasificacion_2_correlativo
+   classifierId3                    : clasificacion_3_correlativo
+   branchId                         : sucursal_correlativo
+   code                             : codigo
+   name                             : nombre
+   reference                        : referencia
+   contact                          : contacto
+   account                          : cuenta_contable*
+   fiscalId1                        : id_fiscal
+   fiscalId2                        : id_fiscal2
+   address                          : direccion
+   countryId                        : pais_correlativo
+   stateId                          : provincia_correlativo
+   cityId                           : ciudad_correlativo
+   subLocationId1                   : sublocalidad1_correlativo
+   subLocationId2                   : sublocalidad2_correlativo
+   postalCode                       : zona_postal
+   timezone                         : huso_horario
+   phoneNumbers                     : telefonos
+   fax                              : fax
+   email                            : correo_electronico
+   creditDays                       : dias_credito
+   creditLimit                      : limite_credito
+   fiscalDenomination               : denominacion_fiscal
+
+DailyPaymentSummary              : resumen_caja_dia
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   documentType                     : tipo_documento
+   module                           : modulo
+   period                           : periodo
+   date                             : fecha
+   currencyId                       : moneda_correlativo
+   cash                             : efectivo
+   check                            : cheque
+   creditCard                       : tarjeta_credito
+   debitCard                        : tarjeta_debito
+   bonusCard                        : tarjeta_alimenticia
+   coupon                           : cupon
+   giftCard                         : tarjeta_regalo
+   bankDeposit                      : deposito_bancario
+   banckTransfer                    : transferencia_bancaria
+   paymentTotal                     : total_pagado
+   chance                           : vuelto
+   operationTotal                   : total_operacion
+   creditTotal                      : total_credito
+
+DailySalesSummaryByDep           : resumen_ventas_dep_suc_dia
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   period                           : periodo
+   date                             : fecha
+   documentType                     : tipo_documento
+   departmentId                     : departamento_correlativo
+   currencyId                       : moneda_correlativo
+   unitId                           : unidad_correlativo
+   unitFactor                       : factor_unidad
+   totalGrossValue                  : total_bruto
+   totalLinealDiscount              : total_descuentos_lineal
+   totalGlobalDiscount              : total_descuentos_global
+   totalDiscount                    : total_descuentos
+   totalCharges                     : total_cargos
+   totalNetValue                    : total_neto
+   totalTaxes                       : total_impuestos
+   totalOperation                   : total_operacion
+   averageTotalCalculedCost         : total_costo_calculado_promedio
+   lastTotalCalculedCost            : total_costo_calculado_ultimo
+   totalSupplierCost                : total_costo_proveedor
+   profit                           : utilidad
+   profitPercentage                 : porc_utilidad
+   totalSalesFees                   : total_comisiones_ventas
+   totalCollectionFee               : total_comision_cobranza
+
+MonthlySalesSummaryByDep         : resumen_ventas_dep_suc_mes
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   period                           : periodo
+   documentType                     : tipo_documento
+   departmentId                     : departamento_correlativo
+   currencyId                       : moneda_correlativo
+   unitId                           : unidad_correlativo
+   unitFactor                       : factor_unidad
+   totalGrossValue                  : total_bruto
+   totalLinealDiscounts             : total_descuentos_lineal
+   totalGlobalDiscounts             : total_descuentos_global
+   totalDiscounts                   : total_descuentos
+   totalCharges                     : total_cargos
+   totalNetWorth                    : total_neto
+   totalTaxes                       : total_impuestos
+   totalOperation                   : total_operacion
+   totalCalculedAverageCost         : total_costo_calculado_promedio
+   totalCalculedLastCost            : total_costo_calculado_ultimo
+   totalSupplierCost                : total_costo_proveedor
+   profit                           : utilidad
+   profitPercentage                 : porc_utilidad
+   totalSalesFees                   : total_comisiones_ventas
+   totalCollectioFee                : total_comision_cobranza
+   processedDays                    : dias_procesados
+
+MonthlySalesResume               : resumen_ventas_mes
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   documentType                     : tipo_documento
+   period                           : periodo
+   currencyId                       : moneda_correlativo
+   totalGrossValue                  : total_bruto
+   totalDiscounts                   : total_descuentos
+   totalCharges                     : total_cargos
+   totalNetWorth                    : total_neto
+   totalTaxes                       : total_impuestos
+   totalOperation                   : total_operacion
+   totalCalculedAverageCost         : total_costo_calculado_promedio
+   totalCalculedLastCost            : total_costo_calculado_ultimo
+   totalSupplierCost                : total_costo_proveedor
+   profit                           : utilidad
+   profitPercentage                 : porc_utilidad
+   totalSalesFees                   : total_comisiones_ventas
+   totalCollectioFee                : total_comision_cobranza
+   totalCash                        : total_contado
+   totalCredit                      : total_credito
+   totalWithholding                 : total_retenciones
+   rows                             : numero_renglones
+   processedDays                    : dias_procesados
+   transactions                     : numero_transacciones
+
+*DailySalesSummaryByProductEx    : resumen_ventas_prod_suc_dia_ex
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   documentType                     : tipo_documento
+   period                           : periodo
+   date                             : fecha
+   currencyId                       : moneda_correlativo
+   productId                        : producto_correlativo
+   unitId                           : unidad_correlativo
+   unitFactor                       : factor_unidad
+   salesPerson                      : vendedor_correlativo
+   clientId                         : cliente_correlativo
+   rows                             : cantidad_renglon
+   rows2                            : cantidad_2_renglon
+   totalGrossValue                  : total_bruto_renglon
+   total_descuentos_renglon
+   total_cargos_renglon
+   totalGrossValue                  : total_bruto
+   totalDiscount                    : total_descuentos
+   totalCharges                     : total_cargos
+   totalNetWorth                    : total_neto
+   totalTaxes                       : total_impuestos
+   totalOperation                   : total_operacion
+   averageTotalCalculedCost         : total_costo_calculado_promedio
+   lastTotalCalculedCost            : total_costo_calculado_ultimo
+   totalSupplierCost                : total_costo_proveedor
+   profit                           : utilidad
+   profitPercentage                 : porc_utilidad
+   totalSalesFees                   : total_comisiones_ventas
+   totalCollectionFee               : total_comision_cobranza
+   totalCash                        : total_contado
+   totalCredit                      : total_credito
+   rows                             : numero_renglones
+
+*DailySalesSummaryByProduct       : resumen_ventas_prod_suc_dia
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   documentType                     : tipo_documento
+   period                           : periodo
+   date                             : fecha
+   currencyId                       : moneda_correlativo
+   productId                        : producto_correlativo
+   unitId                           : unidad_correlativo
+   unitFactor                       : factor_unidad
+   cantidad_renglon
+   cantidad_2_renglon
+   total_bruto_renglon
+   total_descuentos_renglon
+   total_cargos_renglon
+   totalGrossValue                  : total_bruto
+   totalDiscount                    : total_descuentos
+   totalCharges                     : total_cargos
+   totalNetWorth                    : total_neto
+   totalTaxes                       : total_impuestos
+   totalOperation                   : total_operacion
+   averageTotalCalculedCost         : total_costo_calculado_promedio
+   lastTotalCalculedCost            : total_costo_calculado_ultimo
+   totalSupplierCost                : total_costo_proveedor
+   profit                           : utilidad
+   profitPercentage                 : porc_utilidad
+   totalSalesFees                   : total_comisiones_ventas
+   totalCollectionfee               : total_comision_cobranza
+   totalCash                        : total_contado
+   totalCredit                      : total_credito
+   rows                             : numero_renglones
+
+*MonthlySalesSummaryByProductEx  : resumen_ventas_prod_suc_mes_ex
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   documentType                     : tipo_documento
+   period                           : periodo
+   currencyId                       : moneda_correlativo
+   productId                        : producto_correlativo
+   unitId                           : unidad_correlativo
+   Unitfactor                       : factor_unidad
+   salesPersonId                    : vendedor_correlativo
+   clientId                         : cliente_correlativo
+   cantidad_renglon
+   cantidad_2_renglon
+   total_bruto_renglon
+   total_descuentos_renglon
+   total_cargos_renglon
+   totalGrossValue                  : total_bruto
+   totalDiscount                    : total_descuentos
+   totalCharges                     : total_cargos
+   totalNetWorth                    : total_neto
+   totalTaxes                       : total_impuestos
+   totalOperation                   : total_operacion
+   averageTotalCalculedCost         : total_costo_calculado_promedio
+   lastTotalCalculedCost            : total_costo_calculado_ultimo
+   totalSupplierCost                : total_costo_proveedor
+   profit                           : utilidad
+   profitPercentage                 : porc_utilidad
+   totalSalesFees                   : total_comisiones_ventas
+   totalCollectionfee               : total_comision_cobranza
+   totalCash                        : total_contado
+   totalCredit                      : total_credito
+   rows                             : numero_renglones
+   processedDays                    : dias_procesados
+
+*MonthlySalesSummaryByProduct    : resumen_ventas_prod_suc_mes
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   documentType                     : tipo_documento
+   period                           : periodo
+   currencyId                       : moneda_correlativo
+   productId                        : producto_correlativo
+   unitId                           : unidad_correlativo
+   unitFactor                       : factor_unidad
+   cantidad_renglon
+   cantidad_2_renglon
+   total_bruto_renglon
+   total_descuentos_renglon
+   total_cargos_renglon
+   totalGrossValue                  : total_bruto
+   totalDiscounts                   : total_descuentos
+   totalCharges                     : total_cargos
+   totalNetWorth                    : total_neto
+   totalTaxes                       : total_impuestos
+   totalOperation                   : total_operacion
+   averageTotalCalculedCost         : total_costo_calculado_promedio
+   lastTotalCalculedCost            : total_costo_calculado_ultimo
+   totalSupplierCost                : total_costo_proveedor
+   profit                           : utilidad
+   profitPercentage                 : porc_utilidad
+   totalSalesFees                   : total_comisiones_ventas
+   totalCollectionFee               : total_comision_cobranza
+   totalCash                        : total_contado
+   totalCredit                      : total_credito
+   items                            : numero_renglones
+   processedDays                    : dias_procesados
+
+*DailySalesSummaryByBranch      : resumen_ventas_sucursal_dia
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   period                           : periodo
+   issuedAt                         : fecha
+   docummentType                    : tipo_documento
+   currencyId                       : moneda_correlativo
+   totalGrossAmmount                : total_bruto
+   totalDiscounts                   : total_descuentos
+   totalCharges                     : total_cargos
+   totalNetWorth                    : total_neto
+   totalTaxes                       : total_impuestos
+   totalOperation                   : total_operacion
+   averageTotalCalculedCost         : total_costo_calculado_promedio
+   lastTotalCalculedCost            : total_costo_calculado_ultimo
+   totalSupplierCost                : total_costo_proveedor
+   profit                           : utilidad
+   profitPercentage                 : porc_utilidad
+   totalSalesFees                   : total_comisiones_ventas
+   totalCollectionfee               : total_comision_cobranza
+   totalCash                        : total_contado
+   totalCredit                      : total_credito
+   totalWithholding                 : total_retenciones
+   rows                             : numero_renglones
+   transactions                     : numero_transacciones
+
+Server                           : servidores
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   classifierId1                    : clasificacion_1_correlativo
+   classifierId2                    : clasificacion_2_correlativo
+   classifierId3                    : clasificacion_3_correlativo
+   branchId                         : sucursal_correlativo
+   code                             : codigo
+   name                             : nombre
+   reference                        : referencia
+   email                            : correo_electronico
+   address                          : direccion
+   countryId                        : pais_correlativo
+   stateId                          : provincia_correlativo
+   cityId                           : ciudad_correlativo
+   sublocationId1                   : sublocalidad1_correlativo
+   sublocationId2                   : sublocalidad2_correlativo
+   postalCode                       : zona_postal
+   timeZone                         : huso_horario
+   phoneNumbers                     : telefonos
+   feePercentage                    : porc_comision
+   notes                            : notas
+   active                           : activo
+
+EntryDetailSync                  : sync_entradas_detalle
+   id                               : correlativo
+   remoteId                         : correlativo_remoto
+   keyValues                        : valores_clave
+   localId                          : correlativo_local
+   branchId                         : sucursal_correlativo
+
+EntrySync                        : sync_entradas
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   branchId                         : sucursal_correlativo
+   packageVersion                   : version_paquete
+   entity                           : entidad
+   remoteDate                       : fecha_hora_remota
+   localDate                        : fecha_hora_local
+   rowsSent                         : registros_enviados
+   completed                        : completado
+   processed                        : procesado
+
+City                             : sys_ciudades
+   id                               : correlativo
+   name                             : nombre
+   countryId                        : pais_correlativo
+   stateId                          : provincia_correlativo
+   timezone                         : huso_horario
+
+SublocationName                  : sys_nombres_sublocalidades
+   countryId                        : pais_correlativo
+   number                           : numero
+   name                             : nombre
+
+Country                          : sys_paises
+   id                               : correlativo
+   name                             : nombre
+   phonePrefix                      : prefijo_telefonico
+   timezone                         : huso_horario
+   useSublocation1                  : usa_sublocalidad_1
+   useSublocation2                  : usa_sublocalidad_2
+   fiscalIdName1                    : id_fiscal_1_nombre
+   fiscalIdName2                    : id_fiscal_2_nombre
+   fiscalIdName3                    : id_fiscal_3_nombre
+   sublocationName1                 : sublocalidad_1_nombre
+   sublocationName2                 : sublocalidad_2_nombre
+   useFiscalId2                     : usa_id_fiscal_2
+   useFiscalId3                     : usa_id_fiscal_3
+
+SystemProperty                   : sys_propiedades_generales
+   id                               : correlativo
+   countryId                        : pais_correlativo
+   code                             : codigo
+   parentCode                       : padre_codigo
+   position                         : posicion
+   categoryId                       : seccion_correlativo
+   displayType                      : tipo_valor
+   dataType                         : tipo_dato
+   valueList                        : lista_valores_posibles
+   isGroup                          : es_grupo
+   name                             : nombre
+   auditDescription                 : descripion_auditoria
+   help                             : texto_ayuda
+   auditable                        : auditable
+   config                           : configuracion_particular
+   configurableByContract           : configurable_contrato
+   configurableByBranch             : configurable_sucursal
+   configurableByProfile            : configurable_perfil
+   configurableByUser               : configurable_usuario
+   defaultValue                     : valor_por_defecto
+   active                           : activo
+   internal                         : uso_interno
+
+PropertyCategory                 : sys_propiedades_secciones
+   id                               : correlativo
+   name                             : nombre
+   createdAt                        : fecha_creado
+   updatedAt                        : ultima_modificacion
+
+State                            : sys_provincias
+   id                               : correlativo
+   name                             : nombre
+   countryId                        : pais_correlativo
+
+SystemReport                     : sys_reportes
+   id                               : codigo
+   description                      : descripcion
+   title                            : titulo
+   subTitle                         : subtitulo
+   sqlId                            : correlativo_sql
+
+SystemReportFilters              : sys_rptweb_filtros
+   reportId                         : reporte_codigo
+   groupName                        : grupo_nombre
+   groupId                          : id_grupo
+   filterId                         : id_filtro
+   labelId                          : etiqueta
+   name                             : nombre
+   filterType                       : tipo_filtro
+   dataType                         : tipo_dato
+   operator                         : operador
+   values                           : valores
+   sqlValues                        : sql_valores_combo
+   searchListCode                   : listado_busqueda_codigo
+   requiredElements                 : numero_elementos_obligatorios
+   active                           : activo
+
+SubLocation1                     : sys_sublocalidades_1
+   id                               : correlativo
+   name                             : nombre
+   countryId                        : pais_correlativo
+   stateId                          : provincia_correlativo
+   cityId                           : ciudad_correlativo
+
+SubLocation2                     : sys_sublocalidades_2
+   id                               : correlativo
+   name                             : nombre
+   countryId                        : pais_correlativo
+   stateId                          : provincia_correlativo
+   cityId                           : ciudad_correlativo
+   subLocationId1                   : sublocalidad1_correlativo
+
+Size                             : tallas
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   classifierId1                    : clasificacion_1_correlativo
+   classifierId2                    : clasificacion_2_correlativo
+   classifierId3                    : clasificacion_3_correlativo
+   bracnhId                         : sucursal_correlativo
+   code                             : codigo
+   name                             : nombre
+
+DocumentType                     : tipos_documentos
+   documentType                     : tipo_documento
+   name                             : nombre
+   salesFactor                      : factor_ventas
+   receivablesFactor                : factor_cxc
+
+StorageLocation                  : ubicaciones_depositos
+   id                               : correlativo
+   storageId                        : deposito_correlativo
+   name                             : nombre
+
+UnitConversion                   : unidades_conversion
+   id                               : correlativo
+   unitId1                          : correlativo_unidad_1
+   unitId2                          : correlativo_unidad_2
+   factor                           : factor
+   conversionType                   : tipo_conversion
+   conversionValue                  : valor_conversion
+
+Unit                             : unidades
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   classifierId1                    : clasificacion_1_correlativo
+   classifierId2                    : clasificacion_2_correlativo
+   classifierId3                    : clasificacion_3_correlativo
+   branchId                         : sucursal_correlativo
+   code                             : codigo
+   name                             : nombre
+   notes                            : notas
+
+*User                             : usuarios
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   branchId                         : sucursal_correlativo
+   code                             : codigo
+   type                             : tipo
+   group                            : grupo
+   name                             : nombre
+   password                         : clave_acceso
+   globalUser                       : usuario_global
+   status                           : estatus
+   disabledMenus                    : menu_deshabilitado
+   principalAccount                 : cuenta_principal
+   perfilId                         : perfil_correlativo
+   category                         : categoria
+   email                            : correo_electronico
+   securityQuestion                 : pregunta_seguridad
+   securityAnswer                   : respuesta_seguridad
+
+SalesPerson                      : vendedores
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   cassifierId1                     : clasificacion_1_correlativo
+   cassifierId2                     : clasificacion_2_correlativo
+   cassifierIdi                     : clasificacion_3_correlativo
+   branchId                         : sucursal_correlativo
+   code                             : codigo
+   name                             : nombre
+   reference                        : referencia
+   email                            : correo_electronico
+   address                          : direccion
+   countryId                        : pais_correlativo
+   stateId                          : provincia_correlativo
+   cityId                           : ciudad_correlativo
+   sublocationId1                   : sublocalidad1_correlativo
+   subLocationId2                   : sublocalidad2_correlativo
+   postalCode                       : zona_postal
+   timeZone                         : huso_horario
+   phoneNumbers                     : telefonos
+   notes                            : notas
+   active                           : activo
+
+ClientSalesdata                  : ventas_datos_cliente
+   id                               : correlativo
+   fiscalId                         : id_fiscal
+   fiscalId                         : id_fiscal2
+   name                             : nombre
+   contact                          : contacto
+   phoneNumbers                     : telefono
+   email                            : correo_electronico
+   webSite                          : web
+   twitter                          : twitter
+   instagram                        : instagram
+   pinterest                        : pinterest
+   linkedin                         : linkedin
+   address                          : direccion
+   countryId                        : pais_correlativo
+   stateId                          : provincia_correlativo
+   cityId                           : ciudad_correlativo
+   sublocationid1                   : sublocalidad1_correlativo
+   sublocationId2                   : sublocalidad2_correlativo
+   postalCode                       : zona_postal
+   timeZone                         : huso_horario
+   saleZoneId                       : zona_venta_correlativo
+
+SalesDetails                     : ventas_detalles
+   id                               : correlativo
+   saleId                           : venta_correlativo
+   position                         : posicion
+   productId                        : producto_correlativo
+   unitId                           : unidad_correlativo
+   convertionFactorUnit             : conversion_factor_unidad
+   unitFactor                       : factor_unidad
+   currencyId                       : moneda_correlativo
+   unitFactor                       : factor_moneda
+   storageId                        : deposito_correlativo
+   serverId                         : servidor_correlativo
+   salesPersonId                    : vendedor_correlativo
+   ammount                          : cantidad
+   creditedAmmount                  : cantidad_bonificada
+   ammount2                         : cantidad_2
+   creditedAmmount2                 : cantidad_2_bonificada
+   unitPrice                        : precio_unitario
+   priceType                        : tipo_precio
+   *totalGrossAmmount                : total_bruto
+   totalDiscount                    : total_descuentos
+   totalCharges                     : total_cargos
+   *totalNetWorth                    : total_neto
+   totalTaxes                       : total_impuestos
+   total                            : total
+   taxableBase1                     : base_imponible_1
+   taxableBase2                     : base_imponible_2
+   taxableBase3                     : base_imponible_3
+   exemptAmmount                    : monto_exento
+   averageTotalCalculedCost         : total_costo_calculado_promedio
+   lastTotalCalculedCost            : total_costo_calculado_ultimo
+   totalSupplierCost                : total_costo_proveedor
+   brandId                          : marca_correlativo
+
+Sales                            : ventas
+   id                               : correlativo
+   branchId                         : sucursal_correlativo
+   *localId                         : _correlativo
+   clientId                         : cliente_correlativo
+   salePerson                       : vendedor_correlativo
+   stationId                        : estacion_correlativo
+   usreId                           : usuario_correlativo
+   documentId                       : documento
+   documentType                     : tipo_documento
+   issuedAt                         : fecha_emision
+   timeIssued                       : hora_emision
+   internIssued                     : fecha_hora_interna
+   currencyId                       : moneda_correlativo
+   currencyFactor                   : factor_moneda
+   *totalGrossAmmount                : total_bruto
+   totalDiscount                    : total_descuentos
+   totalCharges                     : total_cargos
+   *totalNetWorth                    : total_neto
+   totalTaxes                       : total_impuestos
+   totalOperation                   : total_operacion
+   averageTotalCalculedCost         : total_costo_calculado_promedio
+   lastTotalCalculedCost            : total_costo_calculado_ultimo
+   totalSupplierCost                : total_costo_proveedor
+   profit                           : utilidad
+   profitPercentage                 : porc_utilidad
+   totalSalesFees                   : total_comisiones_ventas
+   totalCollectionFee               : total_comision_cobranza
+   totalCash                        : total_contado
+   totalCredit                      : total_credito
+   rows                             : numero_renglones
+   updateAt                         : fecha_hora_posteo
+
+OrganizationalStructure          : view_estructura_organizacional
+   contractId                       : contrato_correlativo
+   order                            : orden
+   level                            : nivel
+   id                               : correlativo
+   name                             : nombre
+
+DepartmentSalesMonth              : view_ventas_dep_mes
+   branchId                         : sucursal_correlativo
+   period                           : periodo
+   departmentId                     : departamento_correlativo
+   currencyId                       : moneda_correlativo
+   UnitId                           : unidad_correlativo
+   factorUnit                       : factor_unidad
+   totalGrossValue                  : total_bruto
+   totalLinealDiscount              : total_descuentos_lineal
+   totalGlobalDiscount              : total_descuentos_global
+   totalDiscount                    : total_descuentos
+   totalCharges                     : total_cargos
+   totalNetWorth                    : total_neto
+   totalTaxes                       : total_impuestos
+   operationTotal                   : total_operacion
+   totalCalculedAverageCost         : total_costo_calculado_promedio
+   totalCalculedLastCost            : total_costo_calculado_ultimo
+   totalSupplierCost                : total_costo_proveedor
+   profit                           : utilidad
+   profitPercentage                 : porc_utilidad
+   totalSalesFees                   : total_comisiones_ventas
+   totalCollectionFee               : total_comision_cobranza
+   processedDays                    : prodias_procesados
+
+SalesZone                        : zonas_ventas
+   id                               : correlativo
+   contractId                       : contrato_correlativo
+   classifierId1                    : clasificacion_1_correlativo
+   classifierId2                    : clasificacion_2_correlativo
+   classifierId3                    : clasificacion_3_correlativo
+   branchId                         : sucursal_correlativo
+   code                             : codigo
+   name                             : nombre
+

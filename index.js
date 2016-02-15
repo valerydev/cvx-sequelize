@@ -29,6 +29,9 @@ module.exports = function(config) {
 
         var modelOpts = require(path.join(__dirname, 'models', file))(sequelize, DataTypes);
 
+        if(! modelAttribs[modelName] )
+          throw new Error('No se encuentra la definicion de atributos del modelo ' + modelName);
+
         var baseAttribs = modelAttribs[modelName][0];
         var otherAttribs = modelOpts[0];
         var baseOpts = modelOpts[1];
