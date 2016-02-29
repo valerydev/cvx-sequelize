@@ -23,7 +23,9 @@ module.exports = function(sequelize, Sequelize) {
     socialNetwork1: {},
     socialNetwork2: {},
     socialNetwork3: {},
-    socialNetwork4: {}
+    socialNetwork4: {},
+    phoneNumber1: {},
+    phoneNumber2: {}
   },{
     classMethods: {
       associate: function () {
