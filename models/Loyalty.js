@@ -14,6 +14,7 @@ module.exports = function(sequelize, Sequelize) {
     code: {},
     qrCode: {},
     signupDate: {},
+    identityCard: {},
     name: {},
     lastname: {},
     email: {},
