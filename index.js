@@ -67,6 +67,7 @@ module.exports = function(config) {
 
     utils.addJSONSchema(models);
     utils.wrapAssociations(models);
+    utils.addHooks(models);
 
     //Ejecutamos las asociaciones
     _.values(models).forEach(function (model) {
@@ -74,7 +75,6 @@ module.exports = function(config) {
             model.associate();
         }
     });
-
 
     models.sync = function(options){
         options = options || {};

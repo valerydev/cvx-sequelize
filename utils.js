@@ -1,5 +1,7 @@
 var _ = require('underscore');
-var Model = require('sequelize').Model;
+var Sequelize = require('sequelize');
+var Model = Sequelize.Model;
+var validator = require('validator');
 
 module.exports.wrapAssociations = function(models){
 
@@ -394,3 +396,25 @@ module.exports.addJSONSchema = function (models) {
         };
     });
 };
+
+module.exports.addHooks = function(models){
+  models = _.flatten([_.filter(_.values(models), function (model) {
+    return model instanceof Model
+  })]);
+
+  //Convertir base64 en Buffer
+  models.forEach(function(model){
+    model.hook('afterValidate', function(instance, options) {
+      var attributes = instance.Model.attributes;
+      Object.keys(attributes).forEach(function(attName){
+        if(attributes[attName].type instanceof Sequelize.BLOB){
+          var val = instance[attName];
+          if( validator.isBase64(val) ) {
+            instance[attName] = new Buffer(val, 'base64');
+          }
+        }
+      });
+    });
+  });
+};
+
