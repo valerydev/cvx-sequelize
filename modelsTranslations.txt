@@ -127,7 +127,7 @@ Branch                           : cfg_sucursales
    classifierId1                    : clasificacion_1_correlativo
    classifierId2                    : clasificacion_2_correlativo
    classifierId3                    : clasificacion_3_correlativo
-   branchCode                       : sucursal_codigo
+   code                             : sucursal_codigo
    name                             : nombre
    contact                          : contacto_principal
    startDate                        : fecha_inicio
@@ -145,15 +145,20 @@ Branch                           : cfg_sucursales
 User                             : cfg_usuarios
    id                               : correlativo
    contractId                       : contrato_correlativo
+   classifierId1                    : clasificacion_1_correlativo
+   classifierId2                    : clasificacion_2_correlativo
+   classifierId3                    : clasificacion_3_correlativo
+   branchId                         : sucursal_correlativo
    code                             : codigo
    password                         : clave
    fullName                         : nombres
    email                            : correo_electronico
    securityQuestion                 : pregunta_seguridad
    securityAnswer                   : respuesta_seguridad
-   type                             : tipo
+   kind                             : tipo
    profileId                        : perfil_correlativo
-   ocuppation                       : cargo_correlativo
+   ocuppationId                     : cargo_correlativo
+   visibilityScope                  : nivel_consolidacion
    active                           : activo
    securityQuestion2                : pregunta_seguridad_2
    securityAnswer2                  : respuesta_seguridad_2
