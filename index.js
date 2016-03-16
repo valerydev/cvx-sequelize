@@ -67,7 +67,32 @@ module.exports = function(config) {
 
     utils.addJSONSchema(models);
     utils.wrapAssociations(models);
-    utils.addHooks(models);
+    //utils.addHooks(models);
+
+    //Convertidor base64/Buffer para tipos BLOB
+    //Sequelize.BLOB.parse = function(value, options) {
+    //  if (Buffer.isBuffer(value)) {
+    //    return value.toString('base64');
+    //  } else if( typeof value.buffer == 'function' ) {
+    //    return (value.parser._buffer || {toString: ()=>{}}).toString('base64');
+    //  }
+    //};
+    Sequelize.BLOB.prototype.stringify = function(value, options) {
+      if (!Buffer.isBuffer(value)) {
+        if (Array.isArray(value)) {
+          value = new Buffer(value);
+        } else if(validator.isBase64(value)){
+          value = new Buffer(value.toString(), 'base64');
+        } else if(validator.isHexadecimal(value)) {
+          value = new Buffer(value.toString(), 'hex');
+        } else {
+          value = new Buffer(value.toString());
+        }
+      }
+      var hex = value.toString('hex');
+      return "X'" + hex + "'";
+    };
+    sequelize.refreshTypes();
 
     //Ejecutamos las asociaciones
     _.values(models).forEach(function (model) {

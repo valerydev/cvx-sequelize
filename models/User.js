@@ -77,8 +77,9 @@ module.exports = function(sequelize, Sequelize) {
           user = JSON.parse(JSON.stringify(user));
 
           user = _.pick(user, ['password', 'code', 'contract', 'contractId', 'branch', 'branchId', 'profile',
-            'classifier1', 'classifier2', 'classifier3', 'classifierId1', 'classifierId2', 'classifierId3',
-            'email', 'fullName', 'photo', 'cascadeProperties', 'disabledMenus']);
+            'profileId', 'classifier1', 'classifier2', 'classifier3', 'classifierId1', 'classifierId2',
+            'classifierId3', 'email', 'fullName', 'photo', 'cascadeProperties', 'disabledMenus',
+            'connectionScheduleId']);
 
           user.contract    = _.pick(user.contract,    ['logo', 'disabledMenus']);
           user.profile     = _.pick(user.profile,     ['name', 'disabledMenus']);
