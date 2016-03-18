@@ -8,7 +8,7 @@ module.exports = function(sequelize, Sequelize) {
   },{
     classMethods: {
       associate: function () {
-        this.hasMany( sequelize.models.Property, { foreignKey: 'seccion_correlativo',  as: 'properties' });
+        this.hasMany( sequelize.models.Property, { as: 'properties', foreignKey: 'seccion_correlativo' });
       }
     }
   }];

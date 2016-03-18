@@ -26,7 +26,7 @@ module.exports = function(sequelize, Sequelize) {
   },{
     classMethods: {
       associate: function () {
-        this.belongsTo( sequelize.models.PropertyCategory, { foreignKey: 'seccion_correlativo',  as: 'category' });
+        this.belongsTo( sequelize.models.PropertyCategory, { as: 'category', foreignKey: 'seccion_correlativo' });
       }
     },
     getterMethods: {

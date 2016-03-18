@@ -20,7 +20,7 @@ module.exports = function(sequelize, Sequelize) {
   },{
     classMethods: {
       associate: function () {
-        this.hasMany(sequelize.models.LoyaltySalesItems, { foreignKey: 'venta_correlativo', as: "items" });
+        this.hasMany(sequelize.models.LoyaltySalesItems, { as: "items", foreignKey: 'venta_correlativo' });
       }
     }
   }];

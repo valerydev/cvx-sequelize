@@ -47,7 +47,7 @@ module.exports = function(sequelize, Sequelize) {
 
     classMethods: {
       associate: function () {
-        this.belongsTo(sequelize.models.LoyaltyGroup, {foreignKey: 'grupo_correlativo'});
+        this.belongsTo(sequelize.models.LoyaltyGroup, { as: 'group', foreignKey: 'grupo_correlativo' });
       }
     }
   }];

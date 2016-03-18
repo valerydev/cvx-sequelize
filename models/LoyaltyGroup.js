@@ -11,7 +11,7 @@ module.exports = function(sequelize, Sequelize) {
   },{
     classMethods: {
       associate: function () {
-        this.hasMany(sequelize.models.Loyalty, {foreignKey: 'grupo_correlativo'});
+        this.hasMany(sequelize.models.Loyalty, { as: 'loyalties', foreignKey: 'grupo_correlativo' });
       }
     }
   }];

@@ -20,9 +20,9 @@ module.exports = function(sequelize, Sequelize) {
   }, {
     classMethods: {
       associate: function () {
-        this.hasMany(sequelize.models.Contact, { foreignKey: 'entidad_correlativo', scope: { entity: 'PRV' }, constraints: false });
-        this.hasMany(sequelize.models.Address, { foreignKey: 'entidad_correlativo', scope: { entity: 'PRV' }, constraints: false });
-        //this.belongsTo(sequelize.models.Language, { foreignKey: 'idioma_correlativo' });
+        this.hasMany(sequelize.models.Contact, { as: 'contact', foreignKey: 'entidad_correlativo', scope: { entity: 'PRV' }, constraints: false });
+        this.hasMany(sequelize.models.Address, { as: 'address', foreignKey: 'entidad_correlativo', scope: { entity: 'PRV' }, constraints: false });
+        //this.belongsTo(sequelize.models.Language, { as: 'language' foreignKey: 'idioma_correlativo' });
       }
     }
   }];

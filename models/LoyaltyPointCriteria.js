@@ -17,9 +17,9 @@ module.exports = function(sequelize, Sequelize) {
   },{
     classMethods: {
       associate: function () {
-        this.hasMany(sequelize.models.LoyaltyPointByAmountCriteria, { foreignKey: 'criterio_correlativo' });
-        this.hasMany(sequelize.models.LoyaltyPointByDepartmentCriteria, { foreignKey: 'criterio_correlativo' });
-        this.hasMany(sequelize.models.LoyaltyPointByItemCriteria, { foreignKey: 'criterio_correlativo' });
+        this.hasMany(sequelize.models.LoyaltyPointByAmountCriteria,     { as: 'byAmount',     foreignKey: 'criterio_correlativo' });
+        this.hasMany(sequelize.models.LoyaltyPointByDepartmentCriteria, { as: 'byDepartment', foreignKey: 'criterio_correlativo' });
+        this.hasMany(sequelize.models.LoyaltyPointByItemCriteria,       { as: 'byItem',       foreignKey: 'criterio_correlativo' });
       }
     }
   }];

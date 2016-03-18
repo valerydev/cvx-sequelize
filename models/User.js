@@ -52,14 +52,14 @@ module.exports = function(sequelize, Sequelize) {
 
     classMethods: {
       associate: function () {
-        this.belongsTo(models.Contract, { foreignKey: 'contrato_correlativo', as: 'contract' });
-        this.belongsTo(models.Branch,   { foreignKey: 'sucursal_correlativo', as: 'branch'   });
-        this.belongsTo(models.Image,    { foreignKey: 'foto_correlativo',     as: 'photo'    });
-        this.belongsTo(models.Profile,  { foreignKey: 'perfil_correlativo',   as: 'profile'  });
-        this.belongsTo(models.BranchClassifier,   { foreignKey: 'clasificacion_1_correlativo',  as: 'classifier1' });
-        this.belongsTo(models.BranchClassifier,   { foreignKey: 'clasificacion_2_correlativo',  as: 'classifier2' });
-        this.belongsTo(models.BranchClassifier,   { foreignKey: 'clasificacion_3_correlativo',  as: 'classifier3' });
-        this.belongsTo(models.ConnectionSchedule, { foreignKey: 'horario_conexion_correlativo', as: 'connectionSchedule' });
+        this.belongsTo(models.Contract, { as: 'contract', foreignKey: 'contrato_correlativo' });
+        this.belongsTo(models.Branch,   { as: 'branch',   foreignKey: 'sucursal_correlativo' });
+        this.belongsTo(models.Image,    { as: 'photo',    foreignKey: 'foto_correlativo'     });
+        this.belongsTo(models.Profile,  { as: 'profile',  foreignKey: 'perfil_correlativo'   });
+        this.belongsTo(models.BranchClassifier,   { as: 'classifier1', foreignKey: 'clasificacion_1_correlativo' });
+        this.belongsTo(models.BranchClassifier,   { as: 'classifier2', foreignKey: 'clasificacion_2_correlativo' });
+        this.belongsTo(models.BranchClassifier,   { as: 'classifier3', foreignKey: 'clasificacion_3_correlativo' });
+        this.belongsTo(models.ConnectionSchedule, { as: 'connectionSchedule', foreignKey: 'horario_conexion_correlativo' });
         this.belongsToMany( models.Property, {
           through: models.UserProperty,
           as: 'properties',
