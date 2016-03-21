@@ -83,7 +83,7 @@ module.exports = function(sequelize, Sequelize) {
 
           user.contract    = _.pick(user.contract,    ['logo', 'disabledMenus']);
           user.profile     = _.pick(user.profile,     ['name', 'disabledMenus']);
-          user.branch      = _.pick(user.branch,      ['name']);
+          user.branch      = _.pick(user.branch,      ['id','name', 'code']);
           user.classifier1 = _.pick(user.classifier1, ['name']);
           user.classifier2 = _.pick(user.classifier2, ['name']);
           user.classifier3 = _.pick(user.classifier3, ['name']);
