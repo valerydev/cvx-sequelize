@@ -68,6 +68,7 @@ module.exports = function(config) {
     utils.addJSONSchema(models);
     utils.wrapAssociations(models);
     //utils.addHooks(models);
+    utils.addMixins(models);
 
     //Convertidor base64/Buffer para tipos BLOB
     //Sequelize.BLOB.parse = function(value, options) {
