@@ -1,5 +1,11 @@
 /* jshint indent: 2 */
 module.exports = function(sequelize, Sequelize) {
+
+  var fn  = Sequelize.fn;
+  var col = Sequelize.col;
+  var literal = Sequelize.literal;
+  var models = sequelize.models;
+
   return [{
     id: {},
     contractId: {},
@@ -20,8 +26,8 @@ module.exports = function(sequelize, Sequelize) {
   }, {
     classMethods: {
       associate: function () {
-        this.hasMany(sequelize.models.Contact, { as: 'contact', foreignKey: 'entidad_correlativo', scope: { entity: 'PRV' }, constraints: false });
-        this.hasMany(sequelize.models.Address, { as: 'address', foreignKey: 'entidad_correlativo', scope: { entity: 'PRV' }, constraints: false });
+        this.hasMany( models.Contact, { as: 'contacts', foreignKey: 'entidad_correlativo', scope: { entity: 'PRV' }, constraints: false });
+        this.hasMany( models.Address, { as: 'addresses', foreignKey: 'entidad_correlativo', scope: { entity: 'PRV' }, constraints: false });
         //this.belongsTo(sequelize.models.Language, { as: 'language' foreignKey: 'idioma_correlativo' });
       }
     }
