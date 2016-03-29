@@ -1,5 +1,11 @@
 /* jshint indent: 2 */
 module.exports = function(sequelize, Sequelize) {
+
+  var fn  = Sequelize.fn;
+  var col = Sequelize.col;
+  var literal = Sequelize.literal;
+  var models = sequelize.models;
+
   return [{
     id: {},
     number: {},
@@ -43,11 +49,11 @@ module.exports = function(sequelize, Sequelize) {
   },{
     classMethods: {
       associate: function () {
-        this.hasMany  ( sequelize.models.User,   { as: 'users',    foreignKey: 'contrato_correlativo'          });
-        this.belongsTo( sequelize.models.User,   { as: 'mainUser', foreignKey: 'usuario_principal_correlativo' });
-        this.belongsTo( sequelize.models.Image,  { as: 'logo',     foreignKey: 'logotipo_correlativo'          });
-        this.belongsToMany( sequelize.models.Property, {
-          through: sequelize.models.ContractProperty,
+        this.hasMany  ( models.User,   { as: 'users',    foreignKey: 'contrato_correlativo'          });
+        //this.belongsTo( models.User,   { as: 'mainUser', foreignKey: 'usuario_principal_correlativo' }); //FIXME: Da problema de dependencia ciclica
+        this.belongsTo( models.Image,  { as: 'logo',     foreignKey: 'logotipo_correlativo'          });
+        this.belongsToMany( models.Property, {
+          through: models.ContractProperty,
           as: 'properties',
           foreignKey: 'contrato_correlativo',
           otherKey: 'propiedad_correlativo'
