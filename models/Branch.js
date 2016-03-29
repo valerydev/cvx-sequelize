@@ -24,11 +24,26 @@ module.exports = function(sequelize, Sequelize) {
   },{
     classMethods: {
       associate: function () {
-        this.belongsTo(sequelize.models.Contract, { foreignKey: 'contrato_correlativo', as: 'contract' })
-        this.belongsTo(sequelize.models.BranchClassifier, { foreignKey: 'clasificacion_1_correlativo', as: 'classifier1' });
-        this.belongsTo(sequelize.models.BranchClassifier, { foreignKey: 'clasificacion_2_correlativo', as: 'classifier2' });
-        this.belongsTo(sequelize.models.BranchClassifier, { foreignKey: 'clasificacion_3_correlativo', as: 'classifier3' });
+        this.belongsTo(sequelize.models.Contract, { foreignKey: 'contrato_correlativo', as: 'contract' });
+        this.belongsTo(sequelize.models.BranchClassifier, { as: 'classifier1', foreignKey: 'clasificacion_1_correlativo'  });
+        this.belongsTo(sequelize.models.BranchClassifier, { as: 'classifier2', foreignKey: 'clasificacion_2_correlativo' });
+        this.belongsTo(sequelize.models.BranchClassifier, { as: 'classifier3', foreignKey: 'clasificacion_3_correlativo' });
+      }
+    },
+  scopes:{
+
+    includeClassifiers: function(){
+      var BranchClassifier = sequelize.models.BranchClassifier;
+      return {
+        include:[
+          {model:BranchClassifier,  as:'classifier1'},
+          {model:BranchClassifier,  as:'classifier2'},
+          {model:BranchClassifier,  as:'classifier3'}
+        ]
       }
     }
+
+  }
+
   }];
 };
