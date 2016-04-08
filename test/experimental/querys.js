@@ -34,9 +34,9 @@ var daos = require('../../../valeryweb-data')({
     }
 });
 
-var initDataLoader = require('../../../valeryweb-ws/lib/InitDataLoader');
-initDataLoader.models = models;
-initDataLoader.data = daos;
+var sessionLoader = require('../../../valeryweb-ws/lib/SessionLoader');
+sessionLoader.models = models;
+sessionLoader.data = daos;
 
 //models.SysCurrencyConversion.find({
 //  include: [
@@ -96,7 +96,7 @@ models.User.findUserWithSessionInfo('ricardo.uzcategui@gmail.com').then(function
 });
 
 
-//initDataLoader.loadUserInfo('ricardo.uzcategui@gmail.com').then(function(user){
+//sessionLoader.loadUserInfo('ricardo.uzcategui@gmail.com').then(function(user){
 //  console.log(user.toJSON());
 //});
 
