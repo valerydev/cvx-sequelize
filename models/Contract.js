@@ -49,7 +49,7 @@ module.exports = function(sequelize, Sequelize) {
   },{
     classMethods: {
       associate: function () {
-        this.hasMany  ( models.User,   { as: 'users',    foreignKey: 'contrato_correlativo'          });
+        this.hasMany  ( models.User,   { as: 'users',    foreignKey: 'contrato_correlativo'            });
         //this.belongsTo( models.User,   { as: 'mainUser', foreignKey: 'usuario_principal_correlativo' }); //FIXME: Da problema de dependencia ciclica
         this.belongsTo( models.Image,  { as: 'logo',     foreignKey: 'logotipo_correlativo'          });
         this.belongsToMany( models.Property, {
@@ -58,6 +58,33 @@ module.exports = function(sequelize, Sequelize) {
           foreignKey: 'contrato_correlativo',
           otherKey: 'propiedad_correlativo'
         });
+      }
+    },
+
+    scopes: {
+      includeProperties: function (where) {
+        return {
+          include: [
+            {
+              model: models.Property.scope('includeCategory'),
+              as: 'properties',
+              required: false,
+              where: where||{}
+            }
+          ]
+        }
+      },
+
+      includeLogo: function() {
+        return {
+          include: [
+            {
+              model: models.Image,
+              as: 'logo',
+              required: false
+            }
+          ]
+        }
       }
     }
   }];

@@ -1,5 +1,11 @@
 /* jshint indent: 2 */
 module.exports = function(sequelize, Sequelize) {
+
+  var fn  = Sequelize.fn;
+  var col = Sequelize.col;
+  var literal = Sequelize.literal;
+  var models = sequelize.models;
+
   return [{
     id: {},
     contractId: {},
@@ -14,6 +20,20 @@ module.exports = function(sequelize, Sequelize) {
     classMethods: {
       associate: function () {
 
+      }
+    },
+
+    scopes: {
+      selectNameNotNull: function(level) {
+        return {
+          attributes: {
+            include: [
+              [fn('COALESCE', col('classifier'+level+'.correlativo'), 0), 'id'],
+              [fn('COALESCE', col('classifier'+level+'.nombre'),     ''), 'name']
+            ]
+          },
+          where: {level: level}
+        }
       }
     }
   }];

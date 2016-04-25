@@ -1,5 +1,11 @@
 /* jshint indent: 2 */
 module.exports = function(sequelize, Sequelize) {
+
+  var fn  = Sequelize.fn;
+  var col = Sequelize.col;
+  var literal = Sequelize.literal;
+  var models = sequelize.models;
+
   return [{
     id: {},
     contractId: {},
@@ -30,20 +36,28 @@ module.exports = function(sequelize, Sequelize) {
         this.belongsTo(sequelize.models.BranchClassifier, { as: 'classifier3', foreignKey: 'clasificacion_3_correlativo' });
       }
     },
-  scopes:{
+    scopes:{
 
-    includeClassifiers: function(){
-      var BranchClassifier = sequelize.models.BranchClassifier;
-      return {
-        include:[
-          {model:BranchClassifier,  as:'classifier1'},
-          {model:BranchClassifier,  as:'classifier2'},
-          {model:BranchClassifier,  as:'classifier3'}
-        ]
+      includeClassifiers: function(){
+        var BranchClassifier = sequelize.models.BranchClassifier;
+        return {
+          include:[
+            {model:BranchClassifier,  as:'classifier1'},
+            {model:BranchClassifier,  as:'classifier2'},
+            {model:BranchClassifier,  as:'classifier3'}
+          ]
+        }
+      },
+      selectNameNotNull: {
+        attributes: {
+          include: [
+            [fn('COALESCE', col('branch.correlativo'), 0), 'id'],
+            [fn('COALESCE', col('branch.nombre'), ''), 'name']
+          ]
+        }
       }
-    }
 
-  }
+    }
 
   }];
 };

@@ -1,5 +1,5 @@
 /* jshint indent: 2 */
-_ = require('lodash');
+var md5 = require('md5');
 
 module.exports = function(sequelize, Sequelize) {
 
@@ -7,6 +7,7 @@ module.exports = function(sequelize, Sequelize) {
   var col = Sequelize.col;
   var literal = Sequelize.literal;
   var models = sequelize.models;
+  var _ = Sequelize.Utils._;
 
   return [{
     id: {},
@@ -15,19 +16,49 @@ module.exports = function(sequelize, Sequelize) {
     classifierId2: {},
     classifierId3: {},
     branchId: {},
-    code: {},
-    password: {},
+    code: {
+      get: function() {
+        var val = this.getDataValue('code');
+        if(val === undefined) {
+          return this.getDataValue('email');
+        } else {
+          return val;
+        }
+      }
+    },
+    password: {
+      get: function(){
+        return !this.getDataValue('password') ? '' : this.getDataValue('password');
+      },
+      set: function(val){
+        this.setDataValue('password', md5(val));
+      }
+    },
     fullName: {},
     email: {},
-    securityQuestion: {},
-    securityAnswer: {},
+    securityQuestion1: {},
+    securityAnswer1: {
+      get: function(){
+        return !this.getDataValue('securityAnswer1') ? '' : this.getDataValue('securityAnswer1');
+      },
+      set: function(val){
+        this.setDataValue('securityAnswer1', md5(val));
+      }
+    },
+    securityQuestion2: {},
+    securityAnswer2: {
+      get: function(){
+        return !this.getDataValue('securityAnswer2') ? '' : this.getDataValue('securityAnswer2');
+      },
+      set: function(val){
+        this.setDataValue('securityAnswer2', md5(val));
+      }
+    },
     type: {},
     profileId: {},
     ocuppationId: {},
     visibilityScope: {},
     active: {},
-    securityQuestion2: {},
-    securityAnswer2: {},
     allowedIPs: {},
     address: {},
     countryId: {},
@@ -37,7 +68,19 @@ module.exports = function(sequelize, Sequelize) {
     subLocationId2: {},
     photoId: {},
     connectionScheduleId: {},
-    disabledMenus: {}
+    disabledMenus: {
+      get: function(){
+        var value = this.getDataValue('disabledMenus');
+        return !value ? [] : JSON.parse('[' + value + ']');
+      },
+      set: function(val){
+        if(val instanceof Array) {
+          this.setDataValue('disabledMenus', JSON.stringify(val).slice(1, -1));
+        } else {
+          this.setDataValue('disabledMenus', val);
+        }
+      }
+    }
   },{
 
     getterMethods: {
@@ -46,7 +89,8 @@ module.exports = function(sequelize, Sequelize) {
       },
 
       isRoot: function(){
-        return this.id == (this.get('contract') || {}).mainUserId;
+        var contract = this.getDataValue('contract');
+        return contract == undefined ? contract : this.id == contract.mainUserId;
       }
     },
 
@@ -59,22 +103,21 @@ module.exports = function(sequelize, Sequelize) {
         this.belongsTo(models.BranchClassifier,   { as: 'classifier1', foreignKey: 'clasificacion_1_correlativo' });
         this.belongsTo(models.BranchClassifier,   { as: 'classifier2', foreignKey: 'clasificacion_2_correlativo' });
         this.belongsTo(models.BranchClassifier,   { as: 'classifier3', foreignKey: 'clasificacion_3_correlativo' });
-        this.belongsTo(models.ConnectionSchedule, { as: 'connectionSchedule', foreignKey: 'horario_conexion_correlativo' });
-        this.belongsToMany( models.Property, {
+        this.belongsTo(models.ConnectionSchedule.scope('includeDetails'), { as: 'connectionSchedule', foreignKey: 'horario_conexion_correlativo' });
+        this.belongsToMany(models.Property.scope('includeCategory'), {
           through: models.UserProperty,
           as: 'properties',
           foreignKey: 'usuario_correlativo',
           otherKey: 'propiedad_correlativo'
         });
-
       },
 
       findUserWithSessionInfo: function(email) {
-        return this.scope( 'sessionInfo2' ).findAll({ where: { email: email }}).then(function(res){
+        return this.scope( 'sessionInfo' ).findAll({ where: { email: email }}).then(function(res){
           var user = res[0];
           if(!user) return user;
 
-          user = JSON.parse(JSON.stringify(user));
+          user = user.get({plain: true, raw: true});
 
           user = _.pick(user, ['password', 'code', 'contract', 'contractId', 'branch', 'branchId', 'profile',
             'profileId', 'classifier1', 'classifier2', 'classifier3', 'classifierId1', 'classifierId2',
@@ -106,266 +149,142 @@ module.exports = function(sequelize, Sequelize) {
       }
     },
 
+    instanceMethods: {
+
+      loadCRUDInfo: function(){
+        return this.getPhoto().bind(this).then( photo =>{
+          this.setDataValue('photo', photo);
+          return this;
+        }).then(function() {
+          return this.getConnectionSchedule({scope: 'includeDetails'}).bind(this).then( connSchedule =>{
+            this.setDataValue('connectionSchedule', connSchedule);
+            return this;
+          })
+        }).then(function() {
+          return this.getProperties().bind(this).then( properties =>{
+            this.setDataValue('properties', properties);
+            return this;
+          });
+        }).then(function(){
+          return this.getContract({
+            scope: { method: ['includeProperties', {
+              "configurableByUser"  : 'T',
+              "customConfiguration" : 'F'
+            }]}
+          }).bind(this).then(contract =>{
+            this.setDataValue('contract', contract);
+            return this;
+          });
+        }).then(function(){
+          return this.getProfile({
+            scope: { method: ['includeProperties', {
+              "configurableByUser"  : 'T',
+              "customConfiguration" : 'F'
+            }]}
+          }).bind(this).then(profile =>{
+            this.setDataValue('profile', profile);
+            return this;
+          });
+        });
+      }
+    },
+
     scopes: {
+      includePhoto: function(where) {
+        return {
+          include: [{ model: models.Image, as: 'photo', required: false, where: where||{} }]
+        }
+      },
 
-      cascadingProperties: function() {
-        var Property  = sequelize.models.Property;
-        var PropertyCategory = sequelize.models.PropertyCategory;
-        var Contract  = sequelize.models.Contract;
-        var Profile   = sequelize.models.Profile;
+      includeProperties: function(where) {
+        return {
+          include: [{ model: models.Property.scope('includeCategory'), as: 'properties', required: false, where: where||{} }]
+        }
+      },
 
+      includeProfile: function(where) {
+        return {
+          include: [{ model: models.Profile, as: 'profile', required: true, where: where||{} }]
+        }
+      },
+
+      includeProfileWithProperties: function(where){
+        return {
+          include: [{
+            model: models.Profile.scope({ method: ['includeProperties', where||{} ]}),
+            as: 'profile', required: true
+          }]
+        }
+      },
+
+      includeContract: function(where) {
+        return {
+          include: [{ model: models.Contract, as: 'contract', required: true, where: where||{} }]
+        }
+      },
+
+      includeContractWithProperties: function(where){
+        return {
+          include: [{
+            model: models.Contract.scope({ method: ['includeProperties', where||{} ]}) ,
+            as: 'contract',
+            required: true
+          }]
+        }
+      },
+
+      includeAllProperties: function(where) {
+        var self = models.User.options.scopes;
         return {
           include: [
-            {
-              model: Property,
-              as: 'properties',
-              required: false,
-              include: [
-                {
-                  model: PropertyCategory,
-                  as: 'category',
-                  required: false
-                }
-              ]
-            },
-            {
-              model: Contract,
-              as: 'contract',
-              require: true,
-              include: [
-                {
-                  model: Property,
-                  as: 'properties',
-                  required: true,
-                  include: [
-                    {
-                      model: PropertyCategory,
-                      as: 'category',
-                      required: true
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              model: Profile,
-              as: 'profile',
-              required: true,
-              include: [
-                {
-                  model: Property,
-                  as: 'properties',
-                  required: false,
-                  include: [
-                    {
-                      model: PropertyCategory,
-                      as: 'category',
-                      required: false
-                    }
-                  ]
-                }
-              ]
-            }
+            self.includeProperties(where).include[0],
+            self.includeContractWithProperties(where).include[0],
+            self.includeProfileWithProperties(where).include[0]
           ]
         }
       },
 
       sessionInfo: function() {
 
-        var Profile =   sequelize.models.Profile;
-        var Branch =   sequelize.models.Branch;
-        var BranchClassifier = sequelize.models.BranchClassifier;
-
-        return {
-          include: [
-            {
-              model: Profile, as: 'profile',
-              required: false,
-              attributes: {
-                include: [
-                  [fn('COALESCE', col('profile.correlativo'), 0), 'id'],
-                  [fn('COALESCE', col('profile.nombre'), ''), 'name']
-                ],
-                exclude: Object.keys(Profile.rawAttributes)
-              }
-            },
-            {
-              model: Branch, as: 'branch',
-              required: false,
-              attributes: {
-                include: [
-                  [fn('COALESCE', col('branch.correlativo'), 0), 'id'],
-                  [fn('COALESCE', col('branch.nombre'), ''), 'name']
-                ],
-                exclude: Object.keys(Branch.rawAttributes)
-              }
-            },
-            {
-              model: BranchClassifier, as: 'classifier1',
-              required: false,
-              attributes: {
-                include: [
-                  [fn('COALESCE', col('classifier1.correlativo'), 0), 'id'],
-                  [fn('COALESCE', col('classifier1.nombre'), ''), 'name']
-                ],
-                exclude: Object.keys(BranchClassifier.rawAttributes)
-              },
-              where: {level: 1}
-            },
-            {
-              model: BranchClassifier, as: 'classifier2',
-              required: false,
-              attributes: {
-                include: [
-                  [fn('COALESCE', col('classifier2.correlativo'), 0), 'id'],
-                  [fn('COALESCE', col('classifier2.nombre'), ''), 'name']
-                ],
-                exclude: Object.keys(BranchClassifier.rawAttributes)
-              },
-              where: {level: 2}
-            },
-            {
-              model: BranchClassifier, as: 'classifier3',
-              required: false,
-              attributes: {
-                include: [
-                  [fn('COALESCE', col('classifier3.correlativo'), 0), 'id'],
-                  [fn('COALESCE', col('classifier3.nombre'), ''), 'name']
-                ],
-                exclude: Object.keys(BranchClassifier.rawAttributes)
-              },
-              where: {level: 3}
-            }
-          ]
-        }
-      },
-
-      sessionInfo2: function() {
-
         var Profile  = models.Profile;
-        var Image    = models.Image;
         var Branch   = models.Branch;
-        var Property = models.Property;
         var Contract = models.Contract;
         var BranchClassifier = models.BranchClassifier;
-        var PropertyCategory = models.PropertyCategory;
+        var self     = models.User.options.scopes;
 
         return {
           include: [
+            self.includePhoto().include[0],
+            self.includeProperties().include[0],
             {
-              model: Image,
-              as: 'photo',
+              model: Contract.scope('includeProperties', 'includeLogo'),
+              as: 'contract',
+              require: true
+            },
+            {
+              model: Profile.scope('selectNameNotNull', 'includeProperties'),
+              as: 'profile',
               required: false
             },
             {
-              model: Property,
-              as: 'properties',
-              required: false,
-              attributes: ['id', 'code', 'parentCode', 'defaultValue', 'name'],
-              include: [
-                {
-                  model: PropertyCategory,
-                  as: 'category',
-                  required: false,
-                  attributes: ['id', 'name']
-                }
-              ]
+              model: Branch.scope('selectNameNotNull'),
+              as: 'branch',
+              required: false
             },
             {
-              model: Contract,
-              as: 'contract',
-              require: true,
-              include: [
-                {
-                  model: Image,
-                  as: 'logo',
-                  required: false
-                },
-                {
-                  model: Property,
-                  as: 'properties',
-                  required: true,
-                  attributes: ['id', 'code', 'parentCode', 'defaultValue', 'name'],
-                  include: [
-                    {
-                      model: PropertyCategory,
-                      as: 'category',
-                      required: true,
-                      attributes: ['id', 'name']
-                    }
-                  ]
-                }
-              ]
+              model: BranchClassifier,//.scope([{ method: ['selectNameNotNull', 1] }]),
+              as: 'classifier1',
+              required: false
             },
             {
-              model: Profile,
-              as: 'profile',
-              required: false,
-              attributes: {
-                include: ['code',
-                  [fn('COALESCE', col('profile.correlativo'), 0), 'id'],
-                  [fn('COALESCE', col('profile.nombre'), ''), 'name']
-                ]
-              },
-              include: [
-                {
-                  model: Property,
-                  as: 'properties',
-                  required: false,
-                  attributes: ['id', 'code', 'parentCode', 'defaultValue', 'name'],
-                  include: [
-                    {
-                      model: PropertyCategory,
-                      as: 'category',
-                      required: false,
-                      attributes: ['id', 'name']
-                    }
-                  ]
-                }
-              ]
+              model: BranchClassifier,//.scope([{ method: ['selectNameNotNull', 2] }]),
+              as: 'classifier2',
+              required: false
             },
             {
-              model: Branch, as: 'branch',
-              required: false,
-              attributes: {
-                include: [
-                  [fn('COALESCE', col('branch.correlativo'), 0), 'id'],
-                  [fn('COALESCE', col('branch.nombre'), ''), 'name']
-                ]
-              }
-            },
-            {
-              model: BranchClassifier, as: 'classifier1',
-              required: false,
-              attributes: {
-                include: [
-                  [fn('COALESCE', col('classifier1.correlativo'), 0), 'id'],
-                  [fn('COALESCE', col('classifier1.nombre'), ''), 'name']
-                ]
-              },
-              where: {level: 1}
-            },
-            {
-              model: BranchClassifier, as: 'classifier2',
-              required: false,
-              attributes: {
-                include: [
-                  [fn('COALESCE', col('classifier2.correlativo'), 0), 'id'],
-                  [fn('COALESCE', col('classifier2.nombre'), ''), 'name']
-                ]
-              },
-              where: {level: 2}
-            },
-            {
-              model: BranchClassifier, as: 'classifier3',
-              required: false,
-              attributes: {
-                include: [
-                  [fn('COALESCE', col('classifier3.correlativo'), 0), 'id'],
-                  [fn('COALESCE', col('classifier3.nombre'), ''), 'name']
-                ]
-              },
-              where: {level: 3}
+              model: BranchClassifier,//.scope([{ method: ['selectNameNotNull', 3] }]),
+              as: 'classifier3',
+              required: false
             }
           ]
         }

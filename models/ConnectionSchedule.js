@@ -8,7 +8,20 @@ module.exports = function(sequelize, Sequelize) {
   }, {
     classMethods: {
       associate: function () {
-        this.hasMany(sequelize.models.ConnectionScheduleDetail, { foreignKey: 'horario_correlativo', as: 'details' });
+        this.hasMany(sequelize.models.ConnectionScheduleDetail, { as: 'details', foreignKey: 'horario_correlativo' });
+      }
+    },
+    scopes: {
+      includeDetails: function() {
+        return {
+          include: [
+            {
+              model: sequelize.models.ConnectionScheduleDetail,
+              as: "details",
+              required: true
+            }
+          ]
+        }
       }
     }
   }];

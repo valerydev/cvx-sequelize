@@ -1,7 +1,12 @@
 /* jshint indent: 2 */
-var _ = require('lodash');
-
 module.exports = function(sequelize, Sequelize) {
+
+  var fn  = Sequelize.fn;
+  var col = Sequelize.col;
+  var literal = Sequelize.literal;
+  var models = sequelize.models;
+  var _ = Sequelize.Utils._;
+
   return [{
     id: {},
     contractId: {},
@@ -27,9 +32,53 @@ module.exports = function(sequelize, Sequelize) {
         });
       }
     },
+
     getterMethods: {
       cascadeProperties: function() {
         return _.unionBy(this.properties, (this.contract||{}).properties, 'code');
+      }
+    },
+
+    scopes: {
+
+      selectNameNotNull: {
+        attributes: {
+          include: ['code',
+            [fn('COALESCE', col('profile.correlativo'), 0), 'id'],
+            [fn('COALESCE', col('profile.nombre'), ''), 'name']
+          ]
+        }
+      },
+
+      includeProperties: function (where) {
+        return {
+          include: [
+            {
+              model: models.Property.scope('includeCategory'),
+              as: 'properties',
+              required: false,
+              where: where||{}
+            }
+          ]
+        }
+      },
+
+      includeAllProperties: function(where) {
+        return {
+          include: [
+            {
+              model: models.Property.scope('includeCategory'),
+              as: 'properties',
+              required: false,
+              where: where||{}
+            },
+            {
+              model: models.Contract.scope({ method: ['includeProperties', where] }),
+              as: 'contract',
+              require: true
+            }
+          ]
+        }
       }
     }
   }];
