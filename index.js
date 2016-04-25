@@ -1,6 +1,7 @@
 var fs        = require('fs');
 var path      = require('path');
 var cls       = require('continuation-local-storage');
+var ssaclRoles= require('ssacl-attribute-roles');
 var Sequelize = require('sequelize');
 var _         = require('underscore');
 var utils     = require('./utils');
@@ -113,6 +114,12 @@ module.exports = function(config) {
         }
         return sequelize.sync(options);
     };
+
+    _.values(models).forEach(function(model) {
+      if (model instanceof Sequelize.Model) {
+        ssaclRoles(model);
+      }
+    });
 
     return models;
 };
