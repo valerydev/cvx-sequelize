@@ -12,7 +12,23 @@ var DataTypes = Sequelize;
 
 module.exports = function(config) {
 
-    if (!config) throw new Error('No especifico una configuracion para el modelo');
+    if (!config) {
+      console.warn('No especifico una configuracion para el modelo, ' +
+        'se utilizar una configuracion para SQLite en memoria');
+
+      config = {
+        "user": null,
+        "password": null,
+        "database": "model-test",
+        "dialect": "sqlite",
+        "define":
+        {
+          "timestamps": false,
+          "freezeTableName": true,
+          "underscored": true
+        }
+      }
+    }
 
     var models    = {};
     var sequelize = new Sequelize(config.database, config.user, config.password, config);
