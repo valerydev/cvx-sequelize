@@ -1,3 +1,5 @@
+//var models = require('../../')();
+
 var models = require('../../')({
   "user": "valerysystem",
   "password": "fHKuLJx4",
@@ -12,7 +14,29 @@ var models = require('../../')({
   }
 });
 
-var daos = require('../../../valeryweb-data')({
+//var models = require('../../')({
+//    "user": "valerysystem",
+//    "password": "fHKuLJx4",
+//    "database": "valerydb",
+//    "host": "valerywebdb.valeryweb.com",
+//    "port": 3306,
+//    "dialect": "mysql",
+//    "charset": "UTF8",
+//    "collate": "UTF8_GENERAL_CI",
+//    "engine": "InnoDB",
+//    "define":
+//    {
+//      "timestamps": false,
+//      "freezeTableName": true,
+//      "underscored": true,
+//      "timezone": "-04:30"
+//    },
+//    "pool":
+//    {
+//      "min": 1,
+//      "max": 50
+//    }
+//});
 
     "sql": {
       "_active": "development_v21",
@@ -58,6 +82,56 @@ sessionLoader.data = daos;
 //    });
 //});
 
+//console.log(JSON.stringify(user.disabledMenus));
+//user.disabledMenus = [5,6,7,8,8];
+//user.validate().then(function(errors){
+//  console.log(JSON.stringify(errors));
+//})
+
+//models.Profile.findAll({
+//  include: [
+//    {
+//      model: models.User,
+//      as: 'users',
+//      separate: true
+//    }
+//  ]
+//}).then(profiles => {
+//  console.log()
+//})
+
+//models.Profile.findById(9).then(function(profile){
+//  return Promise.all([
+//    profile.getContract({ scope: 'includeProperties', attributes: [] }).then(function(contract){
+//      profile.setDataValue('contract', contract);
+//    }),
+//    profile.getProperties().then(function(properties){
+//      profile.setDataValue('properties', properties);
+//    })
+//  ]).return(profile);
+//}).then(profile => {
+//  console.log(profile);
+//})
+
+//models.User.scope({
+//  method: ['includeAllProperties', {
+//      "configurableByUser"  : 'T',
+//      "customConfiguration" : 'F'
+//    }
+//  ]
+//}).findById(17).then(user => {
+//  user.cascadeProperties[0].setDataValue('value', user.cascadeProperties[0].ContractProperty.value)
+//  console.log();
+//})
+
+models.Profile.scope({
+method: ['includeAllProperties', {
+    "configurableByUser"  : 'T',
+    "customConfiguration" : 'F'
+}
+]}).findById(9).then(profiles => {
+  console.log();
+})
 
 //models.Loyalty.findAll().then(function(loyalty){
 //  console.log(loyalty.toJSON())
@@ -68,10 +142,15 @@ sessionLoader.data = daos;
 //})
 var sequelize = models.sequelize;
 var Sequelize = models.Sequelize;
+var Promise   = Sequelize.Promise;
 var col     = Sequelize.col;
 var literal = Sequelize.literal;
 var fn      = Sequelize.fn;
 
+
+////////////////////////////////
+////////////  USER  ////////////
+////////////////////////////////
 //models.User.addHook('beforeFind', function(options, callback) {
 //  console.log('se disparo el before hook papa');
 //  callback(null, {})
@@ -82,7 +161,7 @@ var fn      = Sequelize.fn;
 //  return Sequelize.Promise.resolve();
 //});
 //
-//models.User.scope( 'sessionInfo', 'cascadingProperties' ).findAll().then(function(res){
+//models.User.scope( 'sessionInfo', 'cascadeProperties' ).findAll().then(function(res){
 //  console.log('consulta exitosa');
 //});
 
@@ -91,82 +170,41 @@ var fn      = Sequelize.fn;
 //  console.log();
 //});
 
-models.User.findUserWithSessionInfo('ricardo.uzcategui@gmail.com').then(function(userInfo){
-  console.log(JSON.parse(JSON.stringify(userInfo)));
-});
+//models.User.findUserWithSessionInfo('ricardo.uzcategui@gmail.com').then(function(userInfo){
+//  console.log(JSON.parse(JSON.stringify(userInfo)));
+//});
+
+//models.ConnectionSchedule.scope('includeDetails').findAll().then(function(details){
+//  console.log(JSON.stringify(details))
+//})
 
 
 //sessionLoader.loadUserInfo('ricardo.uzcategui@gmail.com').then(function(user){
 //  console.log(user.toJSON());
 //});
 
+//models.User.findAll().then(function(users){
+//  users.map(function(user){
+//    return user.loadCRUDInfo().then(function(){
+//      return user.get({plain: true})
+//    });
+//  });
+//  return Promise.all();
+//}).then(function(users){
+//  console.log(JSON.stringify(users));
+//});
+
+
 //models.User.findAll({include: [{model: models.Image, as: 'photo'}]}).then(function(user){
 //  console.log(user)
 //})
 
-//models.User.findAll({
-//  include: [
-//    {
-//      model: models.Property,
-//      as: 'properties',
-//      required: false,
-//      attributes: ['id', 'code', 'name'],
-//      include: [
-//        {
-//          model: models.PropertyCategory,
-//          as: 'category',
-//          required: false,
-//          attributes: ['id','name']
-//        }
-//      ]
-//    },
-//    {
-//      model: models.Contract,
-//      as: 'contract',
-//      require: true,
-//      include: [
-//        {
-//          model: models.Property,
-//          as: 'properties',
-//          required: true,
-//          attributes: [ 'id', 'code', 'name'],
-//          include: [
-//            {
-//              model: models.PropertyCategory,
-//              as: 'category',
-//              required: true,
-//              attributes: ['id', 'name']
-//            }
-//          ]
-//        }
-//      ]
-//    },
-//    {
-//      model: models.Profile,
-//      as: 'profile',
-//      required: true,
-//      include: [
-//        {
-//          model: models.Property,
-//          as: 'properties',
-//          required: false,
-//          attributes: ['id', 'code', 'name'],
-//          include: [
-//            {
-//              model: models.PropertyCategory,
-//              as: 'category',
-//              required: false,
-//              attributes: ['id', 'name']
-//            }
-//          ]
-//        }
-//      ]
-//    }
-//  ]
-//}).then(function(user){
-//  console.log(user.toJSON());
-//})
 
+
+
+//initDataLoader.loadUserInfo('ricardo.uzcategui@gmail.com').then(function(user){
+//  console.log(JSON.stringify(user.get({plain: true})));
+//});
 
 
 //daos.sql.UserPropertyDAO.getAllByUserCascadeProfileAndContract(16, 9, 1 )
