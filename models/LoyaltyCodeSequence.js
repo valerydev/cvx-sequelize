@@ -14,13 +14,6 @@ module.exports = function(sequelize, Sequelize) {
     contractId: {},
     sequence: {}
   }, {
-    scopes: {
-      nextCode: function(contractId){
-        return {
-          where: { contractId: contractId }
-        }
-      }
-    },
 
     classMethods: {
       associate: function () {},
@@ -33,12 +26,12 @@ module.exports = function(sequelize, Sequelize) {
           step: 1
         });
 
-        return self.scope({method: ['nextCode', contractId]}).findOrCreate({
+        return self.findOrCreate({
           defaults: {
             contractId: contractId,
             sequence: options.start
           },
-          where: {}
+          where: { contractId: contractId }
         }).spread(function (seq, created) {
           if(created) {
             return seq.sequence;
