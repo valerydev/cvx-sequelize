@@ -34,7 +34,7 @@ module.exports = function(sequelize, Sequelize) {
           where: { contractId: contractId }
         }).spread(function (seq, created) {
           if(created) {
-            return seq.sequence;
+            return s.lpad(seq.sequence, '6', '0');
           } else {
             return seq.increment('sequence', {by: options.step}).then(function(seq){
               return seq.reload().then(function(seq){
