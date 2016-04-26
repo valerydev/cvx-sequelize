@@ -3,6 +3,12 @@ var _ = require('underscore');
 var s = require('underscore.string');
 
 module.exports = function(sequelize, Sequelize) {
+
+  var fn  = Sequelize.fn;
+  var col = Sequelize.col;
+  var literal = Sequelize.literal;
+  var models = sequelize.models;
+
   return [{
     id: {},
     contractId: {},

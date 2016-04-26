@@ -1,5 +1,12 @@
 /* jshint indent: 2 */
 module.exports = function(sequelize, Sequelize) {
+
+  var fn      = Sequelize.fn;
+  var col     = Sequelize.col;
+  var literal = Sequelize.literal;
+  var models  = sequelize.models;
+  var _       = Sequelize.Utils._;
+
   return [{
     id: {},
     contractId: {},
@@ -32,7 +39,7 @@ module.exports = function(sequelize, Sequelize) {
       beforeCreate: function (loyalty, options) {
         var contractId = loyalty.contractId;
         return sequelize.transaction().then(function (tx) {
-          return sequelize.models.LoyaltyCodeSequence.getNextCode(contractId)
+          return models.LoyaltyCodeSequence.getNextCode(contractId)
             .then(function (code) {
               tx.commit();
               loyalty.code = code;
@@ -47,7 +54,7 @@ module.exports = function(sequelize, Sequelize) {
 
     classMethods: {
       associate: function () {
-        this.belongsTo(sequelize.models.LoyaltyGroup, { as: 'group', foreignKey: 'grupo_correlativo' });
+        this.belongsTo(models.LoyaltyGroup, { as: 'group', foreignKey: 'grupo_correlativo' });
       }
     }
   }];

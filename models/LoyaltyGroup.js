@@ -1,5 +1,11 @@
 /* jshint indent: 2 */
 module.exports = function(sequelize, Sequelize) {
+
+  var fn  = Sequelize.fn;
+  var col = Sequelize.col;
+  var literal = Sequelize.literal;
+  var models = sequelize.models;
+
   return [{
     id: {},
     contractId: {},
@@ -11,7 +17,7 @@ module.exports = function(sequelize, Sequelize) {
   },{
     classMethods: {
       associate: function () {
-        this.hasMany(sequelize.models.Loyalty, { as: 'loyalties', foreignKey: 'grupo_correlativo' });
+        this.hasMany( models.Loyalty, { as: 'loyalties', foreignKey: 'grupo_correlativo' });
       }
     }
   }];

@@ -22,8 +22,8 @@ module.exports = function(sequelize, Sequelize) {
   },{
     classMethods: {
       associate: function () {
-        this.belongsTo(sequelize.models.Contract, { as: 'contract', foreignKey: 'contrato_correlativo' });
-        this.hasMany(  sequelize.models.User,     { as: 'users',    foreignKey: 'perfil_correlativo'   });
+        this.belongsTo( models.Contract, { as: 'contract', foreignKey: 'contrato_correlativo' });
+        this.hasMany  ( models.User,     { as: 'users',    foreignKey: 'perfil_correlativo'   });
         this.belongsToMany( sequelize.models.Property, {
           through: sequelize.models.ProfileProperty,
           as: 'properties',
