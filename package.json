@@ -1,6 +1,6 @@
 {
   "name": "valeryweb-model",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Modelo ORM sequelize",
   "main": "index.js",
   "scripts": {
