@@ -8,6 +8,7 @@ module.exports = function(sequelize, Sequelize) {
   var literal = Sequelize.literal;
   var models  = sequelize.models;
   var _       = Sequelize.Utils._;
+  var Promise = Sequelize.Promise;
 
   return [{
     id: {},
@@ -117,7 +118,7 @@ module.exports = function(sequelize, Sequelize) {
           var user = res[0];
           if(!user) return user;
 
-          user = user.get({plain: true, raw: true});
+          user = user.get({plain: true});
 
           user = _.pick(user, ['password', 'code', 'contract', 'contractId', 'branch', 'branchId', 'profile',
             'profileId', 'classifier1', 'classifier2', 'classifier3', 'classifierId1', 'classifierId2',
@@ -152,40 +153,26 @@ module.exports = function(sequelize, Sequelize) {
     instanceMethods: {
 
       loadCRUDInfo: function(){
-        return this.getPhoto().bind(this).then( photo =>{
-          this.setDataValue('photo', photo);
-          return this;
-        }).then(function() {
-          return this.getConnectionSchedule({scope: 'includeDetails'}).bind(this).then( connSchedule =>{
-            this.setDataValue('connectionSchedule', connSchedule);
-            return this;
-          })
-        }).then(function() {
-          return this.getProperties().bind(this).then( properties =>{
-            this.setDataValue('properties', properties);
-            return this;
-          });
-        }).then(function(){
-          return this.getContract({
+        return Promise.all([
+          this.getPhoto(),
+          this.getConnectionSchedule({scope: 'includeDetails'}),
+          this.getProperties(),
+          this.getContract({
             scope: { method: ['includeProperties', {
               "configurableByUser"  : 'T',
               "customConfiguration" : 'F'
             }]}
-          }).bind(this).then(contract =>{
-            this.setDataValue('contract', contract);
-            return this;
-          });
-        }).then(function(){
-          return this.getProfile({
+          }),
+          this.getProfile({
             scope: { method: ['includeProperties', {
               "configurableByUser"  : 'T',
               "customConfiguration" : 'F'
             }]}
-          }).bind(this).then(profile =>{
-            this.setDataValue('profile', profile);
-            return this;
-          });
-        });
+          }),
+          this.getClassifier1(),
+          this.getClassifier2(),
+          this.getClassifier3()
+        ]).return(this);
       }
     },
 

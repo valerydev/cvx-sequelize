@@ -43,9 +43,9 @@ module.exports = function(sequelize, Sequelize) {
         var BranchClassifier = sequelize.models.BranchClassifier;
         return {
           include:[
-            {model:BranchClassifier,  as:'classifier1'},
-            {model:BranchClassifier,  as:'classifier2'},
-            {model:BranchClassifier,  as:'classifier3'}
+            {model:BranchClassifier,  as:'classifier1', require: false},
+            {model:BranchClassifier,  as:'classifier2', require: false},
+            {model:BranchClassifier,  as:'classifier3', require: false}
           ]
         }
       },
