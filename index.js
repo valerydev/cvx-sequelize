@@ -15,7 +15,7 @@ module.exports = function(config) {
 
     if (!config) {
       console.warn('No especifico una configuracion para el modelo, ' +
-        'se utilizar una configuracion para SQLite en memoria');
+        'se utilizará una configuracion con SQLite en memoria');
 
       config = {
         "user": null,
@@ -37,7 +37,7 @@ module.exports = function(config) {
     //Este plugin añade propiedades en las instancias al cargar perezosamente asociaciones
     assocFields(sequelize);
 
-    var modelAttribs = require('./models/attribs')(DataTypes, Sequelize);
+  var modelAttribs = require('./models/attribs')(DataTypes, Sequelize);
 
     fs.readdirSync(path.join(__dirname, 'models'))
     .filter(function (file) {
@@ -135,6 +135,7 @@ module.exports = function(config) {
         return sequelize.sync(options);
     };
 
+    ssaclRoles(sequelize);
     _.values(models).forEach(function(model) {
       if (model instanceof Sequelize.Model) {
         ssaclRoles(model);

@@ -31,7 +31,7 @@ module.exports = function(sequelize, Sequelize) {
   },{
     classMethods: {
       associate: function () {
-        this.belongsTo(sequelize.models.Contract, { foreignKey: 'contrato_correlativo', as: 'contract' });
+        this.belongsTo(sequelize.models.Contract, { as: 'contract', foreignKey: 'contrato_correlativo' });
         this.belongsTo(sequelize.models.BranchClassifier, { as: 'classifier1', foreignKey: 'clasificacion_1_correlativo'  });
         this.belongsTo(sequelize.models.BranchClassifier, { as: 'classifier2', foreignKey: 'clasificacion_2_correlativo' });
         this.belongsTo(sequelize.models.BranchClassifier, { as: 'classifier3', foreignKey: 'clasificacion_3_correlativo' });
