@@ -38,7 +38,7 @@ module.exports = function(sequelize, Sequelize) {
     hooks: {
       beforeCreate: function (loyalty, options) {
         var contractId = loyalty.contractId;
-        return sequelize.transaction().then(function (tx) {
+        return sequelize.transaction({autocommit: false}).then(function (tx) {
           return models.LoyaltyCodeSequence.getNextCode(contractId)
             .then(function (code) {
               tx.commit();
