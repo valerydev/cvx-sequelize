@@ -3,6 +3,7 @@ var path        = require('path');
 var cls         = require('continuation-local-storage');
 var ssaclRoles  = require('./ssacl-attribute-roles');
 var assocFields = require('./sequelize-association-fields');
+var assocUpdate = require('./sequelize-association-updates');
 var Sequelize   = require('sequelize');
 var _           = require('underscore');
 var utils       = require('./utils');
@@ -37,6 +38,7 @@ module.exports = function(config) {
   //Este plugin añade propiedades en las instancias al cargar perezosamente asociaciones
   assocFields(sequelize);
   ssaclRoles(sequelize);
+  assocUpdate(sequelize);
 
   var modelAttribs = require('./models/attribs')(DataTypes, Sequelize);
 
@@ -89,8 +91,6 @@ module.exports = function(config) {
 
     utils.addJSONSchema(models);
     utils.wrapAssociations(models);
-    //utils.addHooks(models);
-    utils.addMixins(models);
 
     //Convertidor base64/Buffer para tipos BLOB
     //Sequelize.BLOB.parse = function(value, options) {
