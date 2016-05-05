@@ -13,29 +13,30 @@ var DataTypes = Sequelize;
 
 module.exports = function(config) {
 
-    if (!config) {
-      console.warn('No especifico una configuracion para el modelo, ' +
-        'se utilizará una configuracion con SQLite en memoria');
+  if (!config) {
+    console.warn('No especifico una configuracion para el modelo, ' +
+      'se utilizará una configuracion con SQLite en memoria');
 
-      config = {
-        "user": null,
-        "password": null,
-        "database": "model-test",
-        "dialect": "sqlite",
-        "define":
-        {
-          "timestamps": false,
-          "freezeTableName": true,
-          "underscored": true
-        }
+    config = {
+      "user": null,
+      "password": null,
+      "database": "model-test",
+      "dialect": "sqlite",
+      "define":
+      {
+        "timestamps": false,
+        "freezeTableName": true,
+        "underscored": true
       }
     }
+  }
 
-    var models    = {};
-    var sequelize = new Sequelize(config.database, config.user, config.password, config);
+  var models    = {};
+  var sequelize = new Sequelize(config.database, config.user, config.password, config);
 
-    //Este plugin añade propiedades en las instancias al cargar perezosamente asociaciones
-    assocFields(sequelize);
+  //Este plugin añade propiedades en las instancias al cargar perezosamente asociaciones
+  assocFields(sequelize);
+  ssaclRoles(sequelize);
 
   var modelAttribs = require('./models/attribs')(DataTypes, Sequelize);
 
@@ -134,13 +135,6 @@ module.exports = function(config) {
         }
         return sequelize.sync(options);
     };
-
-    ssaclRoles(sequelize);
-    _.values(models).forEach(function(model) {
-      if (model instanceof Sequelize.Model) {
-        ssaclRoles(model);
-      }
-    });
 
     return models;
 };
