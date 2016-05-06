@@ -153,26 +153,32 @@ module.exports = function(sequelize, Sequelize) {
     instanceMethods: {
 
       loadCRUDInfo: function(){
-        return Promise.all([
-          this.getPhoto(),
-          this.getConnectionSchedule({scope: 'includeDetails'}),
-          this.getProperties(),
-          this.getContract({
-            scope: { method: ['includeProperties', {
-              "configurableByUser"  : 'T',
-              "customConfiguration" : 'F'
-            }]}
-          }),
-          this.getProfile({
-            scope: { method: ['includeProperties', {
-              "configurableByUser"  : 'T',
-              "customConfiguration" : 'F'
-            }]}
-          }),
-          this.getClassifier1(),
-          this.getClassifier2(),
-          this.getClassifier3()
-        ]).return(this);
+        return Promise.mapSeries([
+          ()=> this.getPhoto(),
+          ()=> this.getConnectionSchedule({scope: 'includeDetails'}),
+          ()=> this.getProperties(),
+          ()=> this.getContract({
+                 scope: {
+                   method: ['includeProperties', {
+                     configurableByUser  : 'T',
+                     customConfiguration : 'F'
+                   }]
+                 }
+               }),
+          ()=> this.getProfile({
+                scope: {
+                  method: ['includeProperties', {
+                    configurableByUser  : 'T',
+                    customConfiguration : 'F'
+                  }]
+                }
+              }),
+          ()=> this.getClassifier1({attributes: ['id', 'name']}),
+          ()=> this.getClassifier2({attributes: ['id', 'name']}),
+          ()=> this.getClassifier3({attributes: ['id', 'name']})
+
+        ],
+        runPromise => runPromise() ).return(this);
       }
     },
 
