@@ -10,7 +10,6 @@ module.exports = function(sequelize, Sequelize) {
   return [{
     id: {},
     contractId: {},
-    module: {},
     type: {},
     image: {
       get: function(){
