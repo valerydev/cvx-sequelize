@@ -104,9 +104,9 @@ module.exports = function(config) {
       if (!Buffer.isBuffer(value)) {
         if (Array.isArray(value)) {
           value = new Buffer(value);
-        } else if(validator.isBase64(value)){
+        } else if(Sequelize.Validator.isBase64(value)){
           value = new Buffer(value.toString(), 'base64');
-        } else if(validator.isHexadecimal(value)) {
+        } else if(Sequelize.Validator.isHexadecimal(value)) {
           value = new Buffer(value.toString(), 'hex');
         } else {
           value = new Buffer(value.toString());

@@ -17,11 +17,9 @@ module.exports = function(sequelize, Sequelize) {
         return (image||{toString:()=>{return null}}).toString('base64');
       },
       set: function(val) {
-        if(typeof val == 'string') {
-          this.setDataValue('image', new Buffer(val, 'base64'));
-        } else {
-          this.setDataValue('image', val);
-        }
+        //Para tipos BLOB si se recibe una cadena base64 se transforma en el
+        //formato literal de hexadecimal que acepta la BD.
+        this.setDataValue('image', val);
       }
     }
   },{
