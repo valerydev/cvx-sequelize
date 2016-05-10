@@ -56,8 +56,14 @@ module.exports = function(sequelize, Sequelize) {
         this.belongsToMany( models.Property, {
           through: models.ContractProperty,
           as: 'properties',
-          foreignKey: 'contrato_correlativo',
-          otherKey: 'propiedad_correlativo'
+          foreignKey: {
+            name: 'contractId',
+            field: 'contrato_correlativo'
+          },
+          otherKey: {
+            name: 'propertyId',
+            field: 'propiedad_correlativo'
+          }
         });
       }
     },

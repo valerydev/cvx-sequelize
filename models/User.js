@@ -108,8 +108,14 @@ module.exports = function(sequelize, Sequelize) {
         this.belongsToMany(models.Property.scope('includeCategory'), {
           through: models.UserProperty,
           as: 'properties',
-          foreignKey: 'usuario_correlativo',
-          otherKey: 'propiedad_correlativo'
+          foreignKey: {
+            name: 'userId',
+            field: 'usuario_correlativo'
+          },
+          otherKey: {
+            name: 'propertyId',
+            field: 'propiedad_correlativo'
+          }
         });
       },
 

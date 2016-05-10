@@ -27,8 +27,14 @@ module.exports = function(sequelize, Sequelize) {
         this.belongsToMany( sequelize.models.Property, {
           through: sequelize.models.ProfileProperty,
           as: 'properties',
-          foreignKey: 'perfil_correlativo',
-          otherKey: 'propiedad_correlativo'
+          foreignKey: {
+            name: 'profileId',
+            field: 'perfil_correlativo'
+          },
+          otherKey: {
+            name: 'propertyId',
+            field: 'propiedad_correlativo'
+          }
         });
       }
     },
