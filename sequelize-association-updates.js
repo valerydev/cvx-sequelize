@@ -42,7 +42,9 @@ module.exports = function(sequelize){
         switch (targetInstance._op) {
           case 'C':
             return new Promise(function (resolve) {
-              resolve(sourceInstance[accessors['create']](targetInstance.dataValues));
+              resolve(targetInstance.save().then(function(){
+                sourceInstance[accessors['set']](targetInstance);
+              }));
             });
           case 'U':
             return new Promise(function (resolve) {
