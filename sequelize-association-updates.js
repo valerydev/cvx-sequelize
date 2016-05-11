@@ -35,16 +35,18 @@ module.exports = function(sequelize){
         var target = targetInstance.Model;
         var source = sourceInstance.Model;
 
-        //if (associationType == 'BelongsToMany') {
-        //  throw new Error('La operacion belongToMany no esta implementada por los momentos');
-        //}
-
         switch (targetInstance._op) {
           case 'C':
             return new Promise(function (resolve) {
-              resolve(targetInstance.save().then(function(){
-                sourceInstance[accessors['set']](targetInstance);
-              }));
+              var throughValues;
+              if(associationType === 'BelongsToMany') {
+                throughValues = targetInstance[association.throughModel.name]
+              }
+              resolve(
+                targetInstance.save().then(targetInstance => {
+                  return sourceInstance[accessors['add']](targetInstance, throughValues)
+                })
+              );
             });
           case 'U':
             return new Promise(function (resolve) {
@@ -52,9 +54,20 @@ module.exports = function(sequelize){
                 target.findById(targetInstance.id).then(function (found) {
                   if(!found) {
                     throw new Error('Instance of ' + target.name +
-                      ' with id ' + targetInstance.id + 'not found');
+                      ' with id ' + targetInstance.id + ' not found');
                   }
-                  return found.update(targetInstance.dataValues);
+                  return found.update(targetInstance.dataValues).then(updated =>{
+                    if(association.associationType === 'BelongsToMany') {
+                      var throughValues = targetInstance[association.throughModel.name];
+
+                      var where = {};
+                      where[association.foreignKey] = sourceInstance.id;
+                      where[association.otherKey  ] = targetInstance.id;
+
+                      return association.throughModel.update(throughValues, { where: where });
+                    }
+                    return updated;
+                  });
                 })
               );
             });
@@ -88,7 +101,14 @@ module.exports = function(sequelize){
       }
 
       return Promise.mapSeries(data, function(values){
-        var targetInstance = _.isNumber(values) ? values : target.build(values);
+        var targetInstance = _.isNumber(values) ?
+          values : target.build(values);
+
+        if(association.associationType == 'BelongsToMany') {
+          var throughName = association.throughModel.name;
+          targetInstance[throughName] = values[throughName];
+        }
+        
         _markOperation(values);
         targetInstance._op = values._op;
 

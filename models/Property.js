@@ -59,13 +59,19 @@ module.exports = function(sequelize, Sequelize) {
         this.belongsTo( models.PropertyCategory, { as: 'category', foreignKey: 'seccion_correlativo' });
       }
     },
+    //TODO: Probar si es posible obtener y modificar el valor de la propiedad mediante getter/setter
     getterMethods: {
       value: function() {
         return (this.getDataValue('UserProperty')     ||
                 this.getDataValue('ProfileProperty')  ||
                 this.getDataValue('ContractProperty') || {}).value;
-      },
+      }
     },
+    //setterMethods: {
+    //  value: val => {
+    //    this.setDataValue('UserProperty', val);
+    //  }
+    //},
     defaultScope: function() {
       return {
         include: [
