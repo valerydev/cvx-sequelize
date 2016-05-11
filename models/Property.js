@@ -6,6 +6,7 @@ module.exports = function(sequelize, Sequelize) {
   var literal = Sequelize.literal;
   var models  = sequelize.models;
   var _       = Sequelize.Utils._;
+  var validator = Sequelize.Validator;
 
   return [{
     id: {},
@@ -18,21 +19,15 @@ module.exports = function(sequelize, Sequelize) {
     dataType: {},
     valueList: {
       get: function(){
-        try {
-          var posValues = JSON.parse(this.getDataValue('valueList'));
-          if (posValues.browse) {
-            try {
-              parseInt(posValues.browse);
-              return posValues;
-            } catch(e){
-              e = new Error('Codigo de busqueda (browse) debe ser entero, se encontro: ' + posValues.browse);
-              console.error(e);
-              throw e;
-            }
-
+        var valueList = this.getDataValue('valueList');
+        if(valueList){
+          if(validator.isJSON(valueList)) {
+            return _.flatten([JSON.parse(valueList)]);
+          } else if(typeof valueList == 'string'){
+            return valueList.split(',');
+          } else {
+            return [];
           }
-        } catch(err) {
-          return [];
         }
       },
       set: function(values){
