@@ -86,7 +86,24 @@ module.exports = function(sequelize, Sequelize) {
 
     getterMethods: {
       cascadeProperties: function() {
-        return _.unionBy(this.properties, (this.profile||{}).properties, (this.contract||{}).properties, 'code');
+
+        var userProperties = (this.properties||[]).map(prop => {
+          return prop.get({plain:true});
+        });
+        var profileProperties  = ((this.profile||{}).properties||[]).map(prop => {
+          prop = prop.get({plain:true});
+          prop.UserProperty = prop.ProfileProperty;
+          delete prop.ProfileProperty;
+          return prop;
+        });
+        var contractProperties = ((this.contract||{}).properties||[]).map(prop => {
+          prop = prop.get({plain:true});
+          prop.UserProperty = prop.ContractProperty;
+          delete prop.ContractProperty;
+          return prop;
+        });
+
+        return _.unionBy(userProperties, profileProperties, contractProperties, 'code');
       },
 
       isRoot: function(){
