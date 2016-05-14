@@ -1,7 +1,11 @@
+var Sequelize = require('sequelize');
+var _       = Sequelize.Utils._;
+var Promise = Sequelize.Promise;
+
 module.exports = function(sequelize){
 
-  var _       = sequelize.Utils._;
-  var Promise = sequelize.Promise;
+  var _markOperation = module.exports._markOperation;
+  var _doOperation   = module.exports._doOperation;
 
   _.extend(sequelize.Instance.prototype, {
     updateAssoc: function (opts) {
@@ -9,85 +13,19 @@ module.exports = function(sequelize){
       if(!opts.values) return null;
 
       var self   = this;
+      var data   = _.flatten([opts.values]);
+      var tap    = opts.tap;
       var source = this.Model;
       var target = opts.model;
       var alias  = opts.as;
-      var data   = _.flatten([opts.values]);
-      var tap    = opts.tap;
-
-      var _markOperation = function (values) {
-        var op = 'C';
-        if (_.isNumber(values)) {
-          op = 'A';
-          values = {id: values};
-        } else if (values.id) {
-          op = _.isEmpty(_.omit(values, 'id')) ? 'D' : 'U';
-        }
-        values._op = op;
-        return values;
-      };
-
-      var _doOperation = function (association, sourceInstance, targetInstance) {
-
-        var associationType = association.associationType;
-        var accessors = association.accessors;
-
-        var target = targetInstance.Model;
-        var source = sourceInstance.Model;
-
-        switch (targetInstance._op) {
-          case 'C':
-            return new Promise(function (resolve) {
-              var throughValues;
-              if(associationType === 'BelongsToMany') {
-                throughValues = targetInstance[association.throughModel.name]
-              }
-              resolve(
-                targetInstance.save().then(targetInstance => {
-                  return sourceInstance[accessors['add']](targetInstance, throughValues)
-                })
-              );
-            });
-          case 'U':
-            return new Promise(function (resolve) {
-              resolve(
-                target.findById(targetInstance.id).then(function (found) {
-                  if(!found) {
-                    throw new Error('Instance of ' + target.name +
-                      ' with id ' + targetInstance.id + ' not found');
-                  }
-                  return found.update(targetInstance.dataValues).then(updated =>{
-                    if(association.associationType === 'BelongsToMany') {
-                      var throughValues = targetInstance[association.throughModel.name];
-
-                      var where = {};
-                      where[association.foreignKey] = sourceInstance.id;
-                      where[association.otherKey  ] = targetInstance.id;
-
-                      return association.throughModel.update(throughValues, { where: where });
-                    }
-                    return updated;
-                  });
-                })
-              );
-            });
-          case 'D':
-            return new Promise(function (resolve) {
-              resolve(targetInstance.destroy());
-            });
-          case 'A':
-            return new Promise(function (resolve) {
-              resolve(targetInstance[accessors['set']](targetInstance.id));
-            });
-        }
-      };
-
+      var checkRelated  = _.defaults(opts, { checkRelated: true }).checkRelated;
       var association = source.getAssociation(target, alias);
+
       if (!association)
         throw new Error('No existe la asociacion entre ' + source.name + ' y ' + target.name +
           (alias ? (' bajo el alias ' + alias) : ''));
 
-      if(['HasMany','BelongsToMany'].indexOf(association.associationType) >= 0) {
+      if(/Many$/.test(association.associationType)) {
         var s = association.options.name.singular;
         alias = alias || s[0].toUpperCase() + s.slice(1);
       } else {
@@ -101,24 +39,150 @@ module.exports = function(sequelize){
       }
 
       return Promise.mapSeries(data, function(values){
-        var targetInstance = _.isNumber(values) ?
-          values : target.build(values);
-
-        if(association.associationType == 'BelongsToMany') {
-          var throughName = association.throughModel.name;
-          targetInstance[throughName] = values[throughName];
-        }
-        
         _markOperation(values);
-        targetInstance._op = values._op;
 
-        if (tap !== undefined && _.isFunction(tap)) {
-          tap(targetInstance);
-        }
+        var oper = values._op;
 
-        return _doOperation(association, self, targetInstance);
-      });
+        return new Promise((resolve, reject) => {
+
+          //En todos los casos menos CREAR verificamos que exista en DB el objetivo
+          if(/[AUD]/.test(oper)) {
+
+            if( checkRelated ) {
+
+              //...verificamos adicionalmente si existe la relacion entre ambas instancias
+              //(importante en relaciones M:N)
+              var where = {};
+              where[target.primaryKeyAttribute] = values[target.primaryKeyAttribute];
+
+              return self[association.accessors['get']]({where: where}).then(associatedObjects => {
+                associatedObjects = _.compact(_.flatten([associatedObjects]));
+
+                var isAssociated = !_.isEmpty(associatedObjects);
+                if(!isAssociated) {
+                  reject(
+                    new Error('No existe relacion entre ' + source.name + '('
+                      + self[source.primaryKeyAttribute] + ') y ' + target.name + '('
+                      + values[target.primaryKeyAttribute] + ')')
+                  );
+                } else {
+                  var targetInstance = associatedObjects[0].set(values);
+                  resolve(targetInstance);
+                }
+              });
+            } else {
+              //Nos saltamos la verificacion de que exista la relacion entre las instancias
+              //en relaciones M:N
+              target.findById(values[target.primaryKeyAttribute]).then( targetInstance => {
+                //Siempre verificamos que exista la instancia objetivo
+                if(!targetInstance) {
+
+                  reject(
+                    new Error('No existe el objetivo de la asociacion' + target.name + '('
+                      + values[target.primaryKeyAttribute] + ')')
+                  );
+
+                } else {
+                  targetInstance.set(values);
+                  resolve(targetInstance);
+                }
+              });
+            }
+
+          } else {
+            //En el caso CREAR inicializamos una instancia nueva
+            resolve(target.build(values));
+          }
+
+        }).then( targetInstance => {
+
+          //Si la asociacion es N:M mantenemos el valor
+          if(association.associationType == 'BelongsToMany') {
+            targetInstance[association.throughModel.name] =
+              values[association.throughModel.name];
+          }
+
+          targetInstance._op = values._op;
+
+          if (tap !== undefined && _.isFunction(tap)) {
+            tap(targetInstance);
+          }
+
+          return _doOperation(association, self, targetInstance).then( results => {
+            return /Many$/.test(association.associationType) ? results : results[0];
+          });
+        });
+      }).return(self);
     }
   })
 };
+
+module.exports._markOperation = function (values) {
+  var op = 'C';
+  if (_.isNumber(values)) {
+    op = 'A';
+    values = {id: values};
+  } else if (values.id) {
+    op = _.isEmpty(_.omit(values, 'id')) ? 'D' : 'U';
+  }
+  values._op = op;
+  return values;
+};
+
+module.exports._doOperation = function (association, sourceInstance, targetInstance) {
+
+  var associationType = association.associationType;
+  var accessors = association.accessors;
+
+  var target  = targetInstance.Model,
+    source  = sourceInstance.Model,
+    owner, throughValues, throughModel;
+
+  if(associationType === 'BelongsToMany') {
+    owner         = association.throughModel;
+    throughModel  = owner;
+    throughValues = targetInstance[throughModel.name];
+    delete targetInstance[throughModel.name];
+  } else {
+    owner   = /^has/i.test(associationType) ? target : source;
+  }
+
+  switch (targetInstance._op) {
+
+    case 'C':
+      if(/HasMany|BelongsToMany/i.test(associationType)) {
+
+        return targetInstance.save().then(targetInstance => {
+          return sourceInstance[accessors['add']](targetInstance, throughValues)
+            .return(targetInstance)
+        })
+
+      } else {
+        return sourceInstance[accessors['create']](targetInstance.dataValues)
+          .return(targetInstance);
+      }
+
+    case 'U':
+      return targetInstance.save().then(updated =>{
+        if(associationType === 'BelongsToMany') {
+
+          throughValues[association.foreignKey] = sourceInstance.id;
+          throughValues[association.otherKey  ] = targetInstance.id;
+
+          return throughModel.upsert(throughValues).then((created)=> {
+            return updated
+          });
+        }
+        return updated;
+      });
+
+    case 'D':
+      return targetInstance.destroy();
+
+    case 'A':
+      return targetInstance[accessors['set']](targetInstance[target.primaryKeyAttribute])
+        .return(targetInstance);
+  }
+};
+
 

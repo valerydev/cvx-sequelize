@@ -21,7 +21,11 @@
     "validator": "^3.41.2"
   },
   "devDependencies": {
-    "should": "~5.2.0"
+    "chai": "^3.5.0",
+    "chai-as-promised": "^5.3.0",
+    "chai-spies": "^0.7.1",
+    "sinon": "^1.17.3",
+    "sinon-chai": "^2.8.0"
   },
   "publishConfig": {
     "registry": "http://192.168.1.12:8081/repository/valeryweb-npm-hosted/"
