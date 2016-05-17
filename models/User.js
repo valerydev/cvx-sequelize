@@ -17,16 +17,6 @@ module.exports = function(sequelize, Sequelize) {
     classifierId2: {},
     classifierId3: {},
     branchId: {},
-    code: {
-      get: function() {
-        var val = this.getDataValue('code');
-        if(val === undefined) {
-          return this.getDataValue('email');
-        } else {
-          return val;
-        }
-      }
-    },
     password: {
       get: function(){
         return !this.getDataValue('password') ? '' : this.getDataValue('password');
