@@ -93,7 +93,7 @@ module.exports = function(sequelize, Sequelize) {
           return prop;
         });
 
-        return _.unionBy(userProperties, profileProperties, contractProperties, 'code');
+        return _.orderBy(_.unionBy(userProperties, profileProperties, contractProperties, 'code'), 'code');
       },
 
       isRoot: function(){
