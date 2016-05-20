@@ -186,6 +186,7 @@ module.exports = function(sequelize, Sequelize) {
                   }]
                 }
               }),
+          ()=> this.getBranch({attributes: ['id', 'name']}),
           ()=> this.getClassifier1({attributes: ['id', 'name']}),
           ()=> this.getClassifier2({attributes: ['id', 'name']}),
           ()=> this.getClassifier3({attributes: ['id', 'name']})

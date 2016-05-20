@@ -14,7 +14,11 @@ module.exports = function(sequelize, Sequelize) {
     classifierId2: {},
     classifierId3: {},
     code: {},
-    name: {},
+    name: {
+      get: function(){
+        return this.getDataValue('name') || '';
+      }
+    },
     contact: {},
     startDate: {},
     countryId: {},
