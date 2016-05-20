@@ -40,12 +40,12 @@ beforeEach(function(done){
   };
 
   //M:1
-  models.User.belongsTo(models.Contract   , { as: 'contract', foreignKey: 'contractId' });
-  models.Profile.belongsTo(models.Contract, { as: 'contract', foreignKey: 'contractId' });
-  models.User.belongsTo(models.Profile    , { as: 'profile' , foreignKey: 'profileId'  });
+  models.User.belongsTo( models.Contract   , { as: 'contract', foreignKey: { name: 'contractId', allowNull: true }});
+  models.Profile.belongsTo( models.Contract, { as: 'contract', foreignKey: { name: 'contractId', allowNull: true }});
+  models.User.belongsTo( models.Profile    , { as: 'profile' , foreignKey: { name: 'profileId' , allowNull: true }});
 
   //1:M
-  models.User.hasMany(models.Address      , { as: 'addresses', foreignKey: 'userId'    })
+  models.User.hasMany( models.Address      , { as: 'addresses', foreignKey:{ name: 'userId', allowNull: false }});
 
   //M:N
   models.User.belongsToMany(models.Property, {
@@ -68,22 +68,20 @@ beforeEach(function(done){
   });
 
   sq.sync({logging: null}).then(function(){
-    return Promise.mapSeries([
-      ()=> models.User    .create({
-             name: 'Raul Contreras',
-             addresses: [
-               { street: 'street1' },
-               { street: 'street2' }
-             ]}, { include:{all:true}
-           }),
-      ()=> models.Profile .create({name: 'Admin'}),
-      ()=> models.Contract.create({name: 'Kepen'})
-    ], runPromise => runPromise()).spread((user, profile, contract) => {
+    return models.User.create({
+       name: 'Raul Contreras',
+       contract: { name: 'Kepen' },
+       profile:  { name: 'Admin' },
+       addresses: [
+         { street: 'street1' },
+         { street: 'street2' }
+       ]}, { include:{ all:true }
+    }).then( user => {
       return Promise.mapSeries([
-        ()=> user    .createProperty( {name: 'userProp1'    }, {value: 'value1'} ),
-        ()=> user    .createProperty( {name: 'userProp2'    }, {value: 'value2'} ),
-        ()=> profile .createProperty( {name: 'profileProp' }, {value: 'value1'} ),
-        ()=> contract.createProperty( {name: 'contractProp'}, {value: 'value1'} )
+          ()=> user    .createProperty({ name: 'userProp1'    }, { value: 'value1' }),
+          ()=> user    .createProperty({ name: 'userProp2'    }, { value: 'value2' }),
+          ()=> user.profile .createProperty({ name: 'profileProp'  }, { value: 'value1' }),
+          ()=> user.contract.createProperty({ name: 'contractProp' }, { value: 'value1' })
       ], runPromise => runPromise());
     }).then(()=> {
       return self.models.User.findById(1).then(currUser => {

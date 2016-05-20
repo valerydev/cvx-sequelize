@@ -91,6 +91,12 @@ module.exports = function(sequelize){
 
           } else {
             //En el caso CREAR inicializamos una instancia nueva
+            //Y en caso de que el propietario de la relacion sea el target
+            //colocamos el valor de la clave de source como clave foranea en target
+            //para prevenir violacion de notNull en la clave foranea
+            if(/Many$/.test(association.associationType))
+              values[association.foreignKey] = self[source.primaryKeyAttribute];
+
             resolve(target.build(values));
           }
 
