@@ -4,7 +4,7 @@
   "description": "Modelo ORM sequelize",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --harmony --recursive ./test"
   },
   "author": "Raul Contreras <rcontreras@valery.com>",
   "license": "ISC",

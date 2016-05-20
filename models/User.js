@@ -190,7 +190,6 @@ module.exports = function(sequelize, Sequelize) {
           ()=> this.getClassifier1({attributes: ['id', 'name']}),
           ()=> this.getClassifier2({attributes: ['id', 'name']}),
           ()=> this.getClassifier3({attributes: ['id', 'name']})
-
         ],
         runPromise => runPromise() ).return(this);
       }

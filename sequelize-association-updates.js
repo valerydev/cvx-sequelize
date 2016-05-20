@@ -156,7 +156,7 @@ module.exports._doOperation = function (association, sourceInstance, targetInsta
   switch (targetInstance._op) {
 
     case 'C':
-      if(/HasMany|BelongsToMany/i.test(associationType)) {
+      if(/Many$/i.test(associationType)) {
 
         return targetInstance.save().then(targetInstance => {
           return sourceInstance[accessors['add']](targetInstance, throughValues)
