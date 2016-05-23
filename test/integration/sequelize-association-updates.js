@@ -30,13 +30,13 @@ beforeEach(function(done){
 
   var models = this.models = {
     Address         : sq.define('Address'         , { street: Sequelize.STRING  }),
-    User            : sq.define('User'            , { name: Sequelize.STRING  }),
-    Contract        : sq.define('Contract'        , { name: Sequelize.STRING  }),
-    Profile         : sq.define('Profile'         , { name: Sequelize.STRING  }),
-    Property        : sq.define('Property'        , { name: Sequelize.STRING  }),
-    UserProperty    : sq.define('UserProperty'    , { value: Sequelize.STRING }),
-    ProfileProperty : sq.define('ProfileProperty' , { value: Sequelize.STRING }),
-    ContractProperty: sq.define('ContractProperty', { value: Sequelize.STRING })
+    User            : sq.define('User'            , { name  : Sequelize.STRING  }),
+    Contract        : sq.define('Contract'        , { name  : Sequelize.STRING  }),
+    ContractDet     : sq.define('ContractDet'     , { desc  : Sequelize.STRING  }),
+    Profile         : sq.define('Profile'         , { name  : Sequelize.STRING  }),
+    UserProperty    : sq.define('UserProperty'    , { value : Sequelize.STRING  }),
+    ProfileProperty : sq.define('ProfileProperty' , { value : Sequelize.STRING  }),
+    ContractProperty: sq.define('ContractProperty', { value : Sequelize.STRING  }),
     Property        : sq.define('Property', {
       name  : Sequelize.STRING,
       internal: {
@@ -47,27 +47,28 @@ beforeEach(function(done){
   };
 
   //M:1
-  models.User.belongsTo( models.Contract   , { as: 'contract', foreignKey: { name: 'contractId', allowNull: true }});
-  models.Profile.belongsTo( models.Contract, { as: 'contract', foreignKey: { name: 'contractId', allowNull: true }});
-  models.User.belongsTo( models.Profile    , { as: 'profile' , foreignKey: { name: 'profileId' , allowNull: true }});
+  models.User.belongsTo    ( models.Contract    , { as: 'contract', foreignKey: { name: 'contractId', allowNull: true  }});
+  models.Contract.hasOne   ( models.ContractDet , { as: 'details' , foreignKey: { name: 'contractId', allowNull: false }});
+  models.Profile.belongsTo ( models.Contract    , { as: 'contract', foreignKey: { name: 'contractId', allowNull: true  }});
+  models.User.belongsTo    ( models.Profile     , { as: 'profile' , foreignKey: { name: 'profileId' , allowNull: true  }});
 
   //1:M
-  models.User.hasMany( models.Address      , { as: 'addresses', foreignKey:{ name: 'userId', allowNull: false }});
+  models.User.hasMany      ( models.Address     , { as: 'addresses', foreignKey:{ name: 'userId'    , allowNull: false }});
 
   //M:N
-  models.User.belongsToMany(models.Property, {
+  models.User.belongsToMany    ( models.Property, {
     through: models.UserProperty,
     as: 'properties',
     foreignKey: { name: 'userId'     },
     otherKey  : { name: 'propertyId' }
   });
-  models.Profile.belongsToMany(models.Property, {
+  models.Profile.belongsToMany ( models.Property, {
     through: models.ProfileProperty,
     as: 'properties',
     foreignKey: { name: 'profileId'  },
     otherKey  : { name: 'propertyId' }
   });
-  models.Contract.belongsToMany(models.Property, {
+  models.Contract.belongsToMany( models.Property, {
     through: models.ContractProperty,
     as: 'properties',
     foreignKey: { name: 'contractId' },
@@ -204,7 +205,7 @@ describe('sequelize-association-updates', function() {
         }
       ]
     })
-    .then(user => user.getProperties({where: {id: 1}}))
+    .then(user => user.getProperties({ where: {id: 1} }))
     .then(properties => {
 
       expect(properties).to.have.length(1);
@@ -212,6 +213,54 @@ describe('sequelize-association-updates', function() {
       expect(properties[0].internal).to.be.ok; //Debe conservar su valor, no debe aplicar el default de la columna!
       done();
 
+    }).catch(err => done(err));
+  });
+
+  it('Debe funcionar en series de actualizaciones donde una depende de la otra', function (done) {
+    this.timeout(0);
+
+    var user = this.currUser;
+    var models = this.models;
+    var sequelize = this.sequelize;
+
+    return sequelize.transaction({autocommit: false}, tx => {
+      return Promise.mapSeries([
+        ()=> user.updateAssoc({
+               as: 'contract',
+               model: models.Contract,
+               values: { id: 1 }  //Eliminamos el contrato actual
+             }),
+        ()=> user.updateAssoc({
+               as: 'contract',
+               model: models.Contract,
+               values: { name: 'New Company' } //Creamos un nuevo contrato
+             }),
+        ()=> user.getContract().then( contract => {
+               return !contract ? contract : contract.updateAssoc({
+                 as: 'details',
+                 model: models.ContractDet,
+                 values: { desc: 'Future is now' } //Creamos un nuevo detalle del contrato
+               });
+             })
+      ], runPromise => runPromise() )
+
+      .then(()=> models.Contract.findAll().then( contracts => expect(contracts).to.have.length(1)))
+
+      .then(() => user.getContract({
+        include:[{
+          model: models.ContractDet,
+          as: 'details'
+        }]
+      }))
+      .then(contract => {
+
+        expect(contract).to.be.ok;
+        expect(contract.name).to.be.equal('New Company');
+        expect(contract.details).to.be.ok;
+        expect(contract.details.desc).to.be.equal('Future is now');
+        done();
+
+      });
     }).catch(err => done(err));
   });
 
