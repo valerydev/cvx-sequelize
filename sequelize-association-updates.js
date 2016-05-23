@@ -170,7 +170,7 @@ module.exports._doOperation = function (association, sourceInstance, targetInsta
 
     case 'U':
       return targetInstance.save().then(updated =>{
-        if(associationType === 'BelongsToMany') {
+        if(associationType === 'BelongsToMany' && throughValues ) {
 
           throughValues[association.foreignKey] = sourceInstance.id;
           throughValues[association.otherKey  ] = targetInstance.id;
