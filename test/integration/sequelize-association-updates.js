@@ -37,6 +37,13 @@ beforeEach(function(done){
     UserProperty    : sq.define('UserProperty'    , { value: Sequelize.STRING }),
     ProfileProperty : sq.define('ProfileProperty' , { value: Sequelize.STRING }),
     ContractProperty: sq.define('ContractProperty', { value: Sequelize.STRING })
+    Property        : sq.define('Property', {
+      name  : Sequelize.STRING,
+      internal: {
+        type: Sequelize.BOOLEAN,
+        default: false
+      }
+    })
   };
 
   //M:1
@@ -78,17 +85,14 @@ beforeEach(function(done){
        ]}, { include:{ all:true }
     }).then( user => {
       return Promise.mapSeries([
-          ()=> user    .createProperty({ name: 'userProp1'    }, { value: 'value1' }),
-          ()=> user    .createProperty({ name: 'userProp2'    }, { value: 'value2' }),
-          ()=> user.profile .createProperty({ name: 'profileProp'  }, { value: 'value1' }),
-          ()=> user.contract.createProperty({ name: 'contractProp' }, { value: 'value1' })
-      ], runPromise => runPromise());
-    }).then(()=> {
-      return self.models.User.findById(1).then(currUser => {
-        self.currUser = currUser;
-      });
-    }).return(undefined);
-  }).then(done);
+          ()=> user.createProperty({ name: 'userProp1',  internal: true }, { value: 'value1' }),
+          ()=> user.createProperty({ name: 'userProp2',  internal: true }, { value: 'value2' }),
+          ()=> user.profile.createProperty ({ name: 'profileProp' }, { value: 'value1' }),
+          ()=> user.contract.createProperty({ name: 'contractProp'}, { value: 'value1' })
+        ],
+        runPromise => runPromise()).then(()=> self.currUser = user).then(()=> done());
+    });
+  });
 });
 
 describe('sequelize-association-updates', function() {
@@ -190,36 +194,25 @@ describe('sequelize-association-updates', function() {
   it('Debe actualizar solo los campos que cambiaron', function(done){
     this.timeout(0);
 
-    return this.currUser.getProperties().bind(this)
-      .then(properties => {
-        return this.currUser.updateAssoc({
-          model: this.models.Property,
-          as: 'properties',
-          values: [
-            {
-              id: properties[0].id,
-              name: 'nameChanged',
-              UserProperty: {  value: 'valueChanged' }
-            },
-            {
-              id: properties[1].id,
-              name: 'nameChanged',
-              UserProperty: {  value: 'valueChanged' }
-            }
-          ]
-        });
-      })
-      .then(user => user.getProperties())
-      .then(properties => {
+    return this.currUser.updateAssoc({
+      model: this.models.Property,
+      as: 'properties',
+      values: [
+        {
+          id: 1,
+          name: 'nameChanged'
+        }
+      ]
+    })
+    .then(user => user.getProperties({where: {id: 1}}))
+    .then(properties => {
 
-        expect(properties).to.have.length(2);
-        expect(properties[0].name).to.be.equal('nameChanged');
-        expect(properties[1].name).to.be.equal('nameChanged');
-        expect(properties[0].UserProperty.value).to.be.equal('valueChanged');
-        expect(properties[1].UserProperty.value).to.be.equal('valueChanged');
-        done();
+      expect(properties).to.have.length(1);
+      expect(properties[0].name).to.be.equal('nameChanged');
+      expect(properties[0].internal).to.be.ok; //Debe conservar su valor, no debe aplicar el default de la columna!
+      done();
 
-      }).catch(err => done(err));
+    }).catch(err => done(err));
   });
 
   it('Debe fallar al actualizar las asociaciones debido a que no existe el "target" en DB ( opts.checkRelated = true )', function(done){
