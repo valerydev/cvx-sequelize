@@ -25,7 +25,7 @@ module.exports = function(sequelize, Sequelize) {
             {
               model: sequelize.models.ConnectionScheduleDetail,
               as: "details",
-              required: true
+              required: false
             }
           ]
         }
