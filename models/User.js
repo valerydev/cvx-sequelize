@@ -133,7 +133,7 @@ module.exports = function(sequelize, Sequelize) {
 
           user = user.get({plain: true});
 
-          user = _.pick(user, ['password', 'code', 'contract', 'contractId', 'branch', 'branchId', 'profile',
+          user = _.pick(user, ['id', 'password', 'code', 'contract', 'contractId', 'branch', 'branchId', 'profile',
             'profileId', 'classifier1', 'classifier2', 'classifier3', 'classifierId1', 'classifierId2',
             'classifierId3', 'email', 'fullName', 'photo', 'cascadeProperties', 'disabledMenus',
             'connectionScheduleId']);
