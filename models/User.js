@@ -125,42 +125,6 @@ module.exports = function(sequelize, Sequelize) {
           }
         });
       },
-
-      findUserWithSessionInfo: function(email) {
-        return this.scope( 'sessionInfo' ).findAll({ where: { email: email }}).then(function(res){
-          var user = res[0];
-          if(!user) return user;
-
-          user = user.get({plain: true});
-
-          user = _.pick(user, ['id', 'password', 'code', 'contract', 'contractId', 'branch', 'branchId', 'profile',
-            'profileId', 'classifier1', 'classifier2', 'classifier3', 'classifierId1', 'classifierId2',
-            'classifierId3', 'email', 'fullName', 'photo', 'cascadeProperties', 'disabledMenus',
-            'connectionScheduleId']);
-
-          user.contract    = _.pick(user.contract,    ['logo', 'disabledMenus']);
-          user.profile     = _.pick(user.profile,     ['name', 'disabledMenus']);
-          user.branch      = _.pick(user.branch,      ['id','name', 'code']);
-          user.classifier1 = _.pick(user.classifier1, ['name']);
-          user.classifier2 = _.pick(user.classifier2, ['name']);
-          user.classifier3 = _.pick(user.classifier3, ['name']);
-          user.properties = user.cascadeProperties.map(function(prop){
-            return _.pick(prop, ['id', 'code', 'parentCode', 'defaultValue', 'value']);
-          });
-          delete user.cascadeProperties;
-
-          var currencyId = (_.find(user.properties, {code: 1})||{}).value;
-
-          if(currencyId != undefined) {
-              return models.Currency.findById(currencyId).then(function (currency) {
-                user.currsym = currency.symbol;
-                return user;
-              })
-          } else {
-            return user;
-          }
-        });
-      }
     },
 
     instanceMethods: {
