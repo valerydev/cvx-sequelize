@@ -35,11 +35,11 @@ module.exports = function(sequelize, Sequelize) {
     },
     hooks: {
       beforeCreate: function(conv, opts){
-        if(conv.factor === undefined)
+        if(conv.factor === undefined && conv.value !== undefined)
           this.calculateFactor(conv);
       },
       beforeUpdate: function(conv, opts){
-        if(conv.factor === undefined)
+        if(conv.factor === undefined && conv.value !== undefined)
           this.calculateFactor(conv);
       }
     },
