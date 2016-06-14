@@ -35,19 +35,19 @@ module.exports = function(sequelize, Sequelize) {
     },
     hooks: {
       beforeCreate: function(conv, opts){
-        if(conv.factor === undefined && conv.value !== undefined)
+        if(conv.value !== undefined)
           this.calculateFactor(conv);
       },
       beforeUpdate: function(conv, opts){
-        if(conv.factor === undefined && conv.value !== undefined)
+        if(conv.value !== undefined)
           this.calculateFactor(conv);
       }
     },
     scopes: {
-      includeUnitsNames: {
+      includeUnits: {
         include: [
-          { as: 'unit1', model: models.Unit, attributes: ['name']},
-          { as: 'unit2', model: models.Unit, attributes: ['name'] }
+          { as: 'unit1', model: models.Unit, attributes: ['name', 'code']},
+          { as: 'unit2', model: models.Unit, attributes: ['name', 'code'] }
         ]
 
       },
