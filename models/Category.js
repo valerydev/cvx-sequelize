@@ -28,7 +28,8 @@ module.exports = function(sequelize, Sequelize) {
     productsDependecy: {},
     level: {},
     parentId: {},
-    path: {}
+    path: {},
+    notes: {}
   },{
     classMethods: {
       associate: function () {
