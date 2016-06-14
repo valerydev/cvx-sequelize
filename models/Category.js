@@ -25,11 +25,10 @@ module.exports = function(sequelize, Sequelize) {
     lowerPricePercentage: {},
     extraPricePercentage1: {},
     extraPricePercentage2: {},
-    level: {},
-    parentCategory: {},
-    ancestorCodes: {},
     productsDependecy: {},
-    lastDependecyLevel: {}
+    level: {},
+    parentId: {},
+    path: {}
   },{
     classMethods: {
       associate: function () {
@@ -38,7 +37,28 @@ module.exports = function(sequelize, Sequelize) {
         this.belongsTo(models.BranchClassifier, { as: 'classifier1', foreignKey: 'clasificacion_1_correlativo'  });
         this.belongsTo(models.BranchClassifier, { as: 'classifier2', foreignKey: 'clasificacion_2_correlativo' });
         this.belongsTo(models.BranchClassifier, { as: 'classifier3', foreignKey: 'clasificacion_3_correlativo' });
+        this.belongsTo(models.Category, { as: 'parent', foreignkey: 'categoria_padre_correlativo' })
+      },
+      calculateTreeInfo: function(category) {
+        if(category.parentId === 0) { //Si es Raiz
+          category.path = category.code;
+          category.level = 1;
+        } else {
+          return models.Category.find(category.parentId).then(parent => {
+            category.path = parent.path + '-' + category.code;
+            category.level = parent.level + 1;
+          });
+        }
+      }
+    },
+    hooks: {
+      beforeCreate: function(category, opts) {
+        return calculateTreeInfo(category);
+      },
+      beforeUpdate: function(category, opts) {
+        return calculateTreeInfo(category);
       }
     }
+
   }];
 };
