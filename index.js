@@ -15,9 +15,6 @@ var DataTypes = Sequelize;
 module.exports = function(config) {
 
   if (!config) {
-    console.warn('No especifico una configuracion para el modelo, ' +
-      'se utilizará una configuracion con SQLite en memoria');
-
     config = {
       "user": null,
       "password": null,
