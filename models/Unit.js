@@ -29,7 +29,7 @@ module.exports = function(sequelize, Sequelize) {
         this.belongsTo(models.BranchClassifier, { as: 'classifier1', foreignKey: 'clasificacion_1_correlativo'  });
         this.belongsTo(models.BranchClassifier, { as: 'classifier2', foreignKey: 'clasificacion_2_correlativo' });
         this.belongsTo(models.BranchClassifier, { as: 'classifier3', foreignKey: 'clasificacion_3_correlativo' });
-        this.hasMany(models.UnitConversion.scope('notSameUnits'), { as: 'conversions', foreignKey: 'correlativo_unidad_1' });
+        this.hasMany(models.UnitConversion.scope(['notSameUnits', 'includeUnitsNames']), { as: 'conversions', foreignKey: 'correlativo_unidad_1' });
       }
     }
   }];

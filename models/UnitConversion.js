@@ -44,6 +44,13 @@ module.exports = function(sequelize, Sequelize) {
       }
     },
     scopes: {
+      includeUnitsNames: {
+        include: [
+          { as: 'unit1', model: models.Unit, attributes: ['name']},
+          { as: 'unit2', model: models.Unit, attributes: ['name'] }
+        ]
+
+      },
       notSameUnits: {
         where: {
           unitId1: {
