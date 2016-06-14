@@ -319,8 +319,12 @@ isUUID: 4,                // only allow uuids
 isDate: true,             // only allow date strings
 isAfter: "2011-11-05",    // only allow date strings after a specific date
 isBefore: "2011-11-05",   // only allow date strings before a specific date
-max: 23,                  // only allow values
+max: 23,                  // only allow values <= 23
 min: 23,                  // only allow values >= 23
+gt: 23                    // only allow values > 23
+gte: 23                   // alias para min
+lt: 23                    // only allow values < 23
+lte: 23                   // alias para max
 isArray: true,            // only allow arrays
 isCreditCard: true,       // check for valid credit card numbers
 

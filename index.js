@@ -4,6 +4,7 @@ var cls         = require('continuation-local-storage');
 var ssaclRoles  = require('./sequelize-plugins/ssacl-attribute-roles');
 var assocFields = require('./sequelize-plugins/sequelize-association-fields');
 var assocUpdate = require('./sequelize-plugins/sequelize-association-updates');
+var cValidators = require('./sequelize-plugins/sequelize-custom-validations');
 var Sequelize   = require('sequelize');
 var _           = require('underscore');
 var utils       = require('./utils');
@@ -36,6 +37,7 @@ module.exports = function(config) {
   assocFields(sequelize);
   ssaclRoles(sequelize);
   assocUpdate(sequelize);
+  cValidators(sequelize);
 
   var modelAttribs = require('./models/attribs')(DataTypes, Sequelize);
 
