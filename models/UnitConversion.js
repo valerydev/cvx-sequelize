@@ -44,17 +44,20 @@ module.exports = function(sequelize, Sequelize) {
       }
     },
     scopes: {
-      includeUnits: {
-        include: [
-          { as: 'unit1', model: models.Unit, attributes: ['name', 'code']},
-          { as: 'unit2', model: models.Unit, attributes: ['name', 'code'] }
-        ]
-
+      includeUnits: function(){
+        return {
+          include: [
+            { as: 'unit1', model: models.Unit, attributes: ['name', 'code']},
+            { as: 'unit2', model: models.Unit, attributes: ['name', 'code'] }
+          ]
+        }
       },
-      notSameUnits: {
-        where: {
-          unitId1: {
-            $ne: col('correlativo_unidad_2')
+      notSameUnits: function(){
+        return {
+          where: {
+            unitId1: {
+              $ne: col('correlativo_unidad_2')
+            }
           }
         }
       }
