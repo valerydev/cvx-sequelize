@@ -59,6 +59,13 @@ module.exports = function(sequelize, Sequelize) {
       beforeUpdate: function(category, opts) {
         return this.calculateTreeInfo(category);
       }
+    },
+    scopes: {
+      includeParentName: function() {
+        return {
+          include: [{ as: 'parent', model: models.Category, require: false, attributes: ['name'] }]
+        }
+      }
     }
 
   }];
