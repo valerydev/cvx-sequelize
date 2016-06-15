@@ -5,6 +5,7 @@ var ssaclRoles  = require('./sequelize-plugins/ssacl-attribute-roles');
 var assocFields = require('./sequelize-plugins/sequelize-association-fields');
 var assocUpdate = require('./sequelize-plugins/sequelize-association-updates');
 var cValidators = require('./sequelize-plugins/sequelize-custom-validations');
+var globalHooks = require('./sequelize-plugins/sequelize-global-hooks');
 var Sequelize   = require('sequelize');
 var _           = require('underscore');
 var utils       = require('./utils');
@@ -38,6 +39,7 @@ module.exports = function(config) {
   ssaclRoles(sequelize);
   assocUpdate(sequelize);
   cValidators(sequelize);
+  globalHooks(sequelize);
 
   var modelAttribs = require('./models/attribs')(DataTypes, Sequelize);
 
