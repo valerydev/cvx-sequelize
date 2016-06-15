@@ -54,10 +54,10 @@ module.exports = function(sequelize, Sequelize) {
     },
     hooks: {
       beforeCreate: function(category, opts) {
-        return calculateTreeInfo(category);
+        return this.calculateTreeInfo(category);
       },
       beforeUpdate: function(category, opts) {
-        return calculateTreeInfo(category);
+        return this.calculateTreeInfo(category);
       }
     }
 
