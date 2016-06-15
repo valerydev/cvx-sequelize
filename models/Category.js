@@ -45,7 +45,7 @@ module.exports = function(sequelize, Sequelize) {
           category.path = category.code;
           category.level = 1;
         } else {
-          return models.Category.find(category.parentId).then(parent => {
+          return models.Category.findById(category.parentId).then(parent => {
             category.path = parent.path + '-' + category.code;
             category.level = parent.level + 1;
           });
