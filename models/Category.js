@@ -38,7 +38,7 @@ module.exports = function(sequelize, Sequelize) {
         this.belongsTo(models.BranchClassifier, { as: 'classifier1', foreignKey: 'clasificacion_1_correlativo'  });
         this.belongsTo(models.BranchClassifier, { as: 'classifier2', foreignKey: 'clasificacion_2_correlativo' });
         this.belongsTo(models.BranchClassifier, { as: 'classifier3', foreignKey: 'clasificacion_3_correlativo' });
-        this.belongsTo(models.Category, { as: 'parent', foreignkey: 'categoria_padre_correlativo' })
+        this.belongsTo(models.Category, { as: 'parent', foreignKey: 'categoria_padre_correlativo' })
       },
       calculateTreeInfo: function(category) {
         if(category.parentId === 0) { //Si es Raiz
