@@ -1,14 +1,15 @@
-var fs          = require('fs');
-var path        = require('path');
-var cls         = require('continuation-local-storage');
-var ssaclRoles  = require('./sequelize-plugins/ssacl-attribute-roles');
-var assocFields = require('./sequelize-plugins/sequelize-association-fields');
-var assocUpdate = require('./sequelize-plugins/sequelize-association-updates');
-var cValidators = require('./sequelize-plugins/sequelize-custom-validations');
-var globalHooks = require('./sequelize-plugins/sequelize-global-hooks');
-var Sequelize   = require('sequelize');
-var _           = require('underscore');
-var utils       = require('./utils');
+var fs           = require('fs');
+var path         = require('path');
+var cls          = require('continuation-local-storage');
+var ssaclRoles   = require('./sequelize-plugins/ssacl-attribute-roles');
+var assocFields  = require('./sequelize-plugins/sequelize-association-fields');
+var assocUpdate  = require('./sequelize-plugins/sequelize-association-updates');
+var cValidators  = require('./sequelize-plugins/sequelize-custom-validations');
+var serialSchema = require('./sequelize-plugins/sequelize-serializable-schema');
+var globalHooks  = require('./sequelize-plugins/sequelize-global-hooks');
+var Sequelize    = require('sequelize');
+var _            = require('underscore');
+var utils        = require('./utils');
 
 var basename  = path.basename(module.filename);
 Sequelize.cls = cls.createNamespace('valeryweb-model-ns');
@@ -34,7 +35,7 @@ module.exports = function(config) {
   var models    = {};
   var sequelize = new Sequelize(config.database, config.user, config.password, config);
 
-  //Este plugin añade propiedades en las instancias al cargar perezosamente asociaciones
+  serialSchema(sequelize);
   assocFields(sequelize);
   ssaclRoles(sequelize);
   assocUpdate(sequelize);
