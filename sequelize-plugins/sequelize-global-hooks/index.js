@@ -23,7 +23,7 @@ fs.readdirSync(__dirname)
       var req     = ns.get( REQ_KEY );
       var session = ns.get( SESSION_KEY );
 
-      if(!session || !req)
+      if(!/\w*(Init|Define)/.test(hookName) && ( !session || !req ))
         throw new Error( 'No se encontro session en el espacio de nombres CLS "valeryweb-ws-ns"' );
 
       return hookFunc.apply( { request: req, session: session }, [].slice.call(arguments, 1) );
