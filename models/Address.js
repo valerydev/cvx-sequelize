@@ -23,6 +23,7 @@ module.exports = function(sequelize, Sequelize) {
     subLocationId2: {},
     postalCode: {},
     timezone: {},
+    timezoneId: {},
     geolocation: {}
   }, {
     classMethods: {
