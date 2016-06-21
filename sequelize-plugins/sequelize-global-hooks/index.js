@@ -2,33 +2,34 @@ var fs = require('fs');
 var path = require('path');
 var cls = require('continuation-local-storage');
 
-const VALERY_NS   = 'valeryweb-ws-ns';
-const REQ_KEY     = 'req';
-const SESSION_KEY = 'session';
+var context   = 'global-hooks-ns';
 
-module.exports = function( sequelize ) {
-fs.readdirSync(__dirname)
-  .filter( file => fs.statSync( path.join(__dirname, file)).isFile()
-      && file.slice(-3) == '.js'
-      && file.slice(0,-3) != 'index')
+module.exports = function( sequelize, opts ) {
 
-  .forEach( file => {
-    var _        = sequelize.Sequelize.Utils._;
-    var hookName = file.slice(0,-3);
-    var hookPath = path.join(__dirname, file);
-    var hookFunc = require(hookPath);
+  var namespace =  opts.namespace || 'global-hooks-ns';
 
-    var hookWrapper = _.wrap(hookFunc, function(hookFunc) {
-      var ns      = cls.getNamespace( VALERY_NS );
-      var req     = ns.get( REQ_KEY );
-      var session = ns.get( SESSION_KEY );
+  fs.readdirSync(__dirname)
+    .filter( file => fs.statSync( path.join(__dirname, file)).isFile()
+        && file.slice(-3) == '.js'
+        && file.slice(0,-3) != 'index')
 
-      if(!/\w*(Init|Define)/.test(hookName) && ( !session || !req ))
-        throw new Error( 'No se encontro session en el espacio de nombres CLS "valeryweb-ws-ns"' );
+    .forEach( file => {
+      var _        = sequelize.Sequelize.Utils._;
+      var hookName = file.slice(0,-3);
+      var hookPath = path.join(__dirname, file);
+      var hookFunc = require(hookPath);
 
-      return hookFunc.apply( { request: req, session: session }, [].slice.call(arguments, 1) );
+      var hookWrapper = _.wrap(hookFunc, function(hookFunc) {
+
+        var ns = {};
+        if(!/\w*(Init|Define)/.test(hookName)) {
+          //Solo buscar la session en el namespace de valery si el hook no es *Define/*Init
+          ns = cls.getNamespace( namespace );
+        }
+
+        return hookFunc.apply(ns.active, [].slice.call(arguments, 1));
+      });
+
+      sequelize.addHook( hookName, hookWrapper );
     });
-
-    sequelize.addHook( hookName, hookWrapper );
-  });
 };

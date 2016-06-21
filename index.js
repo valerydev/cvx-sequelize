@@ -43,7 +43,7 @@ module.exports = function(config) {
   ssaclRoles(sequelize);
   assocUpdate(sequelize);
   cValidators(sequelize);
-  globalHooks(sequelize);
+  globalHooks(sequelize, { namespace: 'valeryweb-ws-ns' });
   //defScopeFunc(sequelize);
   nestedAssocScopes(sequelize);
 
