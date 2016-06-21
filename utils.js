@@ -147,6 +147,9 @@ module.exports.addJSONSchema = function (models) {
     })]);
 
     var modelAttribs = require('./models/attribs')({
+        NUMBER: function(){
+          return 'number';
+        },
         BIGINT: function(){
             return 'integer';
         },
@@ -159,8 +162,14 @@ module.exports.addJSONSchema = function (models) {
         DECIMAL: function(){
             return 'number';
         },
+        NUMERIC: function(){
+          return 'number';
+        },
         DOUBLE: function(){
             return 'number';
+        },
+        REAL: function(){
+          return 'number';
         },
         BOOLEAN: function(){
             return 'boolean';
@@ -173,14 +182,26 @@ module.exports.addJSONSchema = function (models) {
             return 'string' + '['+ args.join(',') +']';
         },
         DATE: function(){
-            return 'string' + '#date';
+            return 'string' + '#date-time';
+        },
+        DATEONLY: function(){
+          return 'string' + '#date';
+        },
+        TIME: function(){
+          return 'string' + '#time';
+        },
+        NOW: function(){
+          return 'string' + '#date-time';
         },
         BINARY: function(){
             return 'binary';
         },
         STRING: function(len){
             return 'string'+ (len ? '('+len+')' : '');
-        }
+        },
+        CHAR: function(len){
+          return 'string'+ (len ? '('+len+')' : '');
+        },
     }, Sequelize);
 
     models.forEach(function(model) {
