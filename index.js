@@ -7,6 +7,9 @@ var assocUpdate  = require('./sequelize-plugins/sequelize-association-updates');
 var cValidators  = require('./sequelize-plugins/sequelize-custom-validations');
 var serialSchema = require('./sequelize-plugins/sequelize-serializable-schema');
 var globalHooks  = require('./sequelize-plugins/sequelize-global-hooks');
+//var defScopeFunc = require('./sequelize-plugins/sequelize-default-scope-function');
+var nestedAssocScopes = require('./sequelize-plugins/sequelize-nested-creation-association-scopes');
+
 var Sequelize    = require('sequelize');
 var _            = require('underscore');
 var utils        = require('./utils');
@@ -41,6 +44,8 @@ module.exports = function(config) {
   assocUpdate(sequelize);
   cValidators(sequelize);
   globalHooks(sequelize);
+  //defScopeFunc(sequelize);
+  nestedAssocScopes(sequelize);
 
   var modelAttribs = require('./models/attribs')(DataTypes, Sequelize);
 
