@@ -29,7 +29,14 @@ beforeEach(function(done){
   assocUpdates(sq);
 
   var models = this.models = {
-    Address         : sq.define('Address'         , { street: Sequelize.STRING  }),
+    Address         : sq.define('Address'         , {
+                                                      street: Sequelize.STRING,
+                                                      entity: {
+                                                        field: 'entidad',
+                                                        type: Sequelize.STRING,
+                                                        allowNull: false
+                                                      }
+                                                    }),
     User            : sq.define('User'            , { name  : Sequelize.STRING  }),
     Contract        : sq.define('Contract'        , { name  : Sequelize.STRING  }),
     ContractDet     : sq.define('ContractDet'     , { desc  : Sequelize.STRING  }),
@@ -53,7 +60,7 @@ beforeEach(function(done){
   models.User.belongsTo    ( models.Profile     , { as: 'profile' , foreignKey: { name: 'profileId' , allowNull: true  }});
 
   //1:M
-  models.User.hasMany      ( models.Address     , { as: 'addresses', foreignKey:{ name: 'userId'    , allowNull: false }});
+  models.User.hasMany      ( models.Address     , { as: 'addresses',foreignKey: { name: 'entityId'  , allowNull: false }, scope:{ entity: 'USER' }});
 
   //M:N
   models.User.belongsToMany    ( models.Property, {
@@ -81,8 +88,8 @@ beforeEach(function(done){
        contract: { name: 'Kepen' },
        profile:  { name: 'Admin' },
        addresses: [
-         { street: 'street1' },
-         { street: 'street2' }
+         { street: 'street1', entity: 'USER' },
+         { street: 'street2', entity: 'USER' }
        ]}, { include:{ all:true }
     }).then( user => {
       return Promise.mapSeries([
@@ -117,20 +124,21 @@ describe('sequelize-association-updates', function() {
     }).catch(err => done(err));
   });
 
-  it('Debe crear las asociaciones 1:M', function (done) {
+  it('Debe crear las asociaciones 1:M y soportar scopes en asociacion', function (done) {
     this.timeout(0);
     return this.currUser.updateAssoc({
       model: this.models.Address,
       as: 'addresses',
       values: [
-        { street: 'street3'},
-        { street: 'street4'},
-        { street: 'street5'}
+        { street: 'street3' },
+        { street: 'street4' },
+        { street: 'street5' }
       ]
     })
     .then(user => user.getAddresses())
     .then(addresses => {
       expect(addresses).to.have.length(5);
+      expect(_.map(addresses,'entity')).to.have.members(['USER','USER','USER','USER','USER']);
       done();
 
     }).catch(err => done(err));
@@ -336,6 +344,24 @@ describe('sequelize-association-updates', function() {
         checkRelated: true //Enabling the check for relation existence
       })
       .should.be.rejectedWith(/No existe relacion/).notify(done);;
+    });
+  });
+
+  it('Debe soportar asociaciones con scope', function(done) {
+    this.timeout(0);
+
+    this.models.Property.create({name: 'unrelatedProperty'}).then(prop => {
+      return this.currUser.updateAssoc({
+        model: this.models.Property,
+        as: 'properties',
+        values: [{
+          id: prop.id,
+          name: 'propertyRelated', //We can update the property name...
+          UserProperty: {  value: 'valueX' } //...and create the relation at once.
+        }],
+        checkRelated: true //Enabling the check for relation existence
+      })
+        .should.be.rejectedWith(/No existe relacion/).notify(done);;
     });
   });
 

@@ -156,17 +156,27 @@ module.exports._doOperation = function (association, sourceInstance, targetInsta
   switch (targetInstance._op) {
 
     case 'C':
-      if(/Many$/i.test(associationType)) {
-
-        return targetInstance.save().then(targetInstance => {
-          return sourceInstance[accessors['add']](targetInstance, throughValues)
-            .return(targetInstance)
-        })
-
-      } else {
-        return sourceInstance[accessors['create']](targetInstance.dataValues)
-          .return(targetInstance);
+      //Lamentablemente sequelize no soporta correctamente asociaciones con scope si
+      //los atributos tienen nombres diferentes a los de la tabla en BD, el parche del
+      //commit 7002482df3e88268f5cd56188b018c3696323a90 es un workaround que debemos
+      //tomar en cuenta aqui.
+      if (association.scope) {
+        Object.keys(association.scope).forEach(function (field) {
+          for (var attrName in association.target.attributes){
+            var attr = association.target.attributes[attrName];
+            //Asociamos los nombres de los atributos del scope
+            //con su correspondiente ya sea en la instancia o en BD
+            //y asignamos su valor al atributo de la instancia
+            if(attr.field === field || attr.fieldName === field) {
+              targetInstance[attr.fieldName] = association.scope[field];
+              break;
+            }
+          }
+        });
       }
+
+      return sourceInstance[accessors['create']](targetInstance.dataValues, throughValues)
+        .return(targetInstance);
 
     case 'U':
       return targetInstance.save().then(updated =>{
