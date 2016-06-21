@@ -1,3 +1,3 @@
-module.exports = ( instance, opts ) => {
+module.exports = function( instance, opts ) {
 
 };

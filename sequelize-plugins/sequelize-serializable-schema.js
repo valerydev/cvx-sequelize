@@ -7,7 +7,7 @@ module.exports = function( sequelize ) {
     var modelDef = {};
     _.values(model.rawAttributes).forEach(attr => {
 
-      var type = attr.type
+      var type = attr.type;
       var typeName = attr.type.key;
       typeName = typeName.replace(/DOUBLE PRECISION/, 'DOUBLE');
 
