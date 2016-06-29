@@ -74,6 +74,31 @@ module.exports = function(sequelize, Sequelize) {
     }
   },{
 
+    classMethods: {
+      associate: function () {
+        this.belongsTo(models.Contract, { as: 'contract', foreignKey: 'contrato_correlativo' });
+        this.belongsTo(models.Branch,   { as: 'branch',   foreignKey: 'sucursal_correlativo' });
+        this.belongsTo(models.Image,    { as: 'photo',    foreignKey: 'foto_correlativo'     });
+        this.belongsTo(models.Profile,  { as: 'profile',  foreignKey: 'perfil_correlativo'   });
+        this.belongsTo(models.BranchClassifier,   { as: 'classifier1', foreignKey: 'clasificacion_1_correlativo' });
+        this.belongsTo(models.BranchClassifier,   { as: 'classifier2', foreignKey: 'clasificacion_2_correlativo' });
+        this.belongsTo(models.BranchClassifier,   { as: 'classifier3', foreignKey: 'clasificacion_3_correlativo' });
+        this.belongsTo(models.ConnectionSchedule.scope('includeDetails'), { as: 'connectionSchedule', foreignKey: 'horario_conexion_correlativo' });
+        this.belongsToMany(models.Property.scope('includeCategory'), {
+          through: models.UserProperty,
+          as: 'properties',
+          foreignKey: {
+            name: 'userId',
+            field: 'usuario_correlativo'
+          },
+          otherKey: {
+            name: 'propertyId',
+            field: 'propiedad_correlativo'
+          }
+        });
+      },
+    },
+
     getterMethods: {
       cascadeProperties: function() {
 
@@ -100,31 +125,6 @@ module.exports = function(sequelize, Sequelize) {
         var contract = this.getDataValue('contract');
         return contract == undefined ? contract : this.id == contract.mainUserId;
       }
-    },
-
-    classMethods: {
-      associate: function () {
-        this.belongsTo(models.Contract, { as: 'contract', foreignKey: 'contrato_correlativo' });
-        this.belongsTo(models.Branch,   { as: 'branch',   foreignKey: 'sucursal_correlativo' });
-        this.belongsTo(models.Image,    { as: 'photo',    foreignKey: 'foto_correlativo'     });
-        this.belongsTo(models.Profile,  { as: 'profile',  foreignKey: 'perfil_correlativo'   });
-        this.belongsTo(models.BranchClassifier,   { as: 'classifier1', foreignKey: 'clasificacion_1_correlativo' });
-        this.belongsTo(models.BranchClassifier,   { as: 'classifier2', foreignKey: 'clasificacion_2_correlativo' });
-        this.belongsTo(models.BranchClassifier,   { as: 'classifier3', foreignKey: 'clasificacion_3_correlativo' });
-        this.belongsTo(models.ConnectionSchedule.scope('includeDetails'), { as: 'connectionSchedule', foreignKey: 'horario_conexion_correlativo' });
-        this.belongsToMany(models.Property.scope('includeCategory'), {
-          through: models.UserProperty,
-          as: 'properties',
-          foreignKey: {
-            name: 'userId',
-            field: 'usuario_correlativo'
-          },
-          otherKey: {
-            name: 'propertyId',
-            field: 'propiedad_correlativo'
-          }
-        });
-      },
     },
 
     instanceMethods: {
