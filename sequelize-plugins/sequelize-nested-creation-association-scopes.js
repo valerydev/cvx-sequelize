@@ -10,7 +10,7 @@ module.exports = function( sequelize ) {
       return !(include.association.associationType === 'BelongsTo');
     }).map( function (include) {
 
-      var targetInstances = _.flatten([self.get(include.as)]);
+      var targetInstances = _.flatten(_.compact([self.get(include.as)]));
       if (_.isEmpty(targetInstances)) return;
 
       targetInstances.map(function (targetInstance) {
@@ -36,14 +36,6 @@ module.exports = function( sequelize ) {
       });
     });
   };
-
-  function getModelFieldName(assoc, dbFieldName) {
-    for (var attrName in assoc.target.attributes){
-      var attr = assoc.target.attributes[attrName];
-      if(attr.field === dbFieldName)
-        return attr.fieldName;
-    }
-  }
 
   sequelize.addHook('beforeCreate', assignAssociationScopeAttributes);
 };
