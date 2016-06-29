@@ -6,7 +6,7 @@ var assocFields  = require('./sequelize-plugins/sequelize-association-fields');
 var assocUpdate  = require('./sequelize-plugins/sequelize-association-updates');
 var cValidators  = require('./sequelize-plugins/sequelize-custom-validations');
 var serialSchema = require('./sequelize-plugins/sequelize-serializable-schema');
-var globalHooks  = require('./sequelize-plugins/sequelize-global-hooks');
+var assignedFields = require('./sequelize-plugins/valery-session-assigned-fields');
 //var defScopeFunc = require('./sequelize-plugins/sequelize-default-scope-function');
 var nestedAssocScopes = require('./sequelize-plugins/sequelize-nested-creation-association-scopes');
 
@@ -43,7 +43,7 @@ module.exports = function(config) {
   ssaclRoles(sequelize);
   assocUpdate(sequelize);
   cValidators(sequelize);
-  globalHooks(sequelize, { namespace: 'valeryweb-ws-ns' });
+  assignedFields(sequelize, { namespaces: ['valeryweb-ws-ns'] });
   //defScopeFunc(sequelize);
   nestedAssocScopes(sequelize);
 
