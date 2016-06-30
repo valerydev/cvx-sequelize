@@ -14,7 +14,7 @@ var Sequelize = require('sequelize');
 var _         = Sequelize.Utils._;
 var Promise   = Sequelize.Promise;
 var validator = Sequelize.Validator;
-var assocUpdates = require('../../sequelize-plugins/sequelize-association-updates');
+var assocUpdates = require('../../../sequelize-plugins/association-updates');
 
 beforeEach(function(done){
   this.timeout(0);
@@ -30,13 +30,13 @@ beforeEach(function(done){
 
   var models = this.models = {
     Address         : sq.define('Address'         , {
-                                                      street: Sequelize.STRING,
-                                                      entity: {
-                                                        field: 'entidad',
-                                                        type: Sequelize.STRING,
-                                                        allowNull: false
-                                                      }
-                                                    }),
+      street: Sequelize.STRING,
+      entity: {
+        field: 'entidad',
+        type: Sequelize.STRING,
+        allowNull: false
+      }
+    }),
     User            : sq.define('User'            , { name  : Sequelize.STRING  }),
     Contract        : sq.define('Contract'        , { name  : Sequelize.STRING  }),
     ContractDet     : sq.define('ContractDet'     , { desc  : Sequelize.STRING  }),
@@ -84,13 +84,13 @@ beforeEach(function(done){
 
   sq.sync({logging: null}).then(function(){
     return models.User.create({
-       name: 'Raul Contreras',
-       contract: { name: 'Kepen' },
-       profile:  { name: 'Admin' },
-       addresses: [
-         { street: 'street1', entity: 'USER' },
-         { street: 'street2', entity: 'USER' }
-       ]}, { include:{ all:true }
+      name: 'Raul Contreras',
+      contract: { name: 'Kepen' },
+      profile:  { name: 'Admin' },
+      addresses: [
+        { street: 'street1', entity: 'USER' },
+        { street: 'street2', entity: 'USER' }
+      ]}, { include:{ all:true }
     }).then( user => {
       return Promise.mapSeries([
           ()=> user.createProperty({ name: 'userProp1',  internal: true }, { value: 'value1' }),
@@ -98,7 +98,7 @@ beforeEach(function(done){
           ()=> user.profile.createProperty ({ name: 'profileProp' }, { value: 'value1' }),
           ()=> user.contract.createProperty({ name: 'contractProp'}, { value: 'value1' })
         ],
-        runPromise => runPromise()).then(()=> self.currUser = user).then(()=> done());
+          runPromise => runPromise()).then(()=> self.currUser = user).then(()=> done());
     });
   });
 });
@@ -113,15 +113,15 @@ describe('sequelize-association-updates', function() {
       as: 'contract',
       values: { name: 'CompanyX' }
     })
-    .then(user => user.getContract())
-    .then(contract => {
+      .then(user => user.getContract())
+      .then(contract => {
 
-      expect(contract).to.be.ok;
-      expect(contract).to.have.property('name');
-      expect(contract.name).to.be.equal('CompanyX');
-      done();
+        expect(contract).to.be.ok;
+        expect(contract).to.have.property('name');
+        expect(contract.name).to.be.equal('CompanyX');
+        done();
 
-    }).catch(err => done(err));
+      }).catch(err => done(err));
   });
 
   it('Debe crear las asociaciones 1:M y soportar scopes en asociacion', function (done) {
@@ -135,13 +135,13 @@ describe('sequelize-association-updates', function() {
         { street: 'street5' }
       ]
     })
-    .then(user => user.getAddresses())
-    .then(addresses => {
-      expect(addresses).to.have.length(5);
-      expect(_.map(addresses,'entity')).to.have.members(['USER','USER','USER','USER','USER']);
-      done();
+      .then(user => user.getAddresses())
+      .then(addresses => {
+        expect(addresses).to.have.length(5);
+        expect(_.map(addresses,'entity')).to.have.members(['USER','USER','USER','USER','USER']);
+        done();
 
-    }).catch(err => done(err));
+      }).catch(err => done(err));
   });
 
   it('Debe crear las asociaciones M:N junto con sus atributos adicionales', function(done){
@@ -155,14 +155,14 @@ describe('sequelize-association-updates', function() {
         UserProperty: {  value: 'value1' }
       }]
     })
-    .then(user => user.getProperties({where: {name: 'userProp3'}}))
-    .then(properties => {
+      .then(user => user.getProperties({where: {name: 'userProp3'}}))
+      .then(properties => {
 
-      expect(properties).to.have.length(1);
-      expect(properties[0].UserProperty.value).to.be.equal('value1');
-      done();
+        expect(properties).to.have.length(1);
+        expect(properties[0].UserProperty.value).to.be.equal('value1');
+        done();
 
-    }).catch(err => done(err));
+      }).catch(err => done(err));
   });
 
   it('Debe actualizar las asociaciones M:N junto con sus atributos adicionales', function(done){
@@ -213,15 +213,15 @@ describe('sequelize-association-updates', function() {
         }
       ]
     })
-    .then(user => user.getProperties({ where: {id: 1} }))
-    .then(properties => {
+      .then(user => user.getProperties({ where: {id: 1} }))
+      .then(properties => {
 
-      expect(properties).to.have.length(1);
-      expect(properties[0].name).to.be.equal('nameChanged');
-      expect(properties[0].internal).to.be.ok; //Debe conservar su valor, no debe aplicar el default de la columna!
-      done();
+        expect(properties).to.have.length(1);
+        expect(properties[0].name).to.be.equal('nameChanged');
+        expect(properties[0].internal).to.be.ok; //Debe conservar su valor, no debe aplicar el default de la columna!
+        done();
 
-    }).catch(err => done(err));
+      }).catch(err => done(err));
   });
 
   it('Debe funcionar en series de actualizaciones donde una depende de la otra', function (done) {
@@ -234,41 +234,41 @@ describe('sequelize-association-updates', function() {
     return sequelize.transaction({autocommit: false}, tx => {
       return Promise.mapSeries([
         ()=> user.updateAssoc({
-               as: 'contract',
-               model: models.Contract,
-               values: { id: 1 }  //Eliminamos el contrato actual
-             }),
+          as: 'contract',
+          model: models.Contract,
+          values: { id: 1 }  //Eliminamos el contrato actual
+        }),
         ()=> user.updateAssoc({
-               as: 'contract',
-               model: models.Contract,
-               values: { name: 'New Company' } //Creamos un nuevo contrato
-             }),
+          as: 'contract',
+          model: models.Contract,
+          values: { name: 'New Company' } //Creamos un nuevo contrato
+        }),
         ()=> user.getContract().then( contract => {
-               return !contract ? contract : contract.updateAssoc({
-                 as: 'details',
-                 model: models.ContractDet,
-                 values: { desc: 'Future is now' } //Creamos un nuevo detalle del contrato
-               });
-             })
+          return !contract ? contract : contract.updateAssoc({
+            as: 'details',
+            model: models.ContractDet,
+            values: { desc: 'Future is now' } //Creamos un nuevo detalle del contrato
+          });
+        })
       ], runPromise => runPromise() )
 
-      .then(()=> models.Contract.findAll().then( contracts => expect(contracts).to.have.length(1)))
+        .then(()=> models.Contract.findAll().then( contracts => expect(contracts).to.have.length(1)))
 
-      .then(() => user.getContract({
-        include:[{
-          model: models.ContractDet,
-          as: 'details'
-        }]
-      }))
-      .then(contract => {
+        .then(() => user.getContract({
+          include:[{
+            model: models.ContractDet,
+            as: 'details'
+          }]
+        }))
+        .then(contract => {
 
-        expect(contract).to.be.ok;
-        expect(contract.name).to.be.equal('New Company');
-        expect(contract.details).to.be.ok;
-        expect(contract.details.desc).to.be.equal('Future is now');
-        done();
+          expect(contract).to.be.ok;
+          expect(contract.name).to.be.equal('New Company');
+          expect(contract.details).to.be.ok;
+          expect(contract.details.desc).to.be.equal('Future is now');
+          done();
 
-      });
+        });
     }).catch(err => done(err));
   });
 
@@ -279,26 +279,26 @@ describe('sequelize-association-updates', function() {
 
       //M:1
       ()=> this.currUser.updateAssoc({
-             model: this.models.Contract,
-             as: 'contract',
-             values: { id: 99, name: 'CompanyX' }
-           })
-           .should.be.rejectedWith(/No existe relacion/),
+        model: this.models.Contract,
+        as: 'contract',
+        values: { id: 99, name: 'CompanyX' }
+      })
+        .should.be.rejectedWith(/No existe relacion/),
 
 
       //M:N
       ()=> this.models.Property.find({where: { name: 'contractProp' }}).bind(this).then( contractProp => {
-             return this.currUser.updateAssoc({
-               model: this.models.Property,
-               as: 'properties',
-               values: {
-                 id: contractProp.id,
-                 name: 'nameChanged',
-                 UserProperty: {  value: 'valueChanged' }
-               }
-             });
-           })
-           .should.be.rejectedWith(/No existe relacion/)
+        return this.currUser.updateAssoc({
+          model: this.models.Property,
+          as: 'properties',
+          values: {
+            id: contractProp.id,
+            name: 'nameChanged',
+            UserProperty: {  value: 'valueChanged' }
+          }
+        });
+      })
+        .should.be.rejectedWith(/No existe relacion/)
 
     ], runPromise => runPromise()).should.notify(done);
   });
@@ -318,15 +318,15 @@ describe('sequelize-association-updates', function() {
         checkRelated: false //Disabling the check for relation existence
       });
     })
-    .then(user => user.getProperties())
-    .then(properties => {
+      .then(user => user.getProperties())
+      .then(properties => {
 
-      expect(properties).to.have.length(3);
+        expect(properties).to.have.length(3);
 
-      expect(_.find(properties, {name: 'propertyRelated'})).to.be.ok;
-      done();
+        expect(_.find(properties, {name: 'propertyRelated'})).to.be.ok;
+        done();
 
-    }).catch(err => done(err));
+      }).catch(err => done(err));
   });
 
   it('Debe fallar al actualizar la asociacion M:N debido a que no existe la relacion si opts.checkRelated = true', function(done){
@@ -343,7 +343,7 @@ describe('sequelize-association-updates', function() {
         }],
         checkRelated: true //Enabling the check for relation existence
       })
-      .should.be.rejectedWith(/No existe relacion/).notify(done);;
+        .should.be.rejectedWith(/No existe relacion/).notify(done);;
     });
   });
 

@@ -1,18 +1,20 @@
-var fs           = require('fs');
-var path         = require('path');
-var cls          = require('continuation-local-storage');
-var ssaclRoles   = require('./sequelize-plugins/ssacl-attribute-roles');
-var assocFields  = require('./sequelize-plugins/sequelize-association-fields');
-var assocUpdate  = require('./sequelize-plugins/sequelize-association-updates');
-var cValidators  = require('./sequelize-plugins/sequelize-custom-validations');
-var serialSchema = require('./sequelize-plugins/sequelize-serializable-schema');
-var assignedFields = require('./sequelize-plugins/valery-session-assigned-fields');
-//var defScopeFunc = require('./sequelize-plugins/sequelize-default-scope-function');
-var nestedAssocScopes = require('./sequelize-plugins/sequelize-nested-creation-association-scopes');
+var fs         = require('fs');
+var path       = require('path');
+var cls        = require('continuation-local-storage');
+var Sequelize  = require('sequelize');
+var _          = require('underscore');
+var utils      = require('./lib/utils');
 
-var Sequelize    = require('sequelize');
-var _            = require('underscore');
-var utils        = require('./utils');
+//Plugins de sequelize genericos
+var ssaclRoles        = require('./sequelize-plugins/ssacl-attribute-roles');
+var assocFields       = require('./sequelize-plugins/association-fields');
+var assocUpdate       = require('./sequelize-plugins/association-updates');
+var serialSchema      = require('./sequelize-plugins/serializable-schema');
+var nestedAssocScopes = require('./sequelize-plugins/nested-creation-association-scopes');
+
+//Plugins de sequelize especificos de valeryweb
+var cValidators       = require('./lib/valery-plugins/custom-validations');
+var assignedFields    = require('./lib/valery-plugins/session-assigned-fields');
 
 var basename  = path.basename(module.filename);
 Sequelize.cls = cls.createNamespace('valeryweb-model-ns');
@@ -44,7 +46,6 @@ module.exports = function(config) {
   assocUpdate(sequelize);
   cValidators(sequelize);
   assignedFields(sequelize, { namespaces: ['valeryweb-ws-ns'] });
-  //defScopeFunc(sequelize);
   nestedAssocScopes(sequelize);
 
   var modelAttribs = require('./models/attribs')(DataTypes, Sequelize);
