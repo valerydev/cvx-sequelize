@@ -125,11 +125,18 @@ module.exports = function(config) {
     };
     sequelize.refreshTypes();
 
-    //Ejecutamos las asociaciones
+
     _.values(models).forEach(function (model) {
-        if (model.associate) {
-            model.associate();
-        }
+      //Ejecutamos las asociaciones
+      if (model.associate) {
+          model.associate();
+      }
+      //Sequelize no soporta funciones como defaultScope, pero son necesarias en
+      //algunos casos, asi que solucionamos reemplazando los defaultScope tipo funcion por
+      //el resultado de su ejecucion
+      if(_.isFunction(model.options.defaultScope)) {
+        model.addScope('defaultScope', model.options.defaultScope(), { override: true });
+      }
     });
 
     models.sync = function(options){
