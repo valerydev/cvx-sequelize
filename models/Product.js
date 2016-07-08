@@ -47,7 +47,7 @@ module.exports = function(sequelize, Sequelize) {
         this.hasOne   (models.ProductAttributes,{ as: 'attributes',      foreignKey: 'producto_correlativo'         });
         this.hasOne   (models.ProductColorSize, { as: 'colorSize',       foreignKey: 'producto_correlativo'         });
         this.hasOne   (models.ProductCosts,     { as: 'costs',           foreignKey: 'producto_correlativo'         });
-        this.hasOne   (models.ProductDimensions,{ as: 'dimensions',      foreignKey: 'producto_correlativo'         });
+        this.hasMany  (models.ProductDimensions,{ as: 'dimensions',      foreignKey: 'producto_correlativo'         });
         this.hasOne   (models.ProductPrices,    { as: 'prices',          foreignKey: 'producto_correlativo'         });
         this.hasOne   (models.ProductTaxes,     { as: 'taxes',           foreignKey: 'producto_correlativo'         });
         this.belongsToMany(models.Warehouse,    {
