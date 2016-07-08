@@ -15,10 +15,7 @@ module.exports = function(sequelize, Sequelize) {
   },{
     classMethods: {
       associate: function () {
-        this.belongsTo(sequelize.models.SysCurrencyConversion, {
-          as: 'conversion',
-          foreignKey: 'conversion_correlativo'
-        });
+        this.belongsTo(models.SysCurrencyExchange, { as: 'exchange', foreignKey: 'conversion_correlativo' });
       },
 
       /**

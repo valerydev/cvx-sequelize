@@ -18,7 +18,7 @@ module.exports = function(sequelize, Sequelize) {
       associate: function () {
         this.belongsTo( models.SysCurrency, { as: 'currency1', foreignKey: 'correlativo_moneda_1' });
         this.belongsTo( models.SysCurrency, { as: 'currency2', foreignKey: 'correlativo_moneda_2' });
-        this.hasMany  ( models.SysCurrencyConversionLog, { as: 'conversionLogs', foreignKey: 'conversion_correlativo'});
+        this.hasMany  ( models.SysCurrencyExchangeLog, { as: 'logs', foreignKey: 'conversion_correlativo'});
       }
     }
   }]

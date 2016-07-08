@@ -13,20 +13,55 @@ module.exports = function(sequelize, Sequelize) {
     classifierId2: {},
     classifierId3: {},
     branchId: {},
-    code: {},
-    name: {},
-    symbol: {},
-    principal: {},
-    active: {},
-    sysCurrency: {}
+    sysCurrencyId: {},
+    customExchange: {},
+    primary: {},
+    active: {}
   }, {
-    scopes: {
-      active: { where: { active: true } }
-    },
     classMethods: {
       associate: function () {
+        this.belongsTo( models.Contract,         { as: 'contract'      , foreignKey: 'contrato_correlativo'        });
+        this.belongsTo( models.Branch,           { as: 'branch'        , foreignKey: 'sucursal_correlativo'        });
+        this.belongsTo( models.BranchClassifier, { as: 'classifier1'   , foreignKey: 'clasificacion_1_correlativo' });
+        this.belongsTo( models.BranchClassifier, { as: 'classifier2'   , foreignKey: 'clasificacion_2_correlativo' });
+        this.belongsTo( models.BranchClassifier, { as: 'classifier3'   , foreignKey: 'clasificacion_3_correlativo' });
+        this.hasMany  ( models.CurrencyExchange, { as: 'exchanges'     , foreignKey: 'correlativo_moneda_1'        });
+        this.belongsTo( models.SysCurrency,      { as: 'sysCurrency'   , foreignKey: 'sys_moneda_correlativo', attributes: ['name','code','symbol','timezone']});
 
       }
+    },
+
+    defaultScope: function() {
+      return {
+        include: _.concat( this.scopes.includeExchanges().include,
+          this.scopes.includeSysCurrency().include )
+      }
+    },
+    scopes: {
+      includeExchanges: function(where) {
+        return {
+          include: [
+            {
+              as: 'exchanges',
+              model: models.CurrencyExchange,
+              required: false,
+              where: where||{}
+            }
+          ]
+        }
+      },
+      includeSysCurrency: function() {
+        return {
+          include: [
+            {
+              as: 'sysCurrency',
+              model: models.SysCurrency,
+              required: false
+            }
+          ]
+        }
+      }
     }
+
   }]
 };

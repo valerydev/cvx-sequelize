@@ -14,13 +14,14 @@ module.exports = function(sequelize, Sequelize) {
     timezone: {},
     active: {}
   }, {
-    scopes: {
-      active: { where: { active: true } }
-    },
     classMethods: {
       associate: function () {
 
       }
+    },
+    defaultScope: { where: { active: true } },
+    scopes: {
+      active: { where: { active: true } }
     }
   }]
 };
