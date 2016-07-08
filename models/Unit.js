@@ -27,11 +27,14 @@ module.exports = function(sequelize, Sequelize) {
         this.hasMany(models.UnitConversion, { as: 'conversions', foreignKey: 'correlativo_unidad_1' });
       }
     },
+    defaultScope: function(){
+      return this.scopes.includeConversions();
+    },
     scopes: {
       includeConversions: function(where) {
         return {
           include: [
-            { model: models.UnitConversion.scope(['notSameUnits', 'includeUnits']), as: 'conversions', required: false, where: where||{} }
+            { model: models.UnitConversion, as: 'conversions', required: false, where: where||{} }
           ]
         }
       }

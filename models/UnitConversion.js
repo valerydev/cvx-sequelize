@@ -43,22 +43,16 @@ module.exports = function(sequelize, Sequelize) {
           this.calculateFactor(conv);
       }
     },
+    defaultScope: function() {
+      return this.scopes.includeUnits();
+    },
     scopes: {
       includeUnits: function(){
         return {
           include: [
-            { as: 'unit1', model: models.Unit, attributes: ['name', 'code']},
-            { as: 'unit2', model: models.Unit, attributes: ['name', 'code'] }
+            { as: 'unit1', model: models.Unit.scope(null), attributes: ['name', 'code']},
+            { as: 'unit2', model: models.Unit.scope(null), attributes: ['name', 'code'] }
           ]
-        }
-      },
-      notSameUnits: function(){
-        return {
-          where: {
-            unitId1: {
-              $ne: col('correlativo_unidad_2')
-            }
-          }
         }
       }
     }
