@@ -9,12 +9,12 @@ module.exports = function(sequelize, Sequelize) {
   return [{
     id: {},
     productId: {},
-    dimensionUnitId: {},
+    unitId: {},
     height: {},
     width: {},
     length: {},
     weight: {},
-    volumeUnitId: {},
+    metricUnitId: {},
     volume: {}
   }, {
     classMethods: {
