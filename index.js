@@ -4,12 +4,14 @@ var cls        = require('continuation-local-storage');
 var Sequelize  = require('sequelize');
 var _          = require('underscore');
 var utils      = require('./lib/utils');
+var dynamoSync = require('./lib/dynamodb-sync');
 
 //Plugins de sequelize genericos
 var ssaclRoles        = require('./sequelize-plugins/ssacl-attribute-roles');
 var assocFields       = require('./sequelize-plugins/association-fields');
 var assocUpdate       = require('./sequelize-plugins/association-updates');
 var serialSchema      = require('./sequelize-plugins/serializable-schema');
+var txBatch           = require('./sequelize-plugins/transaction-batch');
 var nestedAssocScopes = require('./sequelize-plugins/nested-creation-association-scopes');
 
 //Plugins de sequelize especificos de valeryweb
@@ -47,6 +49,8 @@ module.exports = function(config) {
   cValidators(sequelize);
   assignedFields(sequelize, { namespaces: ['valeryweb-ws-ns'] });
   nestedAssocScopes(sequelize);
+  txBatch(sequelize, dynamoSync);
+
 
   var modelAttribs = require('./models/attribs')(DataTypes, Sequelize);
 
