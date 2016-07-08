@@ -10,7 +10,7 @@ var dynamoSync = require('./lib/dynamodb-sync');
 var ssaclRoles        = require('./sequelize-plugins/ssacl-attribute-roles');
 var assocFields       = require('./sequelize-plugins/association-fields');
 var assocUpdate       = require('./sequelize-plugins/association-updates');
-var serialSchema      = require('./sequelize-plugins/serializable-schema');
+var schemaValidation  = require('./sequelize-plugins/schema-validation');
 var txBatch           = require('./sequelize-plugins/transaction-batch');
 var nestedAssocScopes = require('./sequelize-plugins/nested-creation-association-scopes');
 
@@ -42,7 +42,7 @@ module.exports = function(config) {
   var models    = {};
   var sequelize = new Sequelize(config.database, config.user, config.password, config);
 
-  serialSchema(sequelize);
+  schemaValidation(sequelize);
   assocFields(sequelize);
   ssaclRoles(sequelize);
   assocUpdate(sequelize);
