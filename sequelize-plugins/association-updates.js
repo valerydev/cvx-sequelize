@@ -78,7 +78,7 @@ module.exports = function(sequelize){
                 if(!targetInstance) {
 
                   reject(
-                    new Error('No existe el objetivo de la asociacion' + target.name + '('
+                    new Error('No existe el objetivo de la asociacion ' + target.name + ' ('
                       + values[target.primaryKeyAttribute] + ')')
                   );
 

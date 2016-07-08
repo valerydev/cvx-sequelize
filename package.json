@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.4.6",
-    "bluebird": "^2.9.33",
+    "bluebird": "3.3.5",
     "continuation-local-storage": "^3.1.4",
     "md5": "^2.1.0",
     "mysql": "2.6.2",

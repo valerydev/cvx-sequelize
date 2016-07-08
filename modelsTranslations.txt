@@ -570,7 +570,7 @@ ProductCost                      : productos_costos
    discountPercentage4              : porc_descuento_4
    discountPercentage5              : porc_descuento_5
    discountPercentage6              : porc_descuento_6
-   bonusDiscount                    : descuento_bonificacion
+   bonusUnits                       : descuento_bonificacion
    unitCost                         : costo_unitario
    addedCost1                       : costo_agregado_1
    addedCost2                       : costo_agregado_2
@@ -583,29 +583,29 @@ ProductCost                      : productos_costos
    importCost                       : costo_importacion
    calculedCost                     : costo_calculado
    unitAverageCost                  : costo_unitario_promedio
-   calculedAverageCost              : costo_calculado_promedio
-   initialCalculedCost              : costo_calculado_inicial
-   lastCalculedCost                 : costo_calculado_anterior
+   calculatedAverageCost            : costo_calculado_promedio
+   initialCalculatedCost            : costo_calculado_inicial
+   lastCalculatedCost               : costo_calculado_anterior
    initialUnitAverageCost           : costo_unitario_promedio_inicial
    lastUnitAverageCost              : costo_unitario_promedio_anterior
-   initialCalculedAverageCost       : costo_calculado_promedio_inicial
-   lastCalculedAverageCost          : costo_calculado_promedio_anterior
-   decimalPresicion                 : numero_decimales
+   initialCalculatedAverageCost     : costo_calculado_promedio_inicial
+   lastCalculatedAverageCost        : costo_calculado_promedio_anterior
+   decimalPrecision                 : numero_decimales
 
-ProductStorage                   : productos_depositos
+ProductWarehouse                  : productos_almacenes
    id                               : correlativo
    productId                        : producto_correlativo
-   storageId                        : deposito_correlativo
+   warehouse                        : deposito_correlativo
    minStock                         : existencia_minima
    maxStock                         : existencia_maxima
-   reorderPoint                     : punto_reorden
-   actualStock                      : existencia_actual
+   reorder                          : punto_reorden
+   currentStock                     : existencia_actual
    reserveStock                     : existencia_comprometida
    orderedStock                     : existencia_ordenada
    consignmentStock2                : existencia_consignacion
    consignmentStock2                : existencia_2_consignacion
    orderedStock2                    : existencia_2_ordenada
-   reserveStock                     : existencia_2_comprometida
+   reservedStock                    : existencia_2_comprometida
    actualStock2                     : existencia_2_actual
 
 ProductImage                     : productos_foto
@@ -671,7 +671,7 @@ ProductPrices                    : productos_precios
    extraPrice1                      : precio_adicional_1
    extraPrice2                      : precio_adicional_2
    maxPricePercentage               : porc_precio_maximo
-   offerPricePercentege             : porc_precio_oferta
+   offerPricePercentage             : porc_precio_oferta
    higherPricePercentage            : porc_precio_mayor
    lowerPricePercentage             : porc_precio_minimo
    extraPricePercentage1            : porc_precio_adicional_1
@@ -687,7 +687,7 @@ ProductPrices                    : productos_precios
    altExtraPrice1                   : precio_adicional_1_alt
    altExtraPrice2                   : precio_adicional_2_alt
    altMaxPricePercentage            : porc_precio_maximo_alt
-   altOfferPricePercentege          : porc_precio_oferta_alt
+   altOfferPricePercentage          : porc_precio_oferta_alt
    altHigherPricePercentage         : porc_precio_mayor_alt
    altLowerPricePercentage          : porc_precio_minimo_alt
    altExtraPricePercentage1         : porc_precio_adicional_1_alt
