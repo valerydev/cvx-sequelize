@@ -2,8 +2,8 @@
   "name": "valeryweb-model",
   "version": "0.0.3",
   "description": "Modelo ORM sequelize",
-  "main": "index.js",
   "scripts": {
+  "main": "index.js",
     "test": "mocha --harmony --recursive ./test"
   },
   "author": "Raul Contreras <rcontreras@valery.com>",
@@ -18,7 +18,7 @@
     "sqlite3": "^3.1.1",
     "underscore": "1.8.3",
     "underscore.string": "^3.3.4",
-    "validator": "^3.41.2"
+    "validator": "4.9.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
