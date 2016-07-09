@@ -50,7 +50,20 @@ module.exports = function(sequelize, Sequelize) {
   }, {
     classMethods: {
       associate: function () {
-        this.belongsTo(models.Product, { as: 'product',  foreignKey: 'producto_correlativo'    });
+        this.belongsTo(models.Product,  { as: 'product',  foreignKey: 'producto_correlativo' });
+        this.belongsTo(models.Currency, { as: 'currency', foreignKey: 'moneda_correlativo'   });
+      }
+    },
+    defaultScope: function() {
+      return this.scopes.includeCurrency();
+    },
+    scopes: {
+      includeCurrency: function(){
+        return {
+          include: [
+            { as: 'currency', model: models.Currency.scope('shortInfo', 'includeSysCurrency') }
+          ]
+        }
       }
     }
   }];

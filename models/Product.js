@@ -17,8 +17,6 @@ module.exports = function(sequelize, Sequelize) {
     code: {},
     type: {},
     categoryId: {},
-    buyingCurrencyId :{},
-    sellingCurrencyId:{},
     name: {},
     shortName : {},
     reference : {},
@@ -38,8 +36,6 @@ module.exports = function(sequelize, Sequelize) {
         this.belongsTo(models.BranchClassifier, { as: 'classifier2',     foreignKey: 'clasificacion_2_correlativo'  });
         this.belongsTo(models.BranchClassifier, { as: 'classifier3',     foreignKey: 'clasificacion_3_correlativo'  });
         this.belongsTo(models.Category,         { as: 'category',        foreignKey: 'categoria_correlativo'        });
-        this.belongsTo(models.Currency,         { as: 'buyingCurrency',  foreignKey: 'moneda_compra_correlativo'    });
-        this.belongsTo(models.Currency,         { as: 'sellingCurrency', foreignKey: 'moneda_venta_correlativo'     });
         this.belongsTo(models.Brand,            { as: 'brand',           foreignKey: 'marca_correlativo'            });
         this.belongsTo(models.Unit,             { as: 'primaryUnit',     foreignKey: 'unidad_principal_correlativo' });
         this.belongsTo(models.Unit,             { as: 'secondaryUnit',   foreignKey: 'unidad_secundaria_correlativo'});
