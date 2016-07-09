@@ -16,7 +16,7 @@ module.exports = function(sequelize, cb){
         //Interceptamos (envolvemos) commit y rollback solo la primera vez
         if(currTx && !currTx.commit.$wrapped) {
           currTx.commit = _.wrap(currTx.commit, function( commit ){
-            return Promise.resolve(cb(currTx.batch)).then(function(){
+            return Promise.resolve(currTx.batch ? cb(currTx.batch) : null).then(function(){
               return commit.apply(currTx);
             });
           });
