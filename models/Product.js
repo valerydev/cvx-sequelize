@@ -74,7 +74,8 @@ module.exports = function(sequelize, Sequelize) {
             field: 'ubicacion_correlativo'
           }
         });
-        this.belongsToMany(models.Supplier,    { as: 'suppliers',
+        this.belongsToMany(models.Supplier,    {
+          as: 'suppliers',
           through: models.ProductSupplier,
           foreignKey: {
             name: 'productId',
