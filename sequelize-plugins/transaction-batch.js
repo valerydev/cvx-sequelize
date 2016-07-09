@@ -29,18 +29,18 @@ module.exports = function(sequelize, cb){
           var attributes = _.values(instance.rawAttributes).filter(attr => !attr.type.toString().startsWith('VIRTUAL'));
           attributes = _.map(attributes, 'fieldName');
 
-          attributes = wrappedFunc.call(null, instance, attributes);
-          if(! attributes ) return;
+          var data = wrappedFunc.call(null, instance, attributes);
+          if(!data) return;
 
-          var data = _.pick(instance.get(), attributes);
+          data.instance = instance;
 
           if(!currTx) {
             //Si no esta en una transaccion entonces disparar el callback
-            return cb([{ instance: instance, data: data }]);
+            return cb([data]);
           } else {
             //Si esta en transaccion acumular el resultado de la operacion
             currTx.batch = currTx.batch || [];
-            currTx.batch.push({ instance: instance, data: data });
+            currTx.batch.push(data);
           }
         }
       }
@@ -53,23 +53,30 @@ module.exports = function(sequelize, cb){
   sequelize.addHook( 'beforeUpdate' , hookTemplate());
   sequelize.addHook( 'beforeDestroy', hookTemplate());
 
-  sequelize.addHook( 'afterCreate', hookTemplate(function( instance, attributes ){
-    //Para indicar que se esta creando omitimos el ID
-    return _.difference(attributes, instance.Model.primaryKeyAttribute);
+  sequelize.addHook( 'afterCreate', hookTemplate( function(instance, attributes) {
+    return  {
+      op: 'C',
+      data: _.pick(instance.get(), attributes)
+    }
   }));
 
-  sequelize.addHook( 'afterUpdate', hookTemplate(function( instance, attributes ) {
+  sequelize.addHook( 'afterUpdate', hookTemplate( function(instance, attributes){
     //Solo los atributos que cambiaron y el ID
-    attributes = _.intersection(attributes, instance.changed().concat(instance.Model.primaryKeyAttributes));
+    attributes = _.intersection(attributes, instance.changed());
     //Ignorar si no hay atributos con cambios
     if(_.isEmpty(attributes)) return;
 
-    return attributes;
+    return  {
+      op: 'U',
+      data: _.pick(instance.get(), attributes.concat(instance.Model.primaryKeyAttributes))
+    }
   }));
 
-  sequelize.addHook( 'afterDestroy', hookTemplate(function( instance, attributes ) {
-    //Solo el ID indica Delete
-    return [ instance.Model.primaryKeyAttribute ];
+  sequelize.addHook( 'afterDestroy', hookTemplate(  function(instance, attributes) {
+    return  {
+      op: 'D',
+      data: instance.get( instance.Model.primaryKeyAttribute )
+    }
   }));
 
 };
