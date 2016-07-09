@@ -73,15 +73,7 @@ module.exports = function(sequelize, Sequelize) {
     //  }
     //},
     defaultScope: function() {
-      return {
-        include: [
-          {
-            model: models.PropertyCategory,
-            as: 'category',
-            required: true
-          }
-        ]
-      }
+      return this.scopes.includeCategory();
     },
     scopes: {
       includeCategory: function(where) {
