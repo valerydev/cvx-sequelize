@@ -19,9 +19,15 @@ module.exports = function(sequelize, Sequelize) {
 
       }
     },
-    defaultScope: { where: { active: true } },
+    defaultScope: function(){
+      return this.scopes.active();
+    },
     scopes: {
-      active: { where: { active: true } }
+      active: function(){
+        return {
+          where: { active: true }
+        }
+      }
     }
   }]
 };
