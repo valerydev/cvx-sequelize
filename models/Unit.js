@@ -40,7 +40,7 @@ module.exports = function(sequelize, Sequelize) {
       },
       shortInfo: function(){
         return {
-          attributes: ['name','code']
+          attributes: ['id', 'name', 'code']
         }
       }
     }

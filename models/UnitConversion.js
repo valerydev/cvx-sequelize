@@ -50,8 +50,8 @@ module.exports = function(sequelize, Sequelize) {
       includeUnits: function(){
         return {
           include: [
-            { as: 'unit1', model: models.Unit.scope(null), attributes: ['name', 'code']},
-            { as: 'unit2', model: models.Unit.scope(null), attributes: ['name', 'code'] }
+            { as: 'unit1', model: models.Unit.scope('shortInfo') },
+            { as: 'unit2', model: models.Unit.scope('shortInfo') }
           ]
         }
       }
