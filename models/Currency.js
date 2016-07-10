@@ -26,15 +26,16 @@ module.exports = function(sequelize, Sequelize) {
         this.belongsTo( models.BranchClassifier, { as: 'classifier2'   , foreignKey: 'clasificacion_2_correlativo' });
         this.belongsTo( models.BranchClassifier, { as: 'classifier3'   , foreignKey: 'clasificacion_3_correlativo' });
         this.hasMany  ( models.CurrencyExchange, { as: 'exchanges'     , foreignKey: 'correlativo_moneda_1'        });
-        this.belongsTo( models.SysCurrency,      { as: 'sysCurrency'   , foreignKey: 'sys_moneda_correlativo', attributes: ['name','code','symbol','timezone']});
-
+        this.belongsTo( models.SysCurrency,      { as: 'sysCurrency'   , foreignKey: 'sys_moneda_correlativo'      });
       }
     },
 
     defaultScope: function() {
       return {
-        include: _.concat( this.scopes.includeExchanges().include,
-          this.scopes.includeSysCurrency().include )
+        include: _.concat(
+          this.scopes.includeExchanges().include,
+          this.scopes.includeSysCurrency().include
+        )
       }
     },
     scopes: {
@@ -59,6 +60,11 @@ module.exports = function(sequelize, Sequelize) {
               required: false
             }
           ]
+        }
+      },
+      shortInfo: function() {
+        return {
+          attributes: ['id', 'sysCurrencyId', 'customExchange', 'primary', 'active']
         }
       }
     }

@@ -32,13 +32,19 @@ module.exports = function(sequelize, Sequelize) {
           include: [
             {
               as: 'currency1',
-              model: models.Currency.scope(null),
-              attributes: ['customExchange', 'primary', 'active']
+              model: models.Currency.scope('shortInfo'),
+              required: false,
+              include: [
+                { as: 'sysCurrency', model: models.SysCurrency, required: false }
+              ]
             },
             {
               as: 'currency2',
-              model: models.Currency.scope(null),
-              attributes: ['customExchange', 'primary', 'active']
+              model: models.Currency.scope('shortInfo'),
+              required: false,
+              include: [
+                { as: 'sysCurrency', model: models.SysCurrency, required: false }
+              ]
             }
           ]
         }
