@@ -23,7 +23,7 @@ module.exports = function(sequelize, Sequelize) {
     signupDate: {},
     identityCard: {},
     name: {},
-    lastname: {},
+    surname: {},
     email: {},
     birthDate: {},
     occupation: {},
