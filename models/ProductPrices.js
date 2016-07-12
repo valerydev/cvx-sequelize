@@ -43,7 +43,9 @@ module.exports = function(sequelize, Sequelize) {
     altRoundMethod: {},
     altRoundWithTaxesIncluded: {},
     altDefaultPriceType: {},
-    altDecimalPrecision: {}
+    altDecimalPrecision: {},
+    originId: {},
+    sessionId: {}
 
   }, {
     classMethods: {

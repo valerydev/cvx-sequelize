@@ -24,7 +24,9 @@ module.exports = function(sequelize, Sequelize) {
     ordered: {},
     ordered2: {},
     consigned: {},
-    consigned2: {}
+    consigned2: {},
+    originId: {},
+    sessionId: {}
   }, {
     classMethods: {
       associate: function () {

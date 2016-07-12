@@ -26,7 +26,9 @@ module.exports = function(sequelize, Sequelize) {
     secondaryUnitId: {},
     costMethod : {},
     status: {},
-    notes: {}
+    notes: {},
+    originId: {},
+    sessionId: {}
 
   }, {
     classMethods: {

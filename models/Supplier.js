@@ -22,7 +22,9 @@ module.exports = function(sequelize, Sequelize) {
     creditDays: {},
     creditLimit: {},
     defaultCurrencyId: {},
-    languageId: {}
+    languageId: {},
+    originId: {},
+    sessionId: {}
 
   }, {
     classMethods: {

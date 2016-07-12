@@ -24,7 +24,9 @@ module.exports = function(sequelize, Sequelize) {
     postalCode: {},
     timezone: {},
     timezoneId: {},
-    geolocation: {}
+    geolocation: {},
+    originId: {},
+    sessionId: {}
   }, {
     classMethods: {
        associate: function () {

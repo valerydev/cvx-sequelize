@@ -21,7 +21,9 @@ module.exports = function(sequelize, Sequelize) {
         //formato literal de hexadecimal que acepta la BD.
         this.setDataValue('image', val);
       }
-    }
+    },
+    originId: {},
+    sessionId: {}
   },{
     classMethods: {
       associate: function () {}

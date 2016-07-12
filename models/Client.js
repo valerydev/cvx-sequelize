@@ -39,11 +39,12 @@ module.exports = function(sequelize, Sequelize) {
       }
     },
     defaultScope: function() {
-      return _.concat(
-        this.scopes.includeAddresses().include,
-        this.scopes.includeAddresses().include,
-        this.scopes.includeContacts().include
-      );
+      return {
+        include: _.concat(
+          this.scopes.includeAddresses().include,
+          this.scopes.includeContacts().include
+        )
+      }
     },
     scopes: {
       shortInfo: function() {

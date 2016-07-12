@@ -12,7 +12,9 @@ module.exports = function(sequelize, Sequelize) {
     currencyId2: {},
     factor: {},
     type: {},
-    value: {}
+    value: {},
+    originId: {},
+    sessionId: {}
 
   }, {
 

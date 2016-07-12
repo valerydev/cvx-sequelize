@@ -10,7 +10,9 @@ module.exports = function(sequelize, Sequelize) {
     id: {},
     productId: {},
     sizeId: {},
-    colorId: {}
+    colorId: {},
+    originId: {},
+    sessionId: {}
   }, {
     classMethods: {
       associate: function () {

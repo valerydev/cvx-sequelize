@@ -16,7 +16,9 @@ module.exports = function(sequelize, Sequelize) {
     sysCurrencyId: {},
     customExchange: {},
     primary: {},
-    active: {}
+    active: {},
+    originId: {},
+    sessionId: {}
   }, {
     classMethods: {
       associate: function () {

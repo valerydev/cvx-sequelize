@@ -46,7 +46,9 @@ module.exports = function(sequelize, Sequelize) {
     initialCalculatedCost: {},
     initialUnitAverageCost: {},
     initialCalculatedAverageCost: {},
-    decimalPrecision: {}
+    decimalPrecision: {},
+    originId: {},
+    sessionId: {}
   }, {
     classMethods: {
       associate: function () {

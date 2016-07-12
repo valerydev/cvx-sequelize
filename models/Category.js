@@ -29,7 +29,9 @@ module.exports = function(sequelize, Sequelize) {
     level: {},
     parentId: {},
     path: {},
-    notes: {}
+    notes: {},
+    originId: {},
+    sessionId: {}
   },{
     classMethods: {
       associate: function () {

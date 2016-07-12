@@ -24,7 +24,9 @@ module.exports = function(sequelize, Sequelize) {
     stateId: {},
     cityId: {},
     subLocationId1: {},
-    subLocationId2: {}
+    subLocationId2: {},
+    originId: {},
+    sessionId: {}
   }, {
     classMethods: {
       associate: function () {

@@ -18,7 +18,9 @@ module.exports = function(sequelize, Sequelize) {
     lastDiscountPercentage5: {},
     lastDiscountPercentage6: {},
     deliveryDays: {},
-    warrantyDays: {}
+    warrantyDays: {},
+    originId: {},
+    sessionId: {}
   }, {
     classMethods: {
       associate: function () {

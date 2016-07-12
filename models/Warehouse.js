@@ -13,7 +13,9 @@ module.exports = function(sequelize, Sequelize) {
     code: {},
     name: {},
     contact: {},
-    notes: {}
+    notes: {},
+    originId: {},
+    sessionId: {}
   },{
     classMethods: {
       associate: function () {

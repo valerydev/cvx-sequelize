@@ -15,7 +15,9 @@ module.exports = function(sequelize, Sequelize) {
     length: {},
     weight: {},
     metricUnitId: {},
-    volume: {}
+    volume: {},
+    originId: {},
+    sessionId: {}
   }, {
     classMethods: {
       associate: function () {

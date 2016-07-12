@@ -23,7 +23,9 @@ module.exports = function(sequelize, Sequelize) {
     franchiseProfitPercentage: {},
     imported: {},
     warrantyDays: {},
-    passwordProtectedSale: {}
+    passwordProtectedSale: {},
+    originId: {},
+    sessionId: {}
   }, {
     classMethods: {
       associate: function () {
