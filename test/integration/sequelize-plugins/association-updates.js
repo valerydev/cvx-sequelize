@@ -14,7 +14,7 @@ var Sequelize = require('sequelize');
 var _         = Sequelize.Utils._;
 var Promise   = Sequelize.Promise;
 var validator = Sequelize.Validator;
-var assocUpdates = require('../../../sequelize-plugins/association-updates');
+var assocUpdates = require('../../../lib/sequelize-plugins/association-updates');
 
 beforeEach(function(done){
   this.timeout(0);

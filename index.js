@@ -7,12 +7,12 @@ var utils      = require('./lib/utils');
 var dynamoSync = require('./lib/dynamodb-sync');
 
 //Plugins de sequelize genericos
-var ssaclRoles        = require('./sequelize-plugins/ssacl-attribute-roles');
-var assocFields       = require('./sequelize-plugins/association-fields');
-var assocUpdate       = require('./sequelize-plugins/association-updates');
-var schemaValidation  = require('./sequelize-plugins/schema-validation');
-var txBatch           = require('./sequelize-plugins/transaction-batch');
-var nestedAssocScopes = require('./sequelize-plugins/nested-creation-association-scopes');
+var ssaclRoles        = require('./lib/sequelize-plugins/ssacl-attribute-roles');
+var assocFields       = require('./lib/sequelize-plugins/association-fields');
+var assocUpdate       = require('./lib/sequelize-plugins/association-updates');
+var schemaValidation  = require('./lib/sequelize-plugins/schema-validation');
+var txBatch           = require('./lib/sequelize-plugins/transaction-batch');
+var nestedAssocScopes = require('./lib/sequelize-plugins/nested-creation-association-scopes');
 
 //Plugins de sequelize especificos de valeryweb
 var cValidators       = require('./lib/valery-plugins/custom-validations');
@@ -52,9 +52,9 @@ module.exports = function(config) {
   txBatch(sequelize, dynamoSync);
 
 
-  var modelAttribs = require('./models/attribs')(DataTypes, Sequelize);
+  var modelAttribs = require('./lib/models/attribs')(DataTypes, Sequelize);
 
-    fs.readdirSync(path.join(__dirname, 'models'))
+    fs.readdirSync(path.join(__dirname, 'lib/models'))
     .filter(function (file) {
         return (file.indexOf('.') !== 0) && (file !== basename);
     })
@@ -63,7 +63,7 @@ module.exports = function(config) {
 
         if (file.slice(-3) !== '.js') return;
 
-        var modelOpts = require(path.join(__dirname, 'models', file))(sequelize, DataTypes);
+        var modelOpts = require(path.join(__dirname, 'lib/models', file))(sequelize, DataTypes);
 
         if(! modelAttribs[modelName] )
           throw new Error('No se encuentra la definicion de atributos del modelo ' + modelName);
