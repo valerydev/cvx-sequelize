@@ -1,26 +1,12 @@
-var fs         = require('fs');
-var path       = require('path');
-var cls        = require('continuation-local-storage');
-var Sequelize  = require('sequelize');
-var _          = require('underscore');
-var utils      = require('./lib/utils');
-var dynamoSync = require('./lib/dynamodb-sync');
+"use strict"
+var fs             = require('fs');
+var path           = require('path');
+var Sequelize      = require('sequelize');
+var cls            = require('continuation-local-storage');
+var installPlugins = require('./lib/sequelize-plugins');
+var _              = Sequelize.Utils._;
 
-//Plugins de sequelize genericos
-var ssaclRoles        = require('./lib/sequelize-plugins/ssacl-attribute-roles');
-var assocFields       = require('./lib/sequelize-plugins/association-fields');
-var assocUpdate       = require('./lib/sequelize-plugins/association-updates');
-var schemaValidation  = require('./lib/sequelize-plugins/schema-validation');
-var txBatch           = require('./lib/sequelize-plugins/transaction-batch');
-var nestedAssocScopes = require('./lib/sequelize-plugins/nested-creation-association-scopes');
-
-//Plugins de sequelize especificos de valeryweb
-var cValidators       = require('./lib/valery-plugins/custom-validations');
-var assignedFields    = require('./lib/valery-plugins/session-assigned-fields');
-
-var basename  = path.basename(module.filename);
 Sequelize.cls = cls.createNamespace('valeryweb-model-ns');
-var DataTypes = Sequelize;
 
 module.exports = function(config) {
 
@@ -39,130 +25,37 @@ module.exports = function(config) {
     }
   }
 
-  var models    = {};
   var sequelize = new Sequelize(config.database, config.user, config.password, config);
+  installPlugins(sequelize);
 
-  schemaValidation(sequelize);
-  assocFields(sequelize);
-  ssaclRoles(sequelize);
-  assocUpdate(sequelize);
-  cValidators(sequelize);
-  assignedFields(sequelize, { namespaces: ['valeryweb-ws-ns'] });
-  nestedAssocScopes(sequelize);
-  txBatch(sequelize, dynamoSync);
+  sequelize.import(path.join(__dirname, 'lib/models'), {
+    splitted: true,
+    attribs:  path.join(__dirname, 'lib/attribs')
+  });
 
+  var models = sequelize.models;
+  models.sequelize = sequelize;
+  models.Sequelize = Sequelize;
 
-  var modelAttribs = require('./lib/models/attribs')(DataTypes, Sequelize);
-
-    fs.readdirSync(path.join(__dirname, 'lib/models'))
-    .filter(function (file) {
-        return (file.indexOf('.') !== 0) && (file !== basename);
-    })
-    .forEach(function (file) {
-        var modelName = file.slice(0, -3);
-
-        if (file.slice(-3) !== '.js') return;
-
-        var modelOpts = require(path.join(__dirname, 'lib/models', file))(sequelize, DataTypes);
-
-        if(! modelAttribs[modelName] )
-          throw new Error('No se encuentra la definicion de atributos del modelo ' + modelName);
-
-        var baseAttribs = modelAttribs[modelName][0];
-        var otherAttribs = modelOpts[0];
-        var baseOpts = modelOpts[1];
-        var otherOpts = modelAttribs[modelName][1];
-
-        Object.keys(baseAttribs).forEach(function (attrib) {
-            if (otherAttribs[attrib] && otherAttribs[attrib].get) {
-                baseAttribs[attrib].get = otherAttribs[attrib].get;
-            }
-            if (otherAttribs[attrib] && otherAttribs[attrib].set) {
-                baseAttribs[attrib].set = otherAttribs[attrib].set;
-            }
-        });
-
-        if (otherOpts) {
-            if (!_.isUndefined(otherOpts.tableName)) {
-                baseOpts.tableName = otherOpts.tableName;
-            }
-            if (!_.isUndefined(otherOpts.validate)) {
-                baseOpts.validate = _.defaults(baseOpts.validate, otherOpts.validate);
-            }
-        }
-
-        var model = sequelize['import'](modelName, function () {
-            return sequelize.define(modelName, baseAttribs, baseOpts);
-        });
-
-        models[model.name] = model;
-    });
-
-    models.sequelize = sequelize;
-    models.Sequelize = Sequelize;
-
-    utils.addJSONSchema(models);
-    utils.wrapAssociations(models);
-
-    //Convertidor base64/Buffer para tipos BLOB
-    //Sequelize.BLOB.parse = function(value, options) {
-    //  if (Buffer.isBuffer(value)) {
-    //    return value.toString('base64');
-    //  } else if( typeof value.buffer == 'function' ) {
-    //    return (value.parser._buffer || {toString: ()=>{}}).toString('base64');
-    //  }
-    //};
-    Sequelize.BLOB.prototype.stringify = function(value, options) {
-      if (!Buffer.isBuffer(value)) {
-        if (Array.isArray(value)) {
-          value = new Buffer(value);
-        } else if(Sequelize.Validator.isBase64(value)){
-          value = new Buffer(value.toString(), 'base64');
-        } else if(Sequelize.Validator.isHexadecimal(value)) {
-          value = new Buffer(value.toString(), 'hex');
-        } else {
-          value = new Buffer(value.toString());
-        }
+  models.sync = function(options){
+      options = options || {};
+      if(!options.force ) options.force = true;
+      if(!options.match ) options.match = /^test|test$/i;
+      if(_.isUndefined(options.logging))
+          options.logging = false;
+      else if(options.logging === true ){
+          options.logging = console.log.bind(console);
       }
-      var hex = value.toString('hex');
-      return "X'" + hex + "'";
-    };
-    sequelize.refreshTypes();
+      return sequelize.sync(options);
+  };
 
-
-    _.values(models).forEach(function (model) {
-      //Ejecutamos las asociaciones
-      if (model.associate) {
-          model.associate();
-      }
-      //Sequelize no soporta funciones como defaultScope, pero son necesarias en
-      //algunos casos, asi que solucionamos reemplazando los defaultScope tipo funcion por
-      //el resultado de su ejecucion
-      if(_.isFunction(model.options.defaultScope)) {
-        model.addScope('defaultScope', model.options.defaultScope(), { override: true });
-      }
-    });
-
-    models.sync = function(options){
-        options = options || {};
-        if(!options.force ) options.force = true;
-        if(!options.match ) options.match = /^test|test$/i;
-        if(_.isUndefined(options.logging))
-            options.logging = false;
-        else if(options.logging === true ){
-            options.logging = console.log.bind(console);
-        }
-        return sequelize.sync(options);
-    };
-
-    return models;
+  return models;
 };
-
 
 module.exports.initialize = function(config, attribName){
     var models = module.exports(config);
 
-    return (function(models,attribName) {
+    return (function(models, attribName) {
         if(!attribName) attribName = 'models';
         var middleware = function(req, res, next) {
             if(req) req[attribName] = models;
@@ -173,3 +66,5 @@ module.exports.initialize = function(config, attribName){
         return middleware;
     })(models, attribName)
 };
+
+module.exports();
