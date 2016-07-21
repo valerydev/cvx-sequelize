@@ -12,6 +12,7 @@
     "md5": "^2.1.0",
     "mysql": "2.6.2",
     "sequelize": "3.23.3",
+    "shimmer": "1.0.0",
     "continuation-local-storage": "^3.1.4",
     "sqlite3": "^3.1.1",
     "underscore": "1.8.3",
