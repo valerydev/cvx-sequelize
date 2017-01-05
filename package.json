@@ -1,5 +1,5 @@
 {
-  "name": "valeryweb-model",
+  "name": "cvx-sequelize",
   "version": "0.0.3",
   "description": "Modelo ORM sequelize",
   "scripts": {

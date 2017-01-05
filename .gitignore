@@ -1,0 +1,14 @@
+node_modules/
+.idea/
+.settings/
+.history/
+.vscode/
+.project
+.classpath
+*.tar.gz
+*.DS_Store
+*.swp
+nohup.out
+*~*
+*.log
+*.sqlite

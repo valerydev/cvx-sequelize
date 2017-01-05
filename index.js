@@ -6,7 +6,7 @@ var cls            = require('continuation-local-storage');
 var installPlugins = require('./lib/sequelize-plugins');
 var _              = Sequelize.Utils._;
 
-Sequelize.cls = cls.createNamespace('valeryweb-model-ns');
+Sequelize.cls = cls.createNamespace('cvx-sequelize-ns');
 
 module.exports = function(config) {
 
@@ -16,6 +16,11 @@ module.exports = function(config) {
       "password": null,
       "database": "model-test",
       "dialect": "sqlite",
+      "models": null, 
+      "splitModels": {
+        "logic": path.resolve(__dirname, '../models'),
+        "attribs": path.resolve(__dirname, '../attribs')
+      },
       "define":
       {
         "timestamps": false,
@@ -28,10 +33,21 @@ module.exports = function(config) {
   var sequelize = new Sequelize(config.database, config.user, config.password, config);
   installPlugins(sequelize);
 
-  sequelize.import(path.join(__dirname, 'lib/models'), {
-    splitted: true,
-    attribs:  path.join(__dirname, 'lib/attribs')
-  });
+  if (config.splitModels) {
+    config.splitModels.logic = config.splitModels.logic || config.models;
+    if (!config.splitModels.logic) 
+      throw new Error('Debes indicar la ruta al directorio de logica de modelos');
+    if (!config.splitModels.attribs)  
+      throw new Error('Debes indicar la ruta al directorio de atributos de modelos');
+
+    sequelize.import(config.splitModels.logic, config.splitModels.attribs);
+
+  } else {
+    if(!config.models)
+      throw new Error('Debes indicar la ruta al directorio de modelos');
+
+    sequelize.import(config.models);
+  }
 
   var models = sequelize.models;
   models.sequelize = sequelize;
@@ -39,11 +55,11 @@ module.exports = function(config) {
 
   models.sync = function(options){
       options = options || {};
-      if(!options.force ) options.force = true;
-      if(!options.match ) options.match = /^test|test$/i;
-      if(_.isUndefined(options.logging))
+      if (!options.force ) options.force = true;
+      if (!options.match ) options.match = /^test|test$/i;
+      if (_.isUndefined(options.logging))
           options.logging = false;
-      else if(options.logging === true ){
+      else if (options.logging === true ){
           options.logging = console.log.bind(console);
       }
       return sequelize.sync(options);
@@ -56,15 +72,13 @@ module.exports.initialize = function(config, attribName){
     var models = module.exports(config);
 
     return (function(models, attribName) {
-        if(!attribName) attribName = 'models';
+        if (!attribName) attribName = 'models';
         var middleware = function(req, res, next) {
-            if(req) req[attribName] = models;
-            if(_.isFunction(next)) next();
+            if (req) req[attribName] = models;
+            if (_.isFunction(next)) next();
             return models;
         };
         middleware.models = models;
         return middleware;
     })(models, attribName)
 };
-
-module.exports();

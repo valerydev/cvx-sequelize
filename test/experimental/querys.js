@@ -1,16 +1,13 @@
-//var models = require('../../')();
-
 var models = require('../../')({
-  "user": "valerysystem",
-  "password": "fHKuLJx4",
-  "database": "valerydb_v21",
-  "host": "192.168.1.13",
-  "dialect": "mysql",
-  "define":
-  {
-    "timestamps": false,
+  "user"    : "<user>",
+  "password": "<password>",
+  "database": "<database>",
+  "host"    : "<host>",
+  "dialect" : "<dialect>",
+  "define"  : {
+    "timestamps"     : false,
     "freezeTableName": true,
-    "underscored": true
+    "underscored"    : true
   }
 });
 
@@ -21,3 +18,6 @@ var col     = Sequelize.col;
 var literal = Sequelize.literal;
 var fn      = Sequelize.fn;
 //--------------------------------------------------------------------//
+//                    AREA DE EXPERIMENTOS                            //
+//--------------------------------------------------------------------//
+//-->
