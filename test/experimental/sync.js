@@ -1,4 +1,4 @@
-var models = require('../../')(require('./test-config.json'));
+let models = require('../../')(require('./test-config.json'))
 
 models.sync({logging: true}).then(function(){
   //-----------------------------------------------------//
@@ -6,4 +6,4 @@ models.sync({logging: true}).then(function(){
   //-----------------------------------------------------//
   //-->
     
-});
+})

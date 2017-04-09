@@ -1,4 +1,4 @@
-var models = require('../../')({
+let models = require('../../')({
   "user"    : "<user>",
   "password": "<password>",
   "database": "<database>",
@@ -9,14 +9,14 @@ var models = require('../../')({
     "freezeTableName": true,
     "underscored"    : true
   }
-});
+})
 
-var sequelize = models.sequelize;
-var Sequelize = models.Sequelize;
-var Promise   = Sequelize.Promise;
-var col     = Sequelize.col;
-var literal = Sequelize.literal;
-var fn      = Sequelize.fn;
+let sequelize = models.sequelize
+let Sequelize = models.Sequelize
+let Promise   = Sequelize.Promise
+let col     = Sequelize.col
+let literal = Sequelize.literal
+let fn      = Sequelize.fn
 //--------------------------------------------------------------------//
 //                    AREA DE EXPERIMENTOS                            //
 //--------------------------------------------------------------------//
