@@ -6,7 +6,8 @@ module.exports = function( sq, DataTypes ){
         type     : DataTypes.INTEGER,
         references: {
           model: 'Contract',
-          key  : 'id'
+          key  : 'id',
+          virtual: true
         }
       }
     }),

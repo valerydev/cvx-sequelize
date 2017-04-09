@@ -37,10 +37,8 @@ describe('attribute-name-refs', function(){
     let models = modelFactory.createReferencesTestModel([sequelizeEvents, attrNameRefs])
     models.sequelize.emit('afterDefineAll', models)
     let references = models.User.attributes.contractId.references
-    expect(references).to.eql({
-      model: 'dat_contract',
-      key  : 'correlative'
-    })
+    expect(references.model).to.equal('dat_contract')
+    expect(references.key).to.equal('correlative')
   })
 })
 
