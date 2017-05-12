@@ -3,21 +3,26 @@
   "version": "0.0.3",
   "description": "Modelo ORM sequelize",
   "scripts": {
-  "main": "index.js",
+    "main": "index.js",
     "test": "mocha --harmony --recursive ./test"
+  },
+  "bin": {
+    "mdtrans": "bin/mdtrans.js"
   },
   "author": "Raul Contreras <rcontreras@valery.com>",
   "license": "ISC",
   "dependencies": {
+    "colors": "^1.1.2",
+    "continuation-local-storage": "^3.1.4",
     "md5": "^2.1.0",
     "mysql": "2.6.2",
     "sequelize": "3.23.3",
     "shimmer": "1.0.0",
-    "continuation-local-storage": "^3.1.4",
     "sqlite3": "^3.1.1",
     "underscore": "1.8.3",
     "underscore.string": "^3.3.4",
-    "validator": "4.9.0"
+    "validator": "4.9.0",
+    "yargs": "^8.0.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
