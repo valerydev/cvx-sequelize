@@ -202,8 +202,8 @@ describe('sequelize-association-updates', async function() {
   })
 
   it('Debe fallar al actualizar la asociacion M:N debido a que no existe la relacion si opts.checkRelated = true', async function(){
-    let prop = this.models.Property.create({name: 'unrelatedProperty'})
-    this.testUser.updateAssoc({
+    let prop = await this.models.Property.create({name: 'unrelatedProperty'})
+    await this.testUser.updateAssoc({
       model: this.models.Property,
       as: 'properties',
       values: [{
@@ -217,8 +217,8 @@ describe('sequelize-association-updates', async function() {
   })
 
   it('Debe soportar asociaciones con scope', async function() {
-    let prop = this.models.Property.create({name: 'unrelatedProperty'})
-    this.testUser.updateAssoc({
+    let prop = await this.models.Property.create({name: 'unrelatedProperty'})
+    await this.testUser.updateAssoc({
       model: this.models.Property,
       as: 'properties',
       values: [{
@@ -228,7 +228,6 @@ describe('sequelize-association-updates', async function() {
       }],
       checkRelated: true //Enabling the check for relation existence
     })
-        .should.be.rejectedWith(/No existe relacion/)
+    .should.be.rejectedWith(/No existe relacion/)
   })
-
 })
