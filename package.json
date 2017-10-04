@@ -1,6 +1,6 @@
 {
   "name": "cvx-sequelize",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Bateria de plugins para sequelize",
   "scripts": {
     "main": "index.js",
